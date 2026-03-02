@@ -1,0 +1,20 @@
+# Eski Wix sayfalarını ana sayfaya yönlendir (301 kalıcı yönlendirme)
+/sulama-makineleri          /#urunler       301
+/sulama-makineleri/*        /#urunler       301
+/gübreleme-makineleri       /#urunler       301
+/urunler                    /#urunler       301
+/urunler/*                  /#urunler       301
+/hakkimizda                 /#hakkimizda    301
+/about                      /#hakkimizda    301
+/iletisim                   /#iletisim      301
+/contact                    /#iletisim      301
+/iklimlendirme              /#iklimlendirme 301
+/iklim-kontrol              /#iklimlendirme 301
+/agrinexus                  /#agrinexus     301
+/scada                      /#agrinexus     301
+/sera-otomasyonu            /               301
+/sera-sulama                /#urunler       301
+/sera-iklimlendirme         /#iklimlendirme 301
+
+# Tüm bilinmeyen sayfaları ana sayfaya yönlendir (SPA fallback)
+/*                          /index.html     200
