@@ -1,0 +1,1067 @@
+<!DOCTYPE html>
+<html lang="tr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OK Otomasyon — Admin Panel</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #0f172a;
+            color: #e2e8f0;
+            min-height: 100vh
+        }
+
+        .login-screen {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #0f172a, #1e293b)
+        }
+
+        .login-box {
+            background: #1e293b;
+            padding: 2.5rem;
+            border-radius: 20px;
+            border: 1px solid #334155;
+            max-width: 380px;
+            width: 90%
+        }
+
+        .login-box h2 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            text-align: center
+        }
+
+        .login-box .logo {
+            text-align: center;
+            margin-bottom: 1.5rem
+        }
+
+        .login-box .logo span {
+            background: #16a34a;
+            color: #fff;
+            padding: 6px 14px;
+            border-radius: 12px;
+            font-weight: 800;
+            font-size: 1.1rem
+        }
+
+        .login-box input {
+            width: 100%;
+            padding: 12px 16px;
+            border: 1.5px solid #334155;
+            border-radius: 12px;
+            background: #0f172a;
+            color: #e2e8f0;
+            font-size: 0.95rem;
+            margin-bottom: 1rem;
+            font-family: inherit
+        }
+
+        .login-box input:focus {
+            outline: none;
+            border-color: #16a34a
+        }
+
+        .login-box button {
+            width: 100%;
+            padding: 12px;
+            background: #16a34a;
+            color: #fff;
+            border: none;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background .2s
+        }
+
+        .login-box button:hover {
+            background: #059669
+        }
+
+        .login-error {
+            color: #ef4444;
+            font-size: 0.85rem;
+            text-align: center;
+            margin-top: 0.5rem;
+            display: none
+        }
+
+        .admin-panel {
+            display: none;
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 1.5rem
+        }
+
+        .admin-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 0;
+            border-bottom: 1px solid #334155;
+            margin-bottom: 1.5rem
+        }
+
+        .admin-header h1 {
+            font-size: 1.4rem
+        }
+
+        .admin-header .logout-btn {
+            background: #ef4444;
+            color: #fff;
+            border: none;
+            padding: 8px 20px;
+            border-radius: 10px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer
+        }
+
+        .tab-bar {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap
+        }
+
+        .tab-btn {
+            padding: 8px 20px;
+            border: 1px solid #334155;
+            border-radius: 10px;
+            background: transparent;
+            color: #94a3b8;
+            font-size: 0.85rem;
+            cursor: pointer;
+            font-family: inherit;
+            transition: all .2s
+        }
+
+        .tab-btn.active {
+            background: #16a34a;
+            color: #fff;
+            border-color: #16a34a
+        }
+
+        .tab-content {
+            display: none
+        }
+
+        .tab-content.active {
+            display: block
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: #1e293b;
+            border-radius: 14px;
+            overflow: hidden
+        }
+
+        th {
+            background: #334155;
+            padding: 10px 14px;
+            text-align: left;
+            font-size: 0.82rem;
+            font-weight: 600;
+            color: #94a3b8
+        }
+
+        td {
+            padding: 10px 14px;
+            border-bottom: 1px solid #1e293b;
+            font-size: 0.88rem
+        }
+
+        tr:nth-child(even) {
+            background: #1a2332
+        }
+
+        .btn-sm {
+            padding: 4px 12px;
+            border: none;
+            border-radius: 8px;
+            font-size: 0.78rem;
+            font-weight: 600;
+            cursor: pointer;
+            margin-right: 4px
+        }
+
+        .btn-edit {
+            background: #3b82f6;
+            color: #fff
+        }
+
+        .btn-del {
+            background: #ef4444;
+            color: #fff
+        }
+
+        .btn-add {
+            background: #16a34a;
+            color: #fff;
+            padding: 10px 24px;
+            border: none;
+            border-radius: 12px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            margin-bottom: 1rem
+        }
+
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.6);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center
+        }
+
+        .modal-overlay.active {
+            display: flex
+        }
+
+        .modal {
+            background: #1e293b;
+            border: 1px solid #334155;
+            border-radius: 20px;
+            padding: 2rem;
+            max-width: 600px;
+            width: 90%;
+            max-height: 85vh;
+            overflow-y: auto
+        }
+
+        .modal h3 {
+            margin-bottom: 1rem;
+            font-size: 1.15rem
+        }
+
+        .modal label {
+            display: block;
+            font-size: 0.82rem;
+            font-weight: 600;
+            color: #94a3b8;
+            margin-bottom: 0.3rem;
+            margin-top: 0.75rem
+        }
+
+        .modal input,
+        .modal textarea {
+            width: 100%;
+            padding: 10px 14px;
+            border: 1.5px solid #334155;
+            border-radius: 10px;
+            background: #0f172a;
+            color: #e2e8f0;
+            font-size: 0.88rem;
+            font-family: inherit
+        }
+
+        .modal textarea {
+            min-height: 60px;
+            resize: vertical
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 0.75rem;
+            margin-top: 1.25rem
+        }
+
+        .modal-actions button {
+            flex: 1;
+            padding: 10px;
+            border: none;
+            border-radius: 10px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer
+        }
+
+        .modal-actions .save {
+            background: #16a34a;
+            color: #fff
+        }
+
+        .modal-actions .cancel {
+            background: #334155;
+            color: #e2e8f0
+        }
+
+        .lang-tabs {
+            display: flex;
+            gap: 0.4rem;
+            margin-bottom: 0.75rem
+        }
+
+        .lang-tab {
+            padding: 4px 12px;
+            border: 1px solid #334155;
+            border-radius: 8px;
+            background: transparent;
+            color: #94a3b8;
+            font-size: 0.75rem;
+            cursor: pointer
+        }
+
+        .lang-tab.active {
+            background: #3b82f6;
+            color: #fff;
+            border-color: #3b82f6
+        }
+
+        .lang-panel {
+            display: none
+        }
+
+        .lang-panel.active {
+            display: block
+        }
+
+        .img-upload-area {
+            border: 2px dashed #334155;
+            border-radius: 14px;
+            padding: 1rem;
+            text-align: center;
+            cursor: pointer;
+            transition: border-color .2s;
+            margin-top: 0.5rem;
+        }
+
+        .img-upload-area:hover {
+            border-color: #16a34a
+        }
+
+        .img-upload-area.dragover {
+            border-color: #3b82f6;
+            background: rgba(59, 130, 246, 0.08)
+        }
+
+        .img-upload-area input[type=file] {
+            display: none
+        }
+
+        .img-upload-area .upload-text {
+            color: #64748b;
+            font-size: 0.82rem
+        }
+
+        .img-upload-area .upload-text strong {
+            color: #16a34a
+        }
+
+        .img-preview {
+            max-width: 180px;
+            max-height: 120px;
+            border-radius: 10px;
+            margin-top: 0.5rem;
+            display: none
+        }
+
+        .img-preview.visible {
+            display: block
+        }
+
+        td img.table-thumb {
+            width: 50px;
+            height: 40px;
+            object-fit: contain;
+            border-radius: 6px;
+            background: #f1f5f9;
+            padding: 2px
+        }
+
+        .stat-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1.5rem
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, #1e293b, #0f172a);
+            border: 1px solid #334155;
+            border-radius: 14px;
+            padding: 1.25rem;
+            text-align: center
+        }
+
+        .stat-card .stat-num {
+            font-size: 2rem;
+            font-weight: 800;
+            color: #16a34a
+        }
+
+        .stat-card .stat-label {
+            font-size: 0.78rem;
+            color: #94a3b8;
+            margin-top: 0.3rem
+        }
+
+        .charts-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1.5rem
+        }
+
+        .chart-box {
+            background: #1e293b;
+            border: 1px solid #334155;
+            border-radius: 14px;
+            padding: 1.25rem
+        }
+
+        .chart-box h4 {
+            font-size: 0.88rem;
+            margin-bottom: 0.75rem;
+            color: #e2e8f0
+        }
+
+        .bar-row {
+            display: flex;
+            align-items: center;
+            margin-bottom: 0.5rem;
+            gap: 0.5rem
+        }
+
+        .bar-label {
+            width: 80px;
+            font-size: 0.75rem;
+            color: #94a3b8;
+            text-align: right;
+            flex-shrink: 0
+        }
+
+        .bar-track {
+            flex: 1;
+            height: 22px;
+            background: #0f172a;
+            border-radius: 6px;
+            overflow: hidden
+        }
+
+        .bar-fill {
+            height: 100%;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            padding-left: 8px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            color: #fff;
+            min-width: 30px;
+            transition: width 0.5s ease
+        }
+
+        .bar-fill.green {
+            background: linear-gradient(90deg, #16a34a, #059669)
+        }
+
+        .bar-fill.blue {
+            background: linear-gradient(90deg, #3b82f6, #2563eb)
+        }
+
+        .bar-fill.purple {
+            background: linear-gradient(90deg, #8b5cf6, #7c3aed)
+        }
+
+        .bar-fill.orange {
+            background: linear-gradient(90deg, #f59e0b, #d97706)
+        }
+
+        .traffic-table {
+            max-height: 400px;
+            overflow-y: auto;
+            border-radius: 14px
+        }
+
+        .traffic-table td {
+            font-size: 0.78rem
+        }
+
+        .traffic-table th {
+            position: sticky;
+            top: 0;
+            z-index: 1
+        }
+
+        .traffic-actions {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+            flex-wrap: wrap
+        }
+
+        .traffic-actions button {
+            padding: 6px 16px;
+            border: 1px solid #334155;
+            border-radius: 8px;
+            background: transparent;
+            color: #94a3b8;
+            font-size: 0.78rem;
+            cursor: pointer;
+            font-family: inherit
+        }
+
+        .traffic-actions button:hover {
+            background: #334155
+        }
+
+        .traffic-actions .btn-danger {
+            border-color: #ef4444;
+            color: #ef4444
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- GİRİŞ EKRANI -->
+    <div class="login-screen" id="loginScreen">
+        <div class="login-box">
+            <div class="logo"><span>OK</span> OTOMASYON</div>
+            <h2>Admin Girişi</h2>
+            <input type="password" id="passInput" placeholder="Şifre" autofocus>
+            <button onclick="tryLogin()">Giriş Yap</button>
+            <div class="login-error" id="loginError">Şifre yanlış!</div>
+        </div>
+    </div>
+
+    <!-- ADMİN PANELİ -->
+    <div class="admin-panel" id="adminPanel">
+        <div class="admin-header">
+            <h1>🔧 OK Otomasyon Admin</h1>
+            <div style="display:flex;gap:0.5rem">
+                <button
+                    style="background:#16a34a;border:none;color:#fff;padding:8px 16px;border-radius:8px;cursor:pointer;font-family:inherit;font-weight:600"
+                    onclick="exportSiteData()">📥 Değişiklikleri İndir</button>
+                <button class="logout-btn" onclick="logout()">Çıkış</button>
+            </div>
+        </div>
+
+        <div class="tab-bar">
+            <button class="tab-btn active" onclick="switchTab('products')">Ürünler (Sulama)</button>
+            <button class="tab-btn" onclick="switchTab('climate')">İklim Sistemleri</button>
+            <button class="tab-btn" onclick="switchTab('traffic')">📊 Trafik</button>
+        </div>
+
+        <!-- ÜRÜNLER TAB -->
+        <div class="tab-content active" id="tab-products">
+            <button class="btn-add" onclick="openProductModal()">+ Yeni Ürün Ekle</button>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Resim</th>
+                        <th>ID</th>
+                        <th>İsim</th>
+                        <th>Fiyat</th>
+                        <th>İşlem</th>
+                    </tr>
+                </thead>
+                <tbody id="productsTable"></tbody>
+            </table>
+        </div>
+
+        <!-- İKLİM TAB -->
+        <div class="tab-content" id="tab-climate">
+            <button class="btn-add" onclick="openClimateModal()">+ Yeni İklim Sistemi Ekle</button>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Resim</th>
+                        <th>ID</th>
+                        <th>İsim</th>
+                        <th>Sektör</th>
+                        <th>Fiyat</th>
+                        <th>İşlem</th>
+                    </tr>
+                </thead>
+                <tbody id="climateTable"></tbody>
+            </table>
+        </div>
+
+        <!-- TRAFİK TAB -->
+        <div class="tab-content" id="tab-traffic">
+            <div class="stat-cards" id="trafficStats"></div>
+            <div class="charts-grid" id="trafficCharts"></div>
+            <div class="traffic-actions">
+                <button onclick="refreshTraffic()">🔄 Yenile</button>
+                <button onclick="exportTraffic()">📥 CSV İndir</button>
+                <button class="btn-danger" onclick="clearTraffic()">🗑️ Tüm Verileri Sil</button>
+            </div>
+            <h4 style="margin-bottom:0.75rem">Son Ziyaretler</h4>
+            <div class="traffic-table">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Tarih</th>
+                            <th>IP</th>
+                            <th>Ülke</th>
+                            <th>Şehir</th>
+                            <th>Cihaz</th>
+                            <th>Tarayıcı</th>
+                            <th>İşletim Sistemi</th>
+                            <th>Kaynak</th>
+                            <th>Ekran</th>
+                        </tr>
+                    </thead>
+                    <tbody id="trafficTable"></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- ÜRÜN DÜZENLEME MODAL -->
+    <div class="modal-overlay" id="productModal">
+        <div class="modal">
+            <h3 id="productModalTitle">Ürün Düzenle</h3>
+            <label>Ürün ID</label><input id="pId">
+            <label>Ürün Adı</label><input id="pName">
+            <label>Fiyat</label><input id="pPrice">
+            <label>Ürün Görseli</label>
+            <div class="img-upload-area" id="pImageDrop" onclick="document.getElementById('pImageFile').click()">
+                <input type="file" id="pImageFile" accept="image/*" onchange="handleProductImage(this)">
+                <div class="upload-text">📷 <strong>Resim seç</strong> veya sürükle-bırak</div>
+                <img class="img-preview" id="pImagePreview">
+            </div>
+            <input type="hidden" id="pImage">
+
+            <div class="lang-tabs" id="pLangTabs">
+                <button class="lang-tab active" onclick="switchPLang('tr')">TR</button>
+                <button class="lang-tab" onclick="switchPLang('en')">EN</button>
+                <button class="lang-tab" onclick="switchPLang('ru')">RU</button>
+                <button class="lang-tab" onclick="switchPLang('ar')">AR</button>
+            </div>
+            <div class="lang-panel active" id="pLang-tr">
+                <label>Badge (TR)</label><input id="pBadge-tr">
+                <label>Tagline (TR)</label><input id="pTagline-tr">
+                <label>Özellikler (TR) — her satır bir özellik</label><textarea id="pSpecs-tr"></textarea>
+            </div>
+            <div class="lang-panel" id="pLang-en">
+                <label>Badge (EN)</label><input id="pBadge-en">
+                <label>Tagline (EN)</label><input id="pTagline-en">
+                <label>Specs (EN)</label><textarea id="pSpecs-en"></textarea>
+            </div>
+            <div class="lang-panel" id="pLang-ru">
+                <label>Badge (RU)</label><input id="pBadge-ru">
+                <label>Tagline (RU)</label><input id="pTagline-ru">
+                <label>Specs (RU)</label><textarea id="pSpecs-ru"></textarea>
+            </div>
+            <div class="lang-panel" id="pLang-ar">
+                <label>Badge (AR)</label><input id="pBadge-ar">
+                <label>Tagline (AR)</label><input id="pTagline-ar">
+                <label>Specs (AR)</label><textarea id="pSpecs-ar"></textarea>
+            </div>
+            <div class="modal-actions">
+                <button class="cancel" onclick="closeProductModal()">İptal</button>
+                <button class="save" onclick="saveProduct()">Kaydet</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- İKLİM DÜZENLEME MODAL -->
+    <div class="modal-overlay" id="climateModal">
+        <div class="modal">
+            <h3 id="climateModalTitle">İklim Sistemi Düzenle</h3>
+            <label>ID</label><input id="cId">
+            <label>Sektör Sayısı</label><input type="number" id="cSectors">
+            <label>Fiyat</label><input id="cPrice">
+            <label>Sistem Görseli</label>
+            <div class="img-upload-area" id="cImageDrop" onclick="document.getElementById('cImageFile').click()">
+                <input type="file" id="cImageFile" accept="image/*" onchange="handleClimateImage(this)">
+                <div class="upload-text">📷 <strong>Resim seç</strong> veya sürükle-bırak</div>
+                <img class="img-preview" id="cImagePreview">
+            </div>
+            <input type="hidden" id="cImage">
+
+            <div class="lang-tabs">
+                <button class="lang-tab active" onclick="switchCLang('tr')">TR</button>
+                <button class="lang-tab" onclick="switchCLang('en')">EN</button>
+                <button class="lang-tab" onclick="switchCLang('ru')">RU</button>
+                <button class="lang-tab" onclick="switchCLang('ar')">AR</button>
+            </div>
+            <div class="lang-panel active" id="cLang-tr">
+                <label>Badge (TR)</label><input id="cBadge-tr">
+                <label>İsim (TR)</label><input id="cName-tr">
+                <label>Açıklama (TR)</label><textarea id="cDesc-tr"></textarea>
+                <label>Özellikler (TR) — her satır bir özellik</label><textarea id="cSpecs-tr"></textarea>
+            </div>
+            <div class="lang-panel" id="cLang-en">
+                <label>Badge (EN)</label><input id="cBadge-en">
+                <label>Name (EN)</label><input id="cName-en">
+                <label>Description (EN)</label><textarea id="cDesc-en"></textarea>
+                <label>Specs (EN)</label><textarea id="cSpecs-en"></textarea>
+            </div>
+            <div class="lang-panel" id="cLang-ru">
+                <label>Badge (RU)</label><input id="cBadge-ru">
+                <label>Название (RU)</label><input id="cName-ru">
+                <label>Описание (RU)</label><textarea id="cDesc-ru"></textarea>
+                <label>Specs (RU)</label><textarea id="cSpecs-ru"></textarea>
+            </div>
+            <div class="lang-panel" id="cLang-ar">
+                <label>Badge (AR)</label><input id="cBadge-ar">
+                <label>الاسم (AR)</label><input id="cName-ar">
+                <label>الوصف (AR)</label><textarea id="cDesc-ar"></textarea>
+                <label>Specs (AR)</label><textarea id="cSpecs-ar"></textarea>
+            </div>
+            <div class="modal-actions">
+                <button class="cancel" onclick="closeClimateModal()">İptal</button>
+                <button class="save" onclick="saveClimate()">Kaydet</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="siteData.js"></script>
+    <script>
+        // ─── ŞİFRE (admin123) ───
+        const PASS = 'admin123';
+        let editingIdx = -1;
+
+        function tryLogin() {
+            if (document.getElementById('passInput').value === PASS) {
+                document.getElementById('loginScreen').style.display = 'none';
+                document.getElementById('adminPanel').style.display = 'block';
+                sessionStorage.setItem('okAdmin', '1');
+                refreshTables();
+            } else {
+                document.getElementById('loginError').style.display = 'block';
+            }
+        }
+        document.getElementById('passInput').addEventListener('keydown', e => { if (e.key === 'Enter') tryLogin(); });
+
+        if (sessionStorage.getItem('okAdmin') === '1') {
+            document.getElementById('loginScreen').style.display = 'none';
+            document.getElementById('adminPanel').style.display = 'block';
+            refreshTables();
+        }
+
+        function logout() { sessionStorage.removeItem('okAdmin'); location.reload(); }
+
+        // ─── TAB SİSTEMİ ───
+        function switchTab(tab) {
+            document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            document.getElementById('tab-' + tab).classList.add('active');
+            event.target.classList.add('active');
+        }
+
+        // ─── ÜRÜN LİSTESİ ───
+        function getProducts() { const c = localStorage.getItem('okProducts'); return c ? JSON.parse(c) : [...SITE.products]; }
+        function saveProducts(list) { localStorage.setItem('okProducts', JSON.stringify(list)); refreshTables(); }
+        function getClimates() { const c = localStorage.getItem('okClimate'); return c ? JSON.parse(c) : [...SITE.climate]; }
+        function saveClimates(list) { localStorage.setItem('okClimate', JSON.stringify(list)); refreshTables(); }
+
+        function getImgSrc(img) {
+            if (!img) return '';
+            if (img.startsWith('data:')) return img;
+            return img;
+        }
+
+        function refreshTables() {
+            const prods = getProducts();
+            document.getElementById('productsTable').innerHTML = prods.map((p, i) =>
+                `<tr><td><img class="table-thumb" src="${getImgSrc(p.image)}" onerror="this.style.display='none'"></td><td>${p.id}</td><td>${p.name}</td><td>${p.price}</td><td>
+            <button class="btn-sm btn-edit" onclick="editProduct(${i})">Düzenle</button>
+            <button class="btn-sm btn-del" onclick="deleteProduct(${i})">Sil</button>
+        </td></tr>`).join('');
+
+            const clims = getClimates();
+            document.getElementById('climateTable').innerHTML = clims.map((c, i) =>
+                `<tr><td><img class="table-thumb" src="${getImgSrc(c.image)}" onerror="this.style.display='none'"></td><td>${c.id}</td><td>${c.name.tr}</td><td>${c.sectors}</td><td>${c.price}</td><td>
+            <button class="btn-sm btn-edit" onclick="editClimate(${i})">Düzenle</button>
+            <button class="btn-sm btn-del" onclick="deleteClimate(${i})">Sil</button>
+        </td></tr>`).join('');
+        }
+
+        // ─── ÜRÜN MODAL ───
+        function switchPLang(l) {
+            document.querySelectorAll('#productModal .lang-panel').forEach(p => p.classList.remove('active'));
+            document.querySelectorAll('#productModal .lang-tab').forEach(b => b.classList.remove('active'));
+            document.getElementById('pLang-' + l).classList.add('active');
+            event.target.classList.add('active');
+        }
+
+        function openProductModal(idx) {
+            editingIdx = idx !== undefined ? idx : -1;
+            document.getElementById('productModalTitle').textContent = editingIdx >= 0 ? 'Ürün Düzenle' : 'Yeni Ürün Ekle';
+            if (editingIdx >= 0) {
+                const p = getProducts()[editingIdx];
+                document.getElementById('pId').value = p.id;
+                document.getElementById('pName').value = p.name;
+                document.getElementById('pImage').value = p.image;
+                const prev = document.getElementById('pImagePreview');
+                if (p.image) { prev.src = getImgSrc(p.image); prev.classList.add('visible'); }
+                else { prev.classList.remove('visible'); }
+                document.getElementById('pPrice').value = p.price;
+                ['tr', 'en', 'ru', 'ar'].forEach(l => {
+                    document.getElementById('pBadge-' + l).value = p.badge[l] || '';
+                    document.getElementById('pTagline-' + l).value = p.tagline[l] || '';
+                    document.getElementById('pSpecs-' + l).value = (p.specs[l] || []).join('\n');
+                });
+            } else {
+                ['pId', 'pName', 'pImage', 'pPrice'].forEach(id => document.getElementById(id).value = '');
+                document.getElementById('pImagePreview').classList.remove('visible');
+                ['tr', 'en', 'ru', 'ar'].forEach(l => {
+                    document.getElementById('pBadge-' + l).value = '';
+                    document.getElementById('pTagline-' + l).value = '';
+                    document.getElementById('pSpecs-' + l).value = '';
+                });
+            }
+            document.getElementById('productModal').classList.add('active');
+        }
+        function closeProductModal() { document.getElementById('productModal').classList.remove('active'); }
+        function editProduct(i) { openProductModal(i); }
+        function deleteProduct(i) { if (confirm('Bu ürünü silmek istediğinize emin misiniz?')) { const p = getProducts(); p.splice(i, 1); saveProducts(p); } }
+
+        function saveProduct() {
+            const p = {
+                id: document.getElementById('pId').value,
+                name: document.getElementById('pName').value,
+                image: document.getElementById('pImage').value,
+                price: document.getElementById('pPrice').value,
+                badge: {}, tagline: {}, specs: {},
+                specLabels: ['capacity', 'channel', 'pressure', 'body', 'connection', 'software'],
+                type: 'detail'
+            };
+            ['tr', 'en', 'ru', 'ar'].forEach(l => {
+                p.badge[l] = document.getElementById('pBadge-' + l).value;
+                p.tagline[l] = document.getElementById('pTagline-' + l).value;
+                p.specs[l] = document.getElementById('pSpecs-' + l).value.split('\n').filter(s => s.trim());
+            });
+            const list = getProducts();
+            if (editingIdx >= 0) list[editingIdx] = p; else list.push(p);
+            saveProducts(list);
+            closeProductModal();
+        }
+
+        // ─── İKLİM MODAL ───
+        function switchCLang(l) {
+            document.querySelectorAll('#climateModal .lang-panel').forEach(p => p.classList.remove('active'));
+            document.querySelectorAll('#climateModal .lang-tab').forEach(b => b.classList.remove('active'));
+            document.getElementById('cLang-' + l).classList.add('active');
+            event.target.classList.add('active');
+        }
+
+        function openClimateModal(idx) {
+            editingIdx = idx !== undefined ? idx : -1;
+            document.getElementById('climateModalTitle').textContent = editingIdx >= 0 ? 'İklim Sistemi Düzenle' : 'Yeni İklim Sistemi';
+            if (editingIdx >= 0) {
+                const c = getClimates()[editingIdx];
+                document.getElementById('cId').value = c.id;
+                document.getElementById('cSectors').value = c.sectors;
+                document.getElementById('cImage').value = c.image;
+                document.getElementById('cPrice').value = c.price;
+                const cprev = document.getElementById('cImagePreview');
+                if (c.image) { cprev.src = getImgSrc(c.image); cprev.classList.add('visible'); }
+                else { cprev.classList.remove('visible'); }
+                ['tr', 'en', 'ru', 'ar'].forEach(l => {
+                    document.getElementById('cBadge-' + l).value = c.badge[l] || '';
+                    document.getElementById('cName-' + l).value = c.name[l] || '';
+                    document.getElementById('cDesc-' + l).value = c.desc[l] || '';
+                    document.getElementById('cSpecs-' + l).value = (c.specs[l] || []).join('\n');
+                });
+            } else {
+                ['cId', 'cSectors', 'cImage', 'cPrice'].forEach(id => document.getElementById(id).value = '');
+                document.getElementById('cImagePreview').classList.remove('visible');
+                ['tr', 'en', 'ru', 'ar'].forEach(l => {
+                    document.getElementById('cBadge-' + l).value = '';
+                    document.getElementById('cName-' + l).value = '';
+                    document.getElementById('cDesc-' + l).value = '';
+                    document.getElementById('cSpecs-' + l).value = '';
+                });
+            }
+            document.getElementById('climateModal').classList.add('active');
+        }
+        function closeClimateModal() { document.getElementById('climateModal').classList.remove('active'); }
+        function editClimate(i) { openClimateModal(i); }
+        function deleteClimate(i) { if (confirm('Bu sistemi silmek istediğinize emin misiniz?')) { const c = getClimates(); c.splice(i, 1); saveClimates(c); } }
+
+        function saveClimate() {
+            const c = {
+                id: document.getElementById('cId').value,
+                sectors: +document.getElementById('cSectors').value,
+                image: document.getElementById('cImage').value,
+                price: document.getElementById('cPrice').value,
+                badge: {}, name: {}, desc: {}, specs: {},
+                featured: false, flagship: false
+            };
+            ['tr', 'en', 'ru', 'ar'].forEach(l => {
+                c.badge[l] = document.getElementById('cBadge-' + l).value;
+                c.name[l] = document.getElementById('cName-' + l).value;
+                c.desc[l] = document.getElementById('cDesc-' + l).value;
+                c.specs[l] = document.getElementById('cSpecs-' + l).value.split('\n').filter(s => s.trim());
+            });
+            const list = getClimates();
+            if (editingIdx >= 0) list[editingIdx] = c; else list.push(c);
+            saveClimates(list);
+            closeClimateModal();
+        }
+
+        // ─── RESİM YÜKLEME ───
+        function handleProductImage(input) {
+            if (!input.files[0]) return;
+            const reader = new FileReader();
+            reader.onload = e => {
+                document.getElementById('pImage').value = e.target.result;
+                const prev = document.getElementById('pImagePreview');
+                prev.src = e.target.result;
+                prev.classList.add('visible');
+            };
+            reader.readAsDataURL(input.files[0]);
+        }
+
+        function handleClimateImage(input) {
+            if (!input.files[0]) return;
+            const reader = new FileReader();
+            reader.onload = e => {
+                document.getElementById('cImage').value = e.target.result;
+                const prev = document.getElementById('cImagePreview');
+                prev.src = e.target.result;
+                prev.classList.add('visible');
+            };
+            reader.readAsDataURL(input.files[0]);
+        }
+
+        // Sürükle-bırak
+        ['pImageDrop', 'cImageDrop'].forEach(id => {
+            const el = document.getElementById(id);
+            if (!el) return;
+            el.addEventListener('dragover', e => { e.preventDefault(); el.classList.add('dragover'); });
+            el.addEventListener('dragleave', () => el.classList.remove('dragover'));
+            el.addEventListener('drop', e => {
+                e.preventDefault(); el.classList.remove('dragover');
+                const file = e.dataTransfer.files[0];
+                if (!file || !file.type.startsWith('image/')) return;
+                const fileInput = el.querySelector('input[type=file]');
+                const dt = new DataTransfer(); dt.items.add(file); fileInput.files = dt.files;
+                fileInput.dispatchEvent(new Event('change'));
+            });
+        });
+
+        // ─── DOSYA EXPORT ───
+        function exportSiteData() {
+            const products = getProducts();
+            const climates = getClimates();
+
+            // SITE objesini klonla ve güncel ürün/fiyat bilgileriyle güncelle
+            const updatedSite = JSON.parse(JSON.stringify(SITE));
+            updatedSite.products = products;
+            updatedSite.climate = climates;
+
+            // siteData.js dosyası oluştur
+            const content = `/* ═══════════════════════════════════════════
+   OK OTOMASYON — Site İçerik Verisi
+   Güncelleme: ${new Date().toLocaleString('tr-TR')}
+   ═══════════════════════════════════════════ */
+
+const SITE = ${JSON.stringify(updatedSite, null, 4)};
+`;
+            const blob = new Blob([content], { type: 'application/javascript;charset=utf-8' });
+            const a = document.createElement('a');
+            a.href = URL.createObjectURL(blob);
+            a.download = 'siteData.js';
+            a.click();
+            alert('siteData.js indirildi. Dosyayi klasore koyun ve Netlify ye yukleyin.');
+        }
+
+        // ─── TRAFİK ANALİZ ───
+        function getVisits() {
+            try { return JSON.parse(localStorage.getItem('okVisitors') || '[]'); } catch { return []; }
+        }
+
+        function refreshTraffic() {
+            const visits = getVisits();
+            const now = Date.now();
+            const dayMs = 86400000;
+            const today = visits.filter(v => now - v.ts < dayMs);
+            const week = visits.filter(v => now - v.ts < dayMs * 7);
+            const month = visits.filter(v => now - v.ts < dayMs * 30);
+
+            // İstatistik kartları
+            document.getElementById('trafficStats').innerHTML = `
+                <div class="stat-card"><div class="stat-num">${visits.length}</div><div class="stat-label">Toplam Ziyaret</div></div>
+                <div class="stat-card"><div class="stat-num">${today.length}</div><div class="stat-label">Bugün</div></div>
+                <div class="stat-card"><div class="stat-num">${week.length}</div><div class="stat-label">Bu Hafta</div></div>
+                <div class="stat-card"><div class="stat-num">${month.length}</div><div class="stat-label">Bu Ay</div></div>
+            `;
+
+            // Dağılım grafikleri
+            function makeChart(data, colorClass) {
+                const counts = {};
+                data.forEach(v => { counts[v] = (counts[v] || 0) + 1; });
+                const sorted = Object.entries(counts).sort((a, b) => b[1] - a[1]);
+                const max = sorted[0] ? sorted[0][1] : 1;
+                return sorted.map(([label, count]) =>
+                    `<div class="bar-row">
+                        <span class="bar-label">${label}</span>
+                        <div class="bar-track"><div class="bar-fill ${colorClass}" style="width:${(count / max * 100)}%">${count}</div></div>
+                    </div>`
+                ).join('');
+            }
+
+            document.getElementById('trafficCharts').innerHTML = `
+                <div class="chart-box"><h4>� Ülke Dağılımı</h4>${makeChart(visits.map(v => v.country || 'Bilinmiyor'), 'green')}</div>
+                <div class="chart-box"><h4>🏙️ Şehir Dağılımı</h4>${makeChart(visits.map(v => v.city || 'Bilinmiyor'), 'blue')}</div>
+                <div class="chart-box"><h4>�📱 Cihaz Dağılımı</h4>${makeChart(visits.map(v => v.device), 'green')}</div>
+                <div class="chart-box"><h4>🌐 Tarayıcı Dağılımı</h4>${makeChart(visits.map(v => v.browser), 'blue')}</div>
+                <div class="chart-box"><h4>📡 Trafik Kaynağı</h4>${makeChart(visits.map(v => v.source), 'purple')}</div>
+                <div class="chart-box"><h4>💻 İşletim Sistemi</h4>${makeChart(visits.map(v => v.os), 'orange')}</div>
+            `;
+
+            // Son ziyaretler tablosu
+            const recent = visits.slice(-50).reverse();
+            document.getElementById('trafficTable').innerHTML = recent.map(v =>
+                `<tr><td>${v.date}</td><td style="font-family:monospace;font-size:0.72rem">${v.ip || '-'}</td><td>${v.country || '-'}</td><td>${v.city || '-'}</td><td>${v.device}</td><td>${v.browser}</td><td>${v.os}</td><td>${v.source}</td><td>${v.screen}</td></tr>`
+            ).join('') || '<tr><td colspan="9" style="text-align:center;color:#64748b">Henüz ziyaretçi verisi yok</td></tr>';
+        }
+
+        function exportTraffic() {
+            const visits = getVisits();
+            if (!visits.length) return alert('Henüz veri yok');
+            const header = 'Tarih,IP,Ülke,Şehir,Cihaz,Tarayıcı,İşletim Sistemi,Kaynak,Ekran,Sayfa Dili,ISP\n';
+            const rows = visits.map(v => `"${v.date}","${v.ip || ''}","${v.country || ''}","${v.city || ''}","${v.device}","${v.browser}","${v.os}","${v.source}","${v.screen}","${v.siteLang}","${v.isp || ''}"`).join('\n');
+            const blob = new Blob(['\ufeff' + header + rows], { type: 'text/csv;charset=utf-8;' });
+            const a = document.createElement('a');
+            a.href = URL.createObjectURL(blob);
+            a.download = 'ok_trafik_' + new Date().toISOString().slice(0, 10) + '.csv';
+            a.click();
+        }
+
+        function clearTraffic() {
+            if (confirm('Tüm ziyaretçi verilerini silmek istediğinize emin misiniz?')) {
+                localStorage.removeItem('okVisitors');
+                refreshTraffic();
+            }
+        }
+
+        // switchTab güncelle — trafik sekmesi açıldığında yenile
+        const origSwitchTab = switchTab;
+        switchTab = function (tab) {
+            document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            document.getElementById('tab-' + tab).classList.add('active');
+            event.target.classList.add('active');
+            if (tab === 'traffic') refreshTraffic();
+        };
+    </script>
+</body>
+
+</html>
