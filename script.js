@@ -267,7 +267,7 @@ function renderSensors(L) {
         `<button class="sensor-filter-btn ${activeSensorFilter === c.key ? 'active' : ''}" onclick="filterSensors('${c.key}')">${c[L]}</button>`
     ).join('');
 
-    const items = SITE.sensors.filter(s => activeSensorFilter === 'all' || s.category === activeSensorFilter);
+    const items = getSensorsList().filter(s => activeSensorFilter === 'all' || s.category === activeSensorFilter);
 
     document.getElementById('sensorsGrid').innerHTML = items.map((s, i) => {
         const name = typeof s.name === 'string' ? s.name : (s.name[L] || s.name.tr || '');
@@ -407,12 +407,18 @@ function renderFooter(L) {
         <div class="footer-bottom">${f.copyright}</div>`;
 }
 
-// ─── ÜRÜN LİSTELERİ ───
+// ─── ÜRÜN LİSTELERİ (localStorage öncelikli — admin değişikliklerini yansıtır) ───
 function getProductsList() {
-    return SITE.products;
+    const saved = localStorage.getItem('okProducts');
+    return saved ? JSON.parse(saved) : SITE.products;
 }
 function getClimateList() {
-    return SITE.climate;
+    const saved = localStorage.getItem('okClimate');
+    return saved ? JSON.parse(saved) : SITE.climate;
+}
+function getSensorsList() {
+    const saved = localStorage.getItem('okSensors');
+    return saved ? JSON.parse(saved) : SITE.sensors;
 }
 
 // ═══════════════════════════════════════════
