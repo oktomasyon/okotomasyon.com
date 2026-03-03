@@ -7,10 +7,10 @@ const SITE = {
 
     // ─── NAVİGASYON ───
     nav: {
-        tr: { about: 'Hakkımızda', products: 'Ürünler', agrinexus: 'AgriNexus', climate: 'İklimlendirme', contact: 'İletişim', cta: 'Teklif Al' },
-        en: { about: 'About Us', products: 'Products', agrinexus: 'AgriNexus', climate: 'Climate Control', contact: 'Contact', cta: 'Get Quote' },
-        ru: { about: 'О нас', products: 'Продукция', agrinexus: 'AgriNexus', climate: 'Климат-контроль', contact: 'Контакты', cta: 'Запрос' },
-        ar: { about: 'من نحن', products: 'المنتجات', agrinexus: 'AgriNexus', climate: 'التحكم بالمناخ', contact: 'اتصل بنا', cta: 'طلب عرض' },
+        tr: { about: 'Hakkımızda', products: 'Ürünler', sensors: 'Sensör & Ölçüm', agrinexus: 'AgriNexus', climate: 'İklimlendirme', contact: 'İletişim', cta: 'Teklif Al' },
+        en: { about: 'About Us', products: 'Products', sensors: 'Sensors & Measurement', agrinexus: 'AgriNexus', climate: 'Climate Control', contact: 'Contact', cta: 'Get Quote' },
+        ru: { about: 'О нас', products: 'Продукция', sensors: 'Датчики и измерение', agrinexus: 'AgriNexus', climate: 'Климат-контроль', contact: 'Контакты', cta: 'Запрос' },
+        ar: { about: 'من نحن', products: 'المنتجات', sensors: 'أجهزة الاستشعار', agrinexus: 'AgriNexus', climate: 'التحكم بالمناخ', contact: 'اتصل بنا', cta: 'طلب عرض' },
     },
 
     // ─── HERO ───
@@ -200,6 +200,89 @@ const SITE = {
             name: { tr: '6 Sektörlü Sistem', en: '6 Zone System', ru: 'Система 6 зон', ar: 'نظام 6 مناطق' },
             desc: { tr: 'Maksimum kapasite — altı bağımsız iklim bölgesinin tam kontrolü. Endüstriyel seviye kontrol kabini, geniş ekran HMI, tam sensör paketi. En büyük sera komplekslerinde bile kusursuz iklim yönetimi.', en: 'Maximum capacity — full control of six independent climate zones. Industrial-grade control cabinet, large screen HMI, complete sensor package. Flawless climate management even in the largest greenhouse complexes.', ru: 'Максимальная мощность — полный контроль шести независимых зон. Промышленный шкаф, большой HMI экран, полный пакет датчиков. Безупречное управление климатом даже в крупнейших комплексах.', ar: 'أقصى سعة — تحكم كامل بست مناطق مناخ مستقلة. خزانة تحكم صناعية وشاشة HMI كبيرة وحزمة أجهزة استشعار كاملة.' },
             specs: { tr: ['6 bağımsız iklim sektörü', 'Flexem HMI dokunmatik panel', 'Endüstriyel kontrol kabini', '6 adet sera sensör seti + meteoroloji'], en: ['6 independent climate zones', 'Flexem HMI touchscreen panel', 'Industrial control cabinet', '6 sensor sets + weather station'], ru: ['6 независимых климатических зон', 'Сенсорная панель Flexem HMI', 'Промышленный шкаф управления', '6 комплектов датчиков + метеостанция'], ar: ['6 مناطق مناخ مستقلة', 'لوحة Flexem HMI', 'خزانة تحكم صناعية', '6 مجموعات استشعار + محطة أرصاد'] }
+        },
+    ],
+
+    // ─── SENSÖR & ÖLÇÜM (SANELSİS) ───
+    sensorsSection: {
+        tr: { eyebrow: 'Sensör & Ölçüm Cihazları', h2: 'EC / pH\n<span class="text-accent">Ölçüm Sistemleri</span>', desc: 'Endüstriyel ve tarımsal uygulamalar için yüksek hassasiyetli EC ve pH ölçüm cihazları, transmitterlar, problar ve kalibrasyon sıvıları. SANELSİS iş birliğiyle.', inquiryBtn: 'Bilgi Al →', addCart: '🛒 Sepete Ekle', partner: 'SANELSİS İş Birliği' },
+        en: { eyebrow: 'Sensors & Measurement', h2: 'EC / pH\n<span class="text-accent">Measurement Systems</span>', desc: 'High-precision EC and pH measurement devices, transmitters, probes and calibration solutions for industrial and agricultural applications. In partnership with SANELSİS.', inquiryBtn: 'Inquire →', addCart: '🛒 Add to Cart', partner: 'SANELSİS Partnership' },
+        ru: { eyebrow: 'Датчики и измерение', h2: 'EC / pH\n<span class="text-accent">Системы измерения</span>', desc: 'Высокоточные приборы EC и pH, трансмиттеры, датчики и калибровочные растворы для промышленных и сельскохозяйственных применений. В партнёрстве с SANELSİS.', inquiryBtn: 'Запрос →', addCart: '🛒 В корзину', partner: 'Партнёрство SANELSİS' },
+        ar: { eyebrow: 'أجهزة الاستشعار والقياس', h2: 'EC / pH\n<span class="text-accent">أنظمة القياس</span>', desc: 'أجهزة قياس EC وpH عالية الدقة ومحولات وأجهزة استشعار ومحاليل معايرة للتطبيقات الصناعية والزراعية. بالشراكة مع SANELSİS.', inquiryBtn: '← استفسار', addCart: '🛒 أضف للسلة', partner: 'شراكة SANELSİS' },
+    },
+
+    sensors: [
+        {
+            id: 'sulama-gubre-makinesi', name: { tr: 'Sulama Gübreleme Makinesi', en: 'Fertigation Machine', ru: 'Машина фертигации', ar: 'آلة التسميد بالري' }, image: 'minimix.png', price: '₺108.926', badge: { tr: 'Makine', en: 'Machine', ru: 'Машина', ar: 'آلة' },
+            category: 'machine',
+            tagline: { tr: 'Hassas sulama ve gübreleme kontrolü için tasarlanmış otomasyon ünitesidir.', en: 'Automation unit designed for precise irrigation and fertigation control.', ru: 'Блок автоматизации, разработанный для точного управления поливом и фертигацией.', ar: 'وحدة أتمتة مصممة للتحكم الدقيق في الري والتسميد.' },
+            specs: { tr: ['Hassas sulama kontrolü', 'Hassas gübreleme kontrolü', 'Otomasyon ünitesi', 'Dokunmatik HMI ekran', 'Kompakt pano tasarımı', 'Kolay entegrasyon'], en: ['Precise irrigation control', 'Precise fertigation control', 'Automation unit', 'Touchscreen HMI display', 'Compact panel design', 'Easy integration'], ru: ['Точный контроль полива', 'Точный контроль подкормки', 'Блок автоматизации', 'Сенсорный HMI', 'Компактный дизайн', 'Лёгкая интеграция'], ar: ['تحكم دقيق في الري', 'تحكم دقيق في التسميد', 'وحدة أتمتة', 'شاشة HMI لمسية', 'تصميم مدمج', 'تكامل سهل'] }
+        },
+        {
+            id: 'sulama-gubre-kontrol', name: { tr: 'Sulama Gübreleme Kontrol Ünitesi', en: 'Fertigation Control Unit', ru: 'Блок управления фертигацией', ar: 'وحدة تحكم التسميد بالري' }, image: 'sensor-kontrol-pano.png', price: '₺43.570', badge: { tr: 'Kontrol Panosu', en: 'Control Panel', ru: 'Панель управления', ar: 'لوحة تحكم' },
+            category: 'machine',
+            tagline: { tr: 'Hassas sulama ve gübreleme kontrolü için tasarlanmış otomasyon ünitesidir.', en: 'Automation unit designed for precise irrigation and fertigation control.', ru: 'Блок автоматизации, разработанный для точного управления поливом и фертигацией.', ar: 'وحدة أتمتة مصممة للتحكم الدقيق في الري والتسميد.' },
+            specs: { tr: ['Hassas sulama kontrolü', 'Hassas gübreleme kontrolü', 'Otomasyon ünitesi', 'Dokunmatik HMI ekran', 'Kompakt pano tasarımı', 'Kolay entegrasyon'], en: ['Precise irrigation control', 'Precise fertigation control', 'Automation unit', 'Touchscreen HMI display', 'Compact panel design', 'Easy integration'], ru: ['Точный контроль полива', 'Точный контроль подкормки', 'Блок автоматизации', 'Сенсорный HMI', 'Компактный дизайн', 'Лёгкая интеграция'], ar: ['تحكم دقيق في الري', 'تحكم دقيق في التسميد', 'وحدة أتمتة', 'شاشة HMI لمسية', 'تصميم مدمج', 'تكامل سهل'] }
+        },
+        {
+            id: 'ec-transmitter-420ma', name: 'EC Transmitter (4-20mA)', image: 'sensor-ec-transmitter.png', price: '', badge: { tr: 'Endüstriyel', en: 'Industrial', ru: 'Промышленный', ar: 'صناعي' },
+            category: 'transmitter',
+            tagline: { tr: 'İletkenlik (EC) Transmitteri — Endüstriyel ve Tarımsal', en: 'Conductivity (EC) Transmitter — Industrial & Agricultural', ru: 'Трансмиттер EC — Промышленный и Сельскохозяйственный', ar: 'جهاز إرسال EC — صناعي وزراعي' },
+            specs: { tr: ['Besleme: 12 - 24 VDC', 'Ölçüm: 0.0 - 10.00 mS/cm', 'Çözünürlük: 0.01 mS/cm', 'Çıkış: 4-20mA analog', 'Otomatik sıcaklık kompanzasyonu', 'IP65 koruma sınıfı'], en: ['Power: 12 - 24 VDC', 'Range: 0.0 - 10.00 mS/cm', 'Resolution: 0.01 mS/cm', 'Output: 4-20mA analog', 'Auto temperature compensation', 'IP65 protection'], ru: ['Питание: 12 - 24 VDC', 'Диапазон: 0.0 - 10.00 мС/см', 'Разрешение: 0.01 мС/см', 'Выход: 4-20мА аналоговый', 'Авто температурная компенсация', 'Защита IP65'], ar: ['التغذية: 12 - 24 VDC', 'النطاق: 0.0 - 10.00 mS/cm', 'الدقة: 0.01 mS/cm', 'الخرج: 4-20mA', 'تعويض حرارة تلقائي', 'حماية IP65'] }
+        },
+        {
+            id: 'ph-transmitter-420ma', name: 'pH Transmitter (4-20mA)', image: 'sensor-ph-transmitter.png', price: '', badge: { tr: 'Endüstriyel', en: 'Industrial', ru: 'Промышленный', ar: 'صناعي' },
+            category: 'transmitter',
+            tagline: { tr: 'pH Transmitteri — Endüstriyel ve Tarımsal', en: 'pH Transmitter — Industrial & Agricultural', ru: 'Трансмиттер pH — Промышленный и Сельскохозяйственный', ar: 'جهاز إرسال pH — صناعي وزراعي' },
+            specs: { tr: ['Besleme: 12 - 24 VDC', 'Ölçüm: 0.00 - 14.00 pH', 'Çözünürlük: 0.01 pH', 'Çıkış: 4-20mA analog', 'Otomatik sıcaklık kompanzasyonu', 'IP65 koruma sınıfı'], en: ['Power: 12 - 24 VDC', 'Range: 0.00 - 14.00 pH', 'Resolution: 0.01 pH', 'Output: 4-20mA analog', 'Auto temperature compensation', 'IP65 protection'], ru: ['Питание: 12 - 24 VDC', 'Диапазон: 0.00 - 14.00 pH', 'Разрешение: 0.01 pH', 'Выход: 4-20мА аналоговый', 'Авто температурная компенсация', 'Защита IP65'], ar: ['التغذية: 12 - 24 VDC', 'النطاق: 0.00 - 14.00 pH', 'الدقة: 0.01 pH', 'الخرج: 4-20mA', 'تعويض حرارة تلقائي', 'حماية IP65'] }
+        },
+        {
+            id: 'ec-metre-rs485', name: 'EC Metre (RS485 Modbus)', image: 'sensor-ec-metre.png', price: '', badge: { tr: 'Dijital', en: 'Digital', ru: 'Цифровой', ar: 'رقمي' },
+            category: 'metre',
+            tagline: { tr: 'EC Metre Transmitter — RS485 Modbus RTU', en: 'EC Meter Transmitter — RS485 Modbus RTU', ru: 'EC Метр Трансмиттер — RS485 Modbus RTU', ar: 'جهاز EC — RS485 Modbus RTU' },
+            specs: { tr: ['Ölçüm: 0 - 10 mS/cm', 'RS485 Modbus RTU haberleşme', 'Yüksek hassasiyetli sensör', 'PLC / SCADA entegrasyonu', 'Epoksi gövde, grafit elektrod', 'Tarım ve endüstri uyumlu'], en: ['Range: 0 - 10 mS/cm', 'RS485 Modbus RTU communication', 'High-precision sensor', 'PLC / SCADA integration', 'Epoxy body, graphite electrode', 'Agricultural & industrial'], ru: ['Диапазон: 0 - 10 мС/см', 'RS485 Modbus RTU связь', 'Высокоточный датчик', 'Интеграция с ПЛК / SCADA', 'Эпоксидный корпус, графитовый электрод', 'Сельское хозяйство и промышленность'], ar: ['النطاق: 0 - 10 mS/cm', 'اتصال RS485 Modbus RTU', 'مستشعر عالي الدقة', 'تكامل PLC / SCADA', 'جسم إيبوكسي، قطب جرافيت', 'زراعي وصناعي'] }
+        },
+        {
+            id: 'ph-metre-rs485', name: 'pH Metre (RS485 Modbus)', image: 'sensor-ph-metre.png', price: '', badge: { tr: 'Dijital', en: 'Digital', ru: 'Цифровой', ar: 'رقمي' },
+            category: 'metre',
+            tagline: { tr: 'pH Metre Transmitter — RS485 Modbus RTU', en: 'pH Meter Transmitter — RS485 Modbus RTU', ru: 'pH Метр Трансмиттер — RS485 Modbus RTU', ar: 'جهاز pH — RS485 Modbus RTU' },
+            specs: { tr: ['Ölçüm: 0.00 - 14.00 pH', 'RS485 Modbus RTU haberleşme', 'Yüksek doğruluklu ölçüm', 'PLC / SCADA entegrasyonu', 'Otomasyon sistemlerine uyumlu', 'Tarım ve endüstri uyumlu'], en: ['Range: 0.00 - 14.00 pH', 'RS485 Modbus RTU communication', 'High-accuracy measurement', 'PLC / SCADA integration', 'Compatible with automation systems', 'Agricultural & industrial'], ru: ['Диапазон: 0.00 - 14.00 pH', 'RS485 Modbus RTU связь', 'Высокоточное измерение', 'Интеграция с ПЛК / SCADA', 'Совместимость с системами автоматизации', 'Сельское хозяйство и промышленность'], ar: ['النطاق: 0.00 - 14.00 pH', 'اتصال RS485 Modbus RTU', 'قياس عالي الدقة', 'تكامل PLC / SCADA', 'متوافق مع أنظمة الأتمتة', 'زراعي وصناعي'] }
+        },
+        {
+            id: 'ec-probu', name: { tr: 'EC Probu', en: 'EC Probe', ru: 'EC Датчик', ar: 'مسبار EC' }, image: 'sensor-ec-probu.png', price: '', badge: { tr: 'Yedek Parça', en: 'Spare Part', ru: 'Запчасть', ar: 'قطعة غيار' },
+            category: 'probe',
+            tagline: { tr: 'Tarımsal EC Ölçüm Probu', en: 'Agricultural EC Measurement Probe', ru: 'Сельскохозяйственный EC датчик', ar: 'مسبار EC الزراعي' },
+            specs: { tr: ['Epoksi gövde', 'Grafit elektrod', 'Hızlı ve güvenilir ölçüm', 'Tüm EC cihazlarıyla uyumlu', 'Tarım uygulamalarına özel', 'Uzun ömürlü yapı'], en: ['Epoxy body', 'Graphite electrode', 'Fast & reliable measurement', 'Compatible with all EC devices', 'Designed for agriculture', 'Long-lasting build'], ru: ['Эпоксидный корпус', 'Графитовый электрод', 'Быстрое и надёжное измерение', 'Совместим со всеми EC приборами', 'Для сельского хозяйства', 'Долговечная конструкция'], ar: ['جسم إيبوكسي', 'قطب جرافيت', 'قياس سريع وموثوق', 'متوافق مع جميع أجهزة EC', 'مصمم للزراعة', 'بناء طويل العمر'] }
+        },
+        {
+            id: 'ph-probu', name: { tr: 'pH Probu', en: 'pH Probe', ru: 'pH Датчик', ar: 'مسبار pH' }, image: 'sensor-ph-probu.png', price: '', badge: { tr: 'Yedek Parça', en: 'Spare Part', ru: 'Запчасть', ar: 'قطعة غيار' },
+            category: 'probe',
+            tagline: { tr: 'pH Ölçüm Probu — Ag-AgCl Referans', en: 'pH Measurement Probe — Ag-AgCl Reference', ru: 'pH Датчик — Ag-AgCl Референс', ar: 'مسبار pH — مرجع Ag-AgCl' },
+            specs: { tr: ['Referans: Ag-AgCl', 'Gövde: Epoksi', 'Ölçüm: 0-13 pH', 'GX2 Membran', 'BNC bağlantı', 'Yüksek hassasiyet'], en: ['Reference: Ag-AgCl', 'Body: Epoxy', 'Range: 0-13 pH', 'GX2 Membrane', 'BNC connection', 'High precision'], ru: ['Референс: Ag-AgCl', 'Корпус: Эпоксид', 'Диапазон: 0-13 pH', 'Мембрана GX2', 'Разъём BNC', 'Высокая точность'], ar: ['المرجع: Ag-AgCl', 'الجسم: إيبوكسي', 'النطاق: 0-13 pH', 'غشاء GX2', 'توصيل BNC', 'دقة عالية'] }
+        },
+        {
+            id: 'ec-metre-taski', name: { tr: 'Hat Üstü EC Metre', en: 'Inline EC Meter', ru: 'Проточный EC Метр', ar: 'جهاز EC خطي' }, image: 'sensor-ec-metre-taski.png', price: '', badge: { tr: 'Tank Tipi', en: 'Tank Type', ru: 'Проточный', ar: 'خطي' },
+            category: 'metre',
+            tagline: { tr: 'Hat Üstü / Tank Tipi EC TDS Metre & Sıcaklık Ölçer', en: 'Inline / Tank Type EC TDS Meter & Temperature', ru: 'Проточный EC TDS Метр и Термометр', ar: 'جهاز EC TDS خطي ومقياس حرارة' },
+            specs: { tr: ['220V ile çalışır', 'Boruya bağlanarak ölçüm', 'EC + TDS + Sıcaklık', 'Dijital ekranlı gösterge', 'Hat üstü veya tank tipi', 'Sera ve endüstri uyumlu'], en: ['220V powered', 'Inline pipe measurement', 'EC + TDS + Temperature', 'Digital display', 'Inline or tank type', 'Greenhouse & industrial'], ru: ['Питание 220В', 'Проточное измерение', 'EC + TDS + Температура', 'Цифровой дисплей', 'Проточный или баковый', 'Теплица и промышленность'], ar: ['تغذية 220V', 'قياس خطي', 'EC + TDS + حرارة', 'شاشة رقمية', 'خطي أو خزان', 'دفيئة وصناعة'] }
+        },
+        {
+            id: 'ph-metre-taski', name: { tr: 'Hat Üstü pH Metre', en: 'Inline pH Meter', ru: 'Проточный pH Метр', ar: 'جهاز pH خطي' }, image: 'sensor-ph-metre-taski.png', price: '', badge: { tr: 'Tank Tipi', en: 'Tank Type', ru: 'Проточный', ar: 'خطي' },
+            category: 'metre',
+            tagline: { tr: 'Hat Üstü / Tank Tipi pH Metre', en: 'Inline / Tank Type pH Meter', ru: 'Проточный pH Метр', ar: 'جهاز pH خطي' },
+            specs: { tr: ['220V ile çalışır', 'Boruya bağlanarak ölçüm', 'Ölçüm: 0.00 - 14.00 pH', 'Dijital ekranlı gösterge', 'Hat üstü veya tank tipi', 'Sera ve endüstri uyumlu'], en: ['220V powered', 'Inline pipe measurement', 'Range: 0.00 - 14.00 pH', 'Digital display', 'Inline or tank type', 'Greenhouse & industrial'], ru: ['Питание 220В', 'Проточное измерение', 'Диапазон: 0.00 - 14.00 pH', 'Цифровой дисплей', 'Проточный или баковый', 'Теплица и промышленность'], ar: ['تغذية 220V', 'قياس خطي', 'النطاق: 0.00 - 14.00 pH', 'شاشة رقمية', 'خطي أو خزان', 'دفيئة وصناعة'] }
+        },
+        {
+            id: 'gubre-vanasi-fib', name: { tr: 'Gübre/Asit Vanası (FIB)', en: 'Fertilizer/Acid Valve (FIB)', ru: 'Клапан удобрений (FIB)', ar: 'صمام الأسمدة (FIB)' }, image: 'sensor-vana-fib.jpg', price: '', badge: { tr: 'Aksesuar', en: 'Accessory', ru: 'Аксессуар', ar: 'ملحق' },
+            category: 'valve',
+            tagline: { tr: 'Elektrikli Gübre & Asit Vanası — Kimyasal Dozlama', en: 'Electric Fertilizer & Acid Valve — Chemical Dosing', ru: 'Электрический клапан — Химическое дозирование', ar: 'صمام كهربائي — جرعات كيميائية' },
+            specs: { tr: ['Kimyasal dozlamaya uygun', 'pH ve EC kontrol uyumlu', 'Elektrikli kontrol', 'Asit ve gübreye dayanıklı', 'Otomasyona entegre', 'Uzun ömürlü yapı'], en: ['Chemical dosing compatible', 'pH and EC control compatible', 'Electric control', 'Acid and fertilizer resistant', 'Automation integrated', 'Long-lasting build'], ru: ['Для химического дозирования', 'Совместим с контролем pH и EC', 'Электрическое управление', 'Устойчив к кислотам и удобрениям', 'Интеграция с автоматизацией', 'Долговечная конструкция'], ar: ['متوافق مع الجرعات الكيميائية', 'متوافق مع تحكم pH وEC', 'تحكم كهربائي', 'مقاوم للأحماض والأسمدة', 'متكامل مع الأتمتة', 'بناء طويل العمر'] }
+        },
+        {
+            id: 'gubre-vanasi-baccara', name: { tr: 'Gübre/Asit Vanası (BACCARA)', en: 'Fertilizer/Acid Valve (BACCARA)', ru: 'Клапан удобрений (BACCARA)', ar: 'صمام الأسمدة (BACCARA)' }, image: 'sensor-vana-baccara.jpg', price: '', badge: { tr: 'Premium', en: 'Premium', ru: 'Премиум', ar: 'بريميوم' },
+            category: 'valve',
+            tagline: { tr: 'BACCARA GEM-SOL Direkt Etkili Valf', en: 'BACCARA GEM-SOL Direct Acting Valve', ru: 'BACCARA GEM-SOL Прямого Действия', ar: 'صمام BACCARA GEM-SOL مباشر' },
+            specs: { tr: ['BACCARA GEM-SOL marka', 'Direkt etkili valf', 'pH ve EC dozlama sistemleri için', 'Asit ve gübreye yüksek dayanım', 'Otomasyona tam entegre', 'Profesyonel kalite'], en: ['BACCARA GEM-SOL brand', 'Direct acting valve', 'For pH and EC dosing systems', 'High acid & fertilizer resistance', 'Full automation integration', 'Professional quality'], ru: ['Бренд BACCARA GEM-SOL', 'Клапан прямого действия', 'Для систем дозирования pH и EC', 'Высокая устойчивость к кислотам', 'Полная интеграция с автоматизацией', 'Профессиональное качество'], ar: ['علامة BACCARA GEM-SOL', 'صمام مباشر', 'لأنظمة جرعات pH وEC', 'مقاومة عالية للأحماض', 'تكامل كامل مع الأتمتة', 'جودة احترافية'] }
         },
     ],
 

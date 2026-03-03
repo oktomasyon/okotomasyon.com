@@ -559,6 +559,7 @@
 
         <div class="tab-bar">
             <button class="tab-btn active" onclick="switchTab('products')">Ürünler (Sulama)</button>
+            <button class="tab-btn" onclick="switchTab('sensors')">Sensör & Ölçüm</button>
             <button class="tab-btn" onclick="switchTab('climate')">İklim Sistemleri</button>
             <button class="tab-btn" onclick="switchTab('traffic')">📊 Trafik</button>
         </div>
@@ -577,6 +578,24 @@
                     </tr>
                 </thead>
                 <tbody id="productsTable"></tbody>
+            </table>
+        </div>
+
+        <!-- SENSÖR TAB -->
+        <div class="tab-content" id="tab-sensors">
+            <button class="btn-add" onclick="openSensorModal()">+ Yeni Sensör Ürünü Ekle</button>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Resim</th>
+                        <th>ID</th>
+                        <th>İsim</th>
+                        <th>Kategori</th>
+                        <th>Fiyat</th>
+                        <th>İşlem</th>
+                    </tr>
+                </thead>
+                <tbody id="sensorsTable"></tbody>
             </table>
         </div>
 
@@ -677,6 +696,66 @@
         </div>
     </div>
 
+    <!-- SENSÖR DÜZENLEME MODAL -->
+    <div class="modal-overlay" id="sensorModal">
+        <div class="modal">
+            <h3 id="sensorModalTitle">Sensör Düzenle</h3>
+            <label>Ürün ID</label><input id="sId">
+            <label>Fiyat</label><input id="sPrice">
+            <label>Kategori</label>
+            <select id="sCategory"
+                style="width:100%;padding:10px;border:1.5px solid #334155;border-radius:12px;background:#0f172a;color:#e2e8f0;font-size:0.9rem;margin-bottom:0.75rem">
+                <option value="machine">Makine</option>
+                <option value="transmitter">Transmitter</option>
+                <option value="metre">Ölçüm Cihazı</option>
+                <option value="probe">Prob & Sensör</option>
+                <option value="valve">Vana</option>
+            </select>
+            <label>Ürün Görseli</label>
+            <div class="img-upload-area" onclick="document.getElementById('sImageFile').click()">
+                <input type="file" id="sImageFile" accept="image/*" onchange="handleSensorImage(this)">
+                <div class="upload-text">📷 <strong>Resim seç</strong> veya sürükle-bırak</div>
+                <img class="img-preview" id="sImagePreview">
+            </div>
+            <input type="hidden" id="sImage">
+
+            <div class="lang-tabs" id="sLangTabs">
+                <button class="lang-tab active" onclick="switchSLang('tr')">TR</button>
+                <button class="lang-tab" onclick="switchSLang('en')">EN</button>
+                <button class="lang-tab" onclick="switchSLang('ru')">RU</button>
+                <button class="lang-tab" onclick="switchSLang('ar')">AR</button>
+            </div>
+            <div class="lang-panel active" id="sLang-tr">
+                <label>İsim (TR)</label><input id="sName-tr">
+                <label>Badge (TR)</label><input id="sBadge-tr">
+                <label>Tagline (TR)</label><input id="sTagline-tr">
+                <label>Özellikler (TR) — her satır bir özellik</label><textarea id="sSpecs-tr"></textarea>
+            </div>
+            <div class="lang-panel" id="sLang-en">
+                <label>Name (EN)</label><input id="sName-en">
+                <label>Badge (EN)</label><input id="sBadge-en">
+                <label>Tagline (EN)</label><input id="sTagline-en">
+                <label>Specs (EN)</label><textarea id="sSpecs-en"></textarea>
+            </div>
+            <div class="lang-panel" id="sLang-ru">
+                <label>Название (RU)</label><input id="sName-ru">
+                <label>Badge (RU)</label><input id="sBadge-ru">
+                <label>Tagline (RU)</label><input id="sTagline-ru">
+                <label>Specs (RU)</label><textarea id="sSpecs-ru"></textarea>
+            </div>
+            <div class="lang-panel" id="sLang-ar">
+                <label>الاسم (AR)</label><input id="sName-ar">
+                <label>Badge (AR)</label><input id="sBadge-ar">
+                <label>Tagline (AR)</label><input id="sTagline-ar">
+                <label>Specs (AR)</label><textarea id="sSpecs-ar"></textarea>
+            </div>
+            <div class="modal-actions">
+                <button class="cancel" onclick="closeSensorModal()">İptal</button>
+                <button class="save" onclick="saveSensor()">Kaydet</button>
+            </div>
+        </div>
+    </div>
+
     <!-- İKLİM DÜZENLEME MODAL -->
     <div class="modal-overlay" id="climateModal">
         <div class="modal">
@@ -768,6 +847,8 @@
         function saveProducts(list) { localStorage.setItem('okProducts', JSON.stringify(list)); refreshTables(); }
         function getClimates() { const c = localStorage.getItem('okClimate'); return c ? JSON.parse(c) : [...SITE.climate]; }
         function saveClimates(list) { localStorage.setItem('okClimate', JSON.stringify(list)); refreshTables(); }
+        function getSensors() { const c = localStorage.getItem('okSensors'); return c ? JSON.parse(c) : [...SITE.sensors]; }
+        function saveSensors(list) { localStorage.setItem('okSensors', JSON.stringify(list)); refreshTables(); }
 
         function getImgSrc(img) {
             if (!img) return '';
@@ -789,6 +870,16 @@
             <button class="btn-sm btn-edit" onclick="editClimate(${i})">Düzenle</button>
             <button class="btn-sm btn-del" onclick="deleteClimate(${i})">Sil</button>
         </td></tr>`).join('');
+
+            const sensors = getSensors();
+            const catLabels = { machine: 'Makine', transmitter: 'Transmitter', metre: 'Ölçüm', probe: 'Prob', valve: 'Vana' };
+            document.getElementById('sensorsTable').innerHTML = sensors.map((s, i) => {
+                const name = typeof s.name === 'string' ? s.name : (s.name.tr || '');
+                return `<tr><td><img class="table-thumb" src="${getImgSrc(s.image)}" onerror="this.style.display='none'"></td><td>${s.id}</td><td>${name}</td><td>${catLabels[s.category] || s.category}</td><td>${s.price || '-'}</td><td>
+            <button class="btn-sm btn-edit" onclick="editSensor(${i})">Düzenle</button>
+            <button class="btn-sm btn-del" onclick="deleteSensor(${i})">Sil</button>
+        </td></tr>`;
+            }).join('');
         }
 
         // ─── ÜRÜN MODAL ───
@@ -940,6 +1031,83 @@
             reader.readAsDataURL(input.files[0]);
         }
 
+        // ─── SENSÖR MODAL ───
+        let editingSensorIdx = -1;
+        function switchSLang(l) {
+            document.querySelectorAll('#sensorModal .lang-panel').forEach(p => p.classList.remove('active'));
+            document.querySelectorAll('#sensorModal .lang-tab').forEach(b => b.classList.remove('active'));
+            document.getElementById('sLang-' + l).classList.add('active');
+            event.target.classList.add('active');
+        }
+
+        function openSensorModal(idx) {
+            editingSensorIdx = idx !== undefined ? idx : -1;
+            document.getElementById('sensorModalTitle').textContent = editingSensorIdx >= 0 ? 'Sensör Düzenle' : 'Yeni Sensör Ürünü';
+            if (editingSensorIdx >= 0) {
+                const s = getSensors()[editingSensorIdx];
+                document.getElementById('sId').value = s.id;
+                document.getElementById('sPrice').value = s.price || '';
+                document.getElementById('sCategory').value = s.category;
+                document.getElementById('sImage').value = s.image;
+                const prev = document.getElementById('sImagePreview');
+                if (s.image) { prev.src = getImgSrc(s.image); prev.classList.add('visible'); }
+                else { prev.classList.remove('visible'); }
+                ['tr', 'en', 'ru', 'ar'].forEach(l => {
+                    const name = typeof s.name === 'string' ? s.name : (s.name[l] || '');
+                    document.getElementById('sName-' + l).value = name;
+                    document.getElementById('sBadge-' + l).value = s.badge[l] || '';
+                    document.getElementById('sTagline-' + l).value = s.tagline[l] || '';
+                    document.getElementById('sSpecs-' + l).value = (s.specs[l] || []).join('\n');
+                });
+            } else {
+                ['sId', 'sPrice', 'sImage'].forEach(id => document.getElementById(id).value = '');
+                document.getElementById('sImagePreview').classList.remove('visible');
+                document.getElementById('sCategory').value = 'transmitter';
+                ['tr', 'en', 'ru', 'ar'].forEach(l => {
+                    document.getElementById('sName-' + l).value = '';
+                    document.getElementById('sBadge-' + l).value = '';
+                    document.getElementById('sTagline-' + l).value = '';
+                    document.getElementById('sSpecs-' + l).value = '';
+                });
+            }
+            document.getElementById('sensorModal').classList.add('active');
+        }
+        function closeSensorModal() { document.getElementById('sensorModal').classList.remove('active'); }
+        function editSensor(i) { openSensorModal(i); }
+        function deleteSensor(i) { if (confirm('Bu sensör ürününü silmek istediğinize emin misiniz?')) { const s = getSensors(); s.splice(i, 1); saveSensors(s); } }
+
+        function saveSensor() {
+            const s = {
+                id: document.getElementById('sId').value,
+                name: {}, image: document.getElementById('sImage').value,
+                price: document.getElementById('sPrice').value,
+                category: document.getElementById('sCategory').value,
+                badge: {}, tagline: {}, specs: {}
+            };
+            ['tr', 'en', 'ru', 'ar'].forEach(l => {
+                s.name[l] = document.getElementById('sName-' + l).value;
+                s.badge[l] = document.getElementById('sBadge-' + l).value;
+                s.tagline[l] = document.getElementById('sTagline-' + l).value;
+                s.specs[l] = document.getElementById('sSpecs-' + l).value.split('\n').filter(x => x.trim());
+            });
+            const list = getSensors();
+            if (editingSensorIdx >= 0) list[editingSensorIdx] = s; else list.push(s);
+            saveSensors(list);
+            closeSensorModal();
+        }
+
+        function handleSensorImage(input) {
+            if (!input.files[0]) return;
+            const reader = new FileReader();
+            reader.onload = e => {
+                document.getElementById('sImage').value = e.target.result;
+                const prev = document.getElementById('sImagePreview');
+                prev.src = e.target.result;
+                prev.classList.add('visible');
+            };
+            reader.readAsDataURL(input.files[0]);
+        }
+
         // Sürükle-bırak
         ['pImageDrop', 'cImageDrop'].forEach(id => {
             const el = document.getElementById(id);
@@ -960,11 +1128,13 @@
         function exportSiteData() {
             const products = getProducts();
             const climates = getClimates();
+            const sensors = getSensors();
 
             // SITE objesini klonla ve güncel ürün/fiyat bilgileriyle güncelle
             const updatedSite = JSON.parse(JSON.stringify(SITE));
             updatedSite.products = products;
             updatedSite.climate = climates;
+            updatedSite.sensors = sensors;
 
             // siteData.js dosyası oluştur
             const content = `/* ═══════════════════════════════════════════

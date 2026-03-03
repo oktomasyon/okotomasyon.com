@@ -28,6 +28,7 @@ function renderPage(lang) {
     renderProducts(L);
     renderAgriNexus(L);
     renderClimate(L);
+    renderSensors(L);
     renderEngineering(L);
     renderContact(L);
     renderFooter(L);
@@ -39,7 +40,13 @@ function renderNav(L) {
     const n = SITE.nav[L];
     document.getElementById('navLinks').innerHTML = `
         <li><a href="#hakkimizda">${n.about}</a></li>
-        <li><a href="#urunler">${n.products}</a></li>
+        <li class="nav-dropdown-parent">
+            <a href="#urunler" class="nav-dropdown-trigger">${n.products} ▾</a>
+            <div class="nav-dropdown-menu">
+                <a href="#urunler">${n.products}</a>
+                <a href="#sensorler">${n.sensors}</a>
+            </div>
+        </li>
         <li><a href="#agrinexus">${n.agrinexus}</a></li>
         <li><a href="#iklimlendirme">${n.climate}</a></li>
         <li><a href="#iletisim">${n.contact}</a></li>`;
@@ -47,6 +54,7 @@ function renderNav(L) {
     document.getElementById('mobileMenu').innerHTML = `
         <a href="#hakkimizda">${n.about}</a>
         <a href="#urunler">${n.products}</a>
+        <a href="#sensorler">${n.sensors}</a>
         <a href="#agrinexus">${n.agrinexus}</a>
         <a href="#iklimlendirme">${n.climate}</a>
         <a href="#iletisim">${n.contact}</a>`;
@@ -177,6 +185,63 @@ function renderClimate(L) {
             </div>
         </div>`;
     }).join('');
+}
+
+// ─── SENSÖR & ÖLÇÜM ───
+let activeSensorFilter = 'all';
+function renderSensors(L) {
+    const ss = SITE.sensorsSection[L];
+    document.getElementById('sensorsHeader').innerHTML = `
+        <p class="section-eyebrow">${ss.eyebrow}</p>
+        <h2>${ss.h2.replace('\n', '<br>')}</h2>
+        <p class="section-desc">${ss.desc}</p>`;
+
+    // Kategori filtreleri
+    const categories = [
+        { key: 'all', tr: 'Tümü', en: 'All', ru: 'Все', ar: 'الكل' },
+        { key: 'machine', tr: 'Makine', en: 'Machine', ru: 'Машина', ar: 'آلة' },
+        { key: 'transmitter', tr: 'Transmitter', en: 'Transmitter', ru: 'Трансмиттер', ar: 'محول' },
+        { key: 'metre', tr: 'Ölçüm Cihazı', en: 'Meter', ru: 'Измеритель', ar: 'جهاز قياس' },
+        { key: 'probe', tr: 'Prob & Sensör', en: 'Probe & Sensor', ru: 'Датчик', ar: 'مسبار' },
+        { key: 'valve', tr: 'Vana', en: 'Valve', ru: 'Клапан', ar: 'صمام' },
+    ];
+
+    document.getElementById('sensorsFilter').innerHTML = categories.map(c =>
+        `<button class="sensor-filter-btn ${activeSensorFilter === c.key ? 'active' : ''}" onclick="filterSensors('${c.key}','${L}')">${c[L]}</button>`
+    ).join('');
+
+    const items = SITE.sensors.filter(s => activeSensorFilter === 'all' || s.category === activeSensorFilter);
+
+    document.getElementById('sensorsGrid').innerHTML = items.map((s, i) => {
+        const name = typeof s.name === 'string' ? s.name : s.name[L];
+        const tagline = s.tagline[L];
+        const badge = s.badge[L];
+        const delays = ['', 'delay-1', 'delay-2', '', 'delay-1', 'delay-2', '', 'delay-1', 'delay-2', ''];
+        return `<div class="sensor-card reveal-up ${delays[i]}">
+            <div class="sensor-card-img">
+                <img src="${s.image}" alt="${name}" loading="lazy">
+                <span class="sensor-badge">${badge}</span>
+            </div>
+            <div class="sensor-card-header">
+                <span class="sensor-partner">${ss.partner}</span>
+            </div>
+            <div class="sensor-card-body">
+                <h3>${name}</h3>
+                <p class="sensor-tagline">${tagline}</p>
+                <ul class="sensor-specs">
+                    ${s.specs[L].map(sp => `<li>✓ ${sp}</li>`).join('')}
+                </ul>
+            </div>
+            <div class="sensor-card-footer">
+                <a href="https://wa.me/905066800525?text=${encodeURIComponent(name + ' hakkında bilgi almak istiyorum')}" class="sensor-inquiry-btn" target="_blank">${ss.inquiryBtn}</a>
+            </div>
+        </div>`;
+    }).join('');
+}
+
+function filterSensors(cat, lang) {
+    activeSensorFilter = cat;
+    renderSensors(lang || currentLang);
 }
 
 // ─── MÜHENDİSLİK ───
