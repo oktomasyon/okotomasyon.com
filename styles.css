@@ -2020,3 +2020,29 @@ h4 {
         font-size: 0.75rem;
     }
 }
+
+/* ─── SENSÖR FİYAT ─── */
+.sensor-price {
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: #16a34a;
+    margin-top: 1rem;
+}
+
+/* ─── MOBİL FOOTER DÜZELTME ─── */
+@media (max-width: 768px) {
+
+    #contact .contact-info,
+    #contact .office-info,
+    #contact {
+        overflow-wrap: break-word;
+        word-break: break-word;
+        max-width: 100%;
+        padding-left: 1rem;
+        padding-right: 1rem;
+    }
+
+    #contact a {
+        word-break: break-all;
+    }
+}

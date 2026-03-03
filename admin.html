@@ -548,7 +548,7 @@
     <!-- ADMİN PANELİ -->
     <div class="admin-panel" id="adminPanel">
         <div class="admin-header">
-            <h1>🔧 OK Otomasyon Admin</h1>
+            <h1>🔧 OK Otomasyon Admin <span id="kurInfo" style="font-size:0.75rem"></span></h1>
             <div style="display:flex;gap:0.5rem">
                 <button
                     style="background:#16a34a;border:none;color:#fff;padding:8px 16px;border-radius:8px;cursor:pointer;font-family:inherit;font-weight:600"
@@ -654,7 +654,7 @@
             <h3 id="productModalTitle">Ürün Düzenle</h3>
             <label>Ürün ID</label><input id="pId">
             <label>Ürün Adı</label><input id="pName">
-            <label>Fiyat</label><input id="pPrice">
+            <label>Fiyat (USD $)</label><input id="pPrice" type="number" placeholder="örn: 5000">
             <label>Ürün Görseli</label>
             <div class="img-upload-area" id="pImageDrop" onclick="document.getElementById('pImageFile').click()">
                 <input type="file" id="pImageFile" accept="image/*" onchange="handleProductImage(this)">
@@ -701,7 +701,7 @@
         <div class="modal">
             <h3 id="sensorModalTitle">Sensör Düzenle</h3>
             <label>Ürün ID</label><input id="sId">
-            <label>Fiyat</label><input id="sPrice">
+            <label>Fiyat (USD $)</label><input id="sPrice" type="number" placeholder="örn: 178">
             <label>Kategori</label>
             <select id="sCategory"
                 style="width:100%;padding:10px;border:1.5px solid #334155;border-radius:12px;background:#0f172a;color:#e2e8f0;font-size:0.9rem;margin-bottom:0.75rem">
@@ -762,7 +762,7 @@
             <h3 id="climateModalTitle">İklim Sistemi Düzenle</h3>
             <label>ID</label><input id="cId">
             <label>Sektör Sayısı</label><input type="number" id="cSectors">
-            <label>Fiyat</label><input id="cPrice">
+            <label>Fiyat (USD $)</label><input id="cPrice" type="number" placeholder="örn: 4200">
             <label>Sistem Görseli</label>
             <div class="img-upload-area" id="cImageDrop" onclick="document.getElementById('cImageFile').click()">
                 <input type="file" id="cImageFile" accept="image/*" onchange="handleClimateImage(this)">
@@ -813,6 +813,43 @@
         // ─── ŞİFRE (admin123) ───
         const PASS = 'admin123';
         let editingIdx = -1;
+        let tcmbKur = null; // TCMB USD/TRY efektif satış kuru
+
+        // TCMB kuru çek (admin paneli için)
+        async function fetchAdminKur() {
+            const cached = localStorage.getItem('tcmbKurData');
+            if (cached) {
+                try {
+                    const data = JSON.parse(cached);
+                    if (Date.now() - data.timestamp < 30 * 60 * 1000) {
+                        tcmbKur = data.kur;
+                        updateKurDisplay();
+                        return;
+                    }
+                } catch (e) { }
+            }
+            try {
+                const res = await fetch('https://hasanadiguzel.com.tr/api/kurgetir');
+                const json = await res.json();
+                const usd = json.TCMB_AnlikKurBilgileri.find(c => c.CurrencyName === 'US DOLLAR');
+                if (usd && usd.BanknoteSelling) {
+                    tcmbKur = parseFloat(usd.BanknoteSelling);
+                    localStorage.setItem('tcmbKurData', JSON.stringify({ kur: tcmbKur, timestamp: Date.now() }));
+                    updateKurDisplay();
+                }
+            } catch (err) {
+                tcmbKur = 44; // fallback
+                console.warn('TCMB kuru alınamadı, fallback: 44 TL');
+            }
+        }
+
+        function updateKurDisplay() {
+            const el = document.getElementById('kurInfo');
+            if (el && tcmbKur) {
+                el.textContent = '💱 TCMB Kur: 1$ = ' + tcmbKur.toFixed(4) + ' ₺';
+                el.style.cssText = 'background:#16a34a22;color:#4ade80;padding:6px 14px;border-radius:10px;font-size:0.85rem;font-weight:600;margin-left:1rem;';
+            }
+        }
 
         function tryLogin() {
             if (document.getElementById('passInput').value === PASS) {
@@ -820,6 +857,7 @@
                 document.getElementById('adminPanel').style.display = 'block';
                 sessionStorage.setItem('okAdmin', '1');
                 refreshTables();
+                fetchAdminKur();
             } else {
                 document.getElementById('loginError').style.display = 'block';
             }
@@ -830,6 +868,7 @@
             document.getElementById('loginScreen').style.display = 'none';
             document.getElementById('adminPanel').style.display = 'block';
             refreshTables();
+            fetchAdminKur();
         }
 
         function logout() { sessionStorage.removeItem('okAdmin'); location.reload(); }
@@ -859,14 +898,14 @@
         function refreshTables() {
             const prods = getProducts();
             document.getElementById('productsTable').innerHTML = prods.map((p, i) =>
-                `<tr><td><img class="table-thumb" src="${getImgSrc(p.image)}" onerror="this.style.display='none'"></td><td>${p.id}</td><td>${p.name}</td><td>${p.price}</td><td>
+                `<tr><td><img class="table-thumb" src="${getImgSrc(p.image)}" onerror="this.style.display='none'"></td><td>${p.id}</td><td>${p.name}</td><td>$${p.priceUSD || '-'}</td><td>
             <button class="btn-sm btn-edit" onclick="editProduct(${i})">Düzenle</button>
             <button class="btn-sm btn-del" onclick="deleteProduct(${i})">Sil</button>
         </td></tr>`).join('');
 
             const clims = getClimates();
             document.getElementById('climateTable').innerHTML = clims.map((c, i) =>
-                `<tr><td><img class="table-thumb" src="${getImgSrc(c.image)}" onerror="this.style.display='none'"></td><td>${c.id}</td><td>${c.name.tr}</td><td>${c.sectors}</td><td>${c.price}</td><td>
+                `<tr><td><img class="table-thumb" src="${getImgSrc(c.image)}" onerror="this.style.display='none'"></td><td>${c.id}</td><td>${c.name.tr}</td><td>${c.sectors}</td><td>$${c.priceUSD || '-'}</td><td>
             <button class="btn-sm btn-edit" onclick="editClimate(${i})">Düzenle</button>
             <button class="btn-sm btn-del" onclick="deleteClimate(${i})">Sil</button>
         </td></tr>`).join('');
@@ -875,7 +914,7 @@
             const catLabels = { machine: 'Makine', transmitter: 'Transmitter', metre: 'Ölçüm', probe: 'Prob', valve: 'Vana' };
             document.getElementById('sensorsTable').innerHTML = sensors.map((s, i) => {
                 const name = typeof s.name === 'string' ? s.name : (s.name.tr || '');
-                return `<tr><td><img class="table-thumb" src="${getImgSrc(s.image)}" onerror="this.style.display='none'"></td><td>${s.id}</td><td>${name}</td><td>${catLabels[s.category] || s.category}</td><td>${s.price || '-'}</td><td>
+                return `<tr><td><img class="table-thumb" src="${getImgSrc(s.image)}" onerror="this.style.display='none'"></td><td>${s.id}</td><td>${name}</td><td>${catLabels[s.category] || s.category}</td><td>$${s.priceUSD || '-'}</td><td>
             <button class="btn-sm btn-edit" onclick="editSensor(${i})">Düzenle</button>
             <button class="btn-sm btn-del" onclick="deleteSensor(${i})">Sil</button>
         </td></tr>`;
@@ -901,7 +940,7 @@
                 const prev = document.getElementById('pImagePreview');
                 if (p.image) { prev.src = getImgSrc(p.image); prev.classList.add('visible'); }
                 else { prev.classList.remove('visible'); }
-                document.getElementById('pPrice').value = p.price;
+                document.getElementById('pPrice').value = p.priceUSD || '';
                 ['tr', 'en', 'ru', 'ar'].forEach(l => {
                     document.getElementById('pBadge-' + l).value = p.badge[l] || '';
                     document.getElementById('pTagline-' + l).value = p.tagline[l] || '';
@@ -923,11 +962,13 @@
         function deleteProduct(i) { if (confirm('Bu ürünü silmek istediğinize emin misiniz?')) { const p = getProducts(); p.splice(i, 1); saveProducts(p); } }
 
         function saveProduct() {
+            const pUSD = parseFloat(document.getElementById('pPrice').value) || 0;
             const p = {
                 id: document.getElementById('pId').value,
                 name: document.getElementById('pName').value,
                 image: document.getElementById('pImage').value,
-                price: document.getElementById('pPrice').value,
+                priceUSD: pUSD,
+                price: '₺' + Math.round(pUSD * (tcmbKur || 44) * 1.20).toLocaleString('tr-TR'),
                 badge: {}, tagline: {}, specs: {},
                 specLabels: ['capacity', 'channel', 'pressure', 'body', 'connection', 'software'],
                 type: 'detail'
@@ -959,7 +1000,7 @@
                 document.getElementById('cId').value = c.id;
                 document.getElementById('cSectors').value = c.sectors;
                 document.getElementById('cImage').value = c.image;
-                document.getElementById('cPrice').value = c.price;
+                document.getElementById('cPrice').value = c.priceUSD || '';
                 const cprev = document.getElementById('cImagePreview');
                 if (c.image) { cprev.src = getImgSrc(c.image); cprev.classList.add('visible'); }
                 else { cprev.classList.remove('visible'); }
@@ -986,11 +1027,13 @@
         function deleteClimate(i) { if (confirm('Bu sistemi silmek istediğinize emin misiniz?')) { const c = getClimates(); c.splice(i, 1); saveClimates(c); } }
 
         function saveClimate() {
+            const cUSD = parseFloat(document.getElementById('cPrice').value) || 0;
             const c = {
                 id: document.getElementById('cId').value,
                 sectors: +document.getElementById('cSectors').value,
                 image: document.getElementById('cImage').value,
-                price: document.getElementById('cPrice').value,
+                priceUSD: cUSD,
+                price: '₺' + Math.round(cUSD * (tcmbKur || 44) * 1.20).toLocaleString('tr-TR'),
                 badge: {}, name: {}, desc: {}, specs: {},
                 featured: false, flagship: false
             };
@@ -1046,7 +1089,7 @@
             if (editingSensorIdx >= 0) {
                 const s = getSensors()[editingSensorIdx];
                 document.getElementById('sId').value = s.id;
-                document.getElementById('sPrice').value = s.price || '';
+                document.getElementById('sPrice').value = s.priceUSD || '';
                 document.getElementById('sCategory').value = s.category;
                 document.getElementById('sImage').value = s.image;
                 const prev = document.getElementById('sImagePreview');
@@ -1077,10 +1120,12 @@
         function deleteSensor(i) { if (confirm('Bu sensör ürününü silmek istediğinize emin misiniz?')) { const s = getSensors(); s.splice(i, 1); saveSensors(s); } }
 
         function saveSensor() {
+            const sUSD = parseFloat(document.getElementById('sPrice').value) || 0;
             const s = {
                 id: document.getElementById('sId').value,
                 name: {}, image: document.getElementById('sImage').value,
-                price: document.getElementById('sPrice').value,
+                priceUSD: sUSD,
+                price: '₺' + Math.round(sUSD * (tcmbKur || 44) * 1.20).toLocaleString('tr-TR'),
                 category: document.getElementById('sCategory').value,
                 badge: {}, tagline: {}, specs: {}
             };

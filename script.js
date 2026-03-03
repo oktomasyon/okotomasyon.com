@@ -2,6 +2,63 @@
    OK OTOMASYON — Render Motoru & İnteraktifler
    ═══════════════════════════════════════════ */
 
+// ─── TCMB DÖVİZ KURU SİSTEMİ ───
+let tcmbKur = null; // Güncel USD/TRY efektif satış kuru
+const KDV_ORAN = 1.20; // %20 KDV
+
+function formatTL(amount) {
+    return '₺' + Math.round(amount).toLocaleString('tr-TR');
+}
+
+function getPrice(item) {
+    if (item.priceUSD && tcmbKur) {
+        return formatTL(item.priceUSD * tcmbKur * KDV_ORAN);
+    }
+    return item.price || '';
+}
+
+async function fetchTCMBKur() {
+    // Cache kontrolü — 30 dakika geçerli
+    const cached = localStorage.getItem('tcmbKurData');
+    if (cached) {
+        try {
+            const data = JSON.parse(cached);
+            if (Date.now() - data.timestamp < 30 * 60 * 1000) {
+                tcmbKur = data.kur;
+                console.log('📌 TCMB kuru (cache):', tcmbKur, 'TL/USD');
+                updateAllPrices();
+                return;
+            }
+        } catch (e) { /* cache hatalı, yeniden çek */ }
+    }
+
+    try {
+        const res = await fetch('https://hasanadiguzel.com.tr/api/kurgetir');
+        const json = await res.json();
+        const usd = json.TCMB_AnlikKurBilgileri.find(c => c.CurrencyName === 'US DOLLAR');
+        if (usd && usd.BanknoteSelling) {
+            tcmbKur = parseFloat(usd.BanknoteSelling);
+            localStorage.setItem('tcmbKurData', JSON.stringify({ kur: tcmbKur, timestamp: Date.now() }));
+            console.log('✅ TCMB efektif satış kuru:', tcmbKur, 'TL/USD');
+            updateAllPrices();
+        }
+    } catch (err) {
+        console.warn('⚠️ TCMB kuru alınamadı, statik fiyatlar kullanılıyor:', err.message);
+    }
+}
+
+function updateAllPrices() {
+    if (!tcmbKur) return;
+    // Products (KDV dahil)
+    SITE.products.forEach(p => { if (p.priceUSD) p.price = formatTL(p.priceUSD * tcmbKur * KDV_ORAN); });
+    // Climate (KDV dahil)
+    SITE.climate.forEach(c => { if (c.priceUSD) c.price = formatTL(c.priceUSD * tcmbKur * KDV_ORAN); });
+    // Sensors (KDV dahil)
+    SITE.sensors.forEach(s => { if (s.priceUSD) s.price = formatTL(s.priceUSD * tcmbKur * KDV_ORAN); });
+    // Sayfayı yeniden render et
+    renderPage(currentLang);
+}
+
 // URL parametresinden dil algılama (SEO hreflang uyumu)
 const urlLang = new URLSearchParams(window.location.search).get('lang');
 let currentLang = urlLang && ['tr', 'en', 'ru', 'ar'].includes(urlLang) ? urlLang : (localStorage.getItem('okLang') || 'tr');
@@ -207,17 +264,18 @@ function renderSensors(L) {
     ];
 
     document.getElementById('sensorsFilter').innerHTML = categories.map(c =>
-        `<button class="sensor-filter-btn ${activeSensorFilter === c.key ? 'active' : ''}" onclick="filterSensors('${c.key}','${L}')">${c[L]}</button>`
+        `<button class="sensor-filter-btn ${activeSensorFilter === c.key ? 'active' : ''}" onclick="filterSensors('${c.key}')">${c[L]}</button>`
     ).join('');
 
     const items = SITE.sensors.filter(s => activeSensorFilter === 'all' || s.category === activeSensorFilter);
 
     document.getElementById('sensorsGrid').innerHTML = items.map((s, i) => {
-        const name = typeof s.name === 'string' ? s.name : s.name[L];
-        const tagline = s.tagline[L];
-        const badge = s.badge[L];
-        const delays = ['', 'delay-1', 'delay-2', '', 'delay-1', 'delay-2', '', 'delay-1', 'delay-2', ''];
-        return `<div class="sensor-card reveal-up ${delays[i]}">
+        const name = typeof s.name === 'string' ? s.name : (s.name[L] || s.name.tr || '');
+        const tagline = (s.tagline && s.tagline[L]) || '';
+        const badge = (s.badge && s.badge[L]) || '';
+        const specs = (s.specs && s.specs[L]) || [];
+        const delays = ['', 'delay-1', 'delay-2', '', 'delay-1', 'delay-2', '', 'delay-1', 'delay-2', '', '', ''];
+        return `<div class="sensor-card reveal-up ${delays[i] || ''}">
             <div class="sensor-card-img">
                 <img src="${s.image}" alt="${name}" loading="lazy">
                 <span class="sensor-badge">${badge}</span>
@@ -229,8 +287,9 @@ function renderSensors(L) {
                 <h3>${name}</h3>
                 <p class="sensor-tagline">${tagline}</p>
                 <ul class="sensor-specs">
-                    ${s.specs[L].map(sp => `<li>✓ ${sp}</li>`).join('')}
+                    ${specs.map(sp => `<li>✓ ${sp}</li>`).join('')}
                 </ul>
+                ${s.price ? `<p class="sensor-price">${s.price} <span style="font-size:0.7em;font-weight:400;opacity:0.7">KDV Dahil</span></p>` : ''}
             </div>
             <div class="sensor-card-footer">
                 <a href="https://wa.me/905066800525?text=${encodeURIComponent(name + ' hakkında bilgi almak istiyorum')}" class="sensor-inquiry-btn" target="_blank">${ss.inquiryBtn}</a>
@@ -239,9 +298,13 @@ function renderSensors(L) {
     }).join('');
 }
 
-function filterSensors(cat, lang) {
+function filterSensors(cat) {
     activeSensorFilter = cat;
-    renderSensors(lang || currentLang);
+    renderSensors(currentLang);
+    // Yeni oluşturulan kartlara visible class'ı ekle (IntersectionObserver yeniden observe etmez)
+    document.querySelectorAll('#sensorsGrid .sensor-card').forEach(el => {
+        el.classList.add('visible');
+    });
 }
 
 // ─── MÜHENDİSLİK ───
@@ -429,6 +492,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // İlk render
     renderPage(currentLang);
+
+    // TCMB döviz kurunu çek ve fiyatları güncelle
+    fetchTCMBKur();
 });
 
 // ═══════════════════════════════════════════
