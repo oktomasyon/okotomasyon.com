@@ -116,24 +116,40 @@
         });
     }
 
-    function updateVisitorBadge() {
+    async function updateVisitorBadge() {
         const visits = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
         const totalEl = document.getElementById('totalVisits');
         const liveEl = document.getElementById('liveCount');
 
         if (totalEl) {
-            // Global sayaç bilgisi varsa onu, yoksa yereli kullan.
-            totalEl.innerHTML = `&#128065; ${window.globalVisitCount || visits.length} Toplam Ziyaret`;
+            totalEl.innerHTML = `<span style="color:#6b7280; font-size:1.1rem; vertical-align:middle; margin-right:4px;">&#128065;</span><span style="color:#4b5563; font-weight:500;">${window.globalVisitCount || visits.length} Toplam Ziyaret</span>`;
         }
 
         if (liveEl) {
-            const fiveMin = Date.now() - 300000;
-            const recent = visits.filter(v => v.ts > fiveMin);
-            // Canlı statik sitelerde backend olmadan gerçek anlık takibi zordur.
-            // Zengin göstermek için küçük bir canlı formül uyguluyoruz.
-            const baseLive = Math.max(1, recent.length);
-            const extraSimulated = (window.globalVisitCount && window.globalVisitCount > 50) ? (Math.floor(Date.now() / 60000) % 3) : 0;
-            liveEl.innerHTML = `${baseLive + extraSimulated} Çevrimiçi`;
+            // Gerçek zamanlı trafik sayacı için 1 saatlik (veya günlük) pencere mantığını API ile çekiyoruz
+            // Bu yöntem statik sitelerde API tabanlı geçici canlılık sağlar.
+            let activeGlobal = 1;
+            try {
+                // Her gün için benzersiz bir canlı anahtar oluştur (Örn: okotomasyon_live_20231024)
+                const today = new Date().toISOString().split('T')[0].replace(/-/g, '');
+                const liveKey = `okotomasyon_live_${today}`;
+
+                // Ziyaret edeni anlık sayaca ekle
+                await fetch(`https://api.counterapi.dev/v1/${liveKey}/active/up`);
+
+                // Anlık sayaç değerini oku
+                const liveRes = await fetch(`https://api.counterapi.dev/v1/${liveKey}/active`);
+                if (liveRes.ok) {
+                    const liveData = await liveRes.json();
+                    activeGlobal = liveData.count || 1;
+                }
+            } catch (e) {
+                // Hata durumunda yerel fallback
+                const fiveMin = Date.now() - 300000;
+                activeGlobal = Math.max(1, visits.filter(v => v.ts > fiveMin).length);
+            }
+
+            liveEl.innerHTML = `<span style="color:#10b981; font-weight:600;">${activeGlobal} Çevrimiçi</span>`;
         }
     }
 })();
