@@ -1202,7 +1202,7 @@ const SITE = ${JSON.stringify(updatedSite, null, 4)};
             try { return JSON.parse(localStorage.getItem('okVisitors') || '[]'); } catch { return []; }
         }
 
-        function refreshTraffic() {
+        async function refreshTraffic() {
             const visits = getVisits();
             const now = Date.now();
             const dayMs = 86400000;
@@ -1210,12 +1210,22 @@ const SITE = ${JSON.stringify(updatedSite, null, 4)};
             const week = visits.filter(v => now - v.ts < dayMs * 7);
             const month = visits.filter(v => now - v.ts < dayMs * 30);
 
+            // Global Toplam Ziyaretçi Sayısını Çek
+            let globalCount = visits.length;
+            try {
+                const countRes = await fetch('https://api.counterapi.dev/v1/okotomasyon_com/visits/');
+                if (countRes.ok) {
+                    const countData = await countRes.json();
+                    globalCount = countData.count || visits.length;
+                }
+            } catch (e) { /* sessizce geç */ }
+
             // İstatistik kartları
             document.getElementById('trafficStats').innerHTML = `
-                <div class="stat-card"><div class="stat-num">${visits.length}</div><div class="stat-label">Toplam Ziyaret</div></div>
-                <div class="stat-card"><div class="stat-num">${today.length}</div><div class="stat-label">Bugün</div></div>
-                <div class="stat-card"><div class="stat-num">${week.length}</div><div class="stat-label">Bu Hafta</div></div>
-                <div class="stat-card"><div class="stat-num">${month.length}</div><div class="stat-label">Bu Ay</div></div>
+                <div class="stat-card" style="border-color:#3b82f6; background:rgba(59,130,246,0.05)"><div class="stat-num" style="color:#3b82f6">${globalCount}</div><div class="stat-label">Gerçek Toplam Ziyaret (Global)</div></div>
+                <div class="stat-card"><div class="stat-num">${visits.length}</div><div class="stat-label">Bu Cihaza Kaydedilen</div></div>
+                <div class="stat-card"><div class="stat-num">${today.length}</div><div class="stat-label">Bugün (Ön Bellek)</div></div>
+                <div class="stat-card"><div class="stat-num">${week.length}</div><div class="stat-label">Bu Hafta (Ön Bellek)</div></div>
             `;
 
             // Dağılım grafikleri

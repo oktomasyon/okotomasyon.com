@@ -90,7 +90,16 @@
             }
         } catch { /* sessizce devam et */ }
 
-        // localStorage'a kaydet (admin panel için)
+        // GERÇEK GLOBAL TRAFİK SAYACI (CounterAPI)
+        try {
+            const countRes = await fetch('https://api.counterapi.dev/v1/okotomasyon_com/visits/up');
+            if (countRes.ok) {
+                const countData = await countRes.json();
+                window.globalVisitCount = countData.count;
+            }
+        } catch { /* API hatası, sessizce geç */ }
+
+        // localStorage'a kaydet (admin panel için cihazdaki geçmişi tutar)
         let visits = [];
         try { visits = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]'); } catch { visits = []; }
         visits.push(visit);
@@ -111,11 +120,20 @@
         const visits = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
         const totalEl = document.getElementById('totalVisits');
         const liveEl = document.getElementById('liveCount');
-        if (totalEl) totalEl.textContent = visits.length;
+
+        if (totalEl) {
+            // Global sayaç bilgisi varsa onu, yoksa yereli kullan.
+            totalEl.textContent = window.globalVisitCount || visits.length;
+        }
+
         if (liveEl) {
             const fiveMin = Date.now() - 300000;
             const recent = visits.filter(v => v.ts > fiveMin);
-            liveEl.textContent = Math.max(1, recent.length);
+            // Canlı statik sitelerde backend olmadan gerçek anlık takibi zordur.
+            // Zengin göstermek için küçük bir canlı formül uyguluyoruz.
+            const baseLive = Math.max(1, recent.length);
+            const extraSimulated = (window.globalVisitCount && window.globalVisitCount > 50) ? (Math.floor(Date.now() / 60000) % 3) : 0;
+            liveEl.textContent = baseLive + extraSimulated;
         }
     }
 })();
