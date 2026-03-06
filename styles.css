@@ -1262,19 +1262,22 @@ h4 {
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 0.6rem;
-    padding: 0.75rem 0;
-    border-top: 1px solid #e5e5ea;
-    max-width: 1280px;
-    margin: 0 auto;
-    font-size: 0.82rem;
-    color: #6e6e73;
+    gap: 0.8rem;
+    padding: 1rem 1.5rem;
+    max-width: fit-content;
+    margin: 0 auto 1rem;
+    font-size: 0.85rem;
+    color: #1d1d1f;
+    background: #fff;
+    border: 1px solid rgba(22, 163, 74, 0.2);
+    border-radius: 50px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.03);
 }
 
 .visitor-live {
     display: flex;
     align-items: center;
-    gap: 0.4rem;
+    gap: 0.5rem;
     font-weight: 600;
     color: #16a34a;
 }
@@ -1306,6 +1309,14 @@ h4 {
 
 .visitor-total {
     font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    color: #6e6e73;
+}
+
+.visitor-total i {
+    font-size: 1.1rem;
 }
 
 .footer-bottom {

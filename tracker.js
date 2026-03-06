@@ -123,7 +123,7 @@
 
         if (totalEl) {
             // Global sayaç bilgisi varsa onu, yoksa yereli kullan.
-            totalEl.textContent = window.globalVisitCount || visits.length;
+            totalEl.innerHTML = `&#128065; ${window.globalVisitCount || visits.length} Toplam Ziyaret`;
         }
 
         if (liveEl) {
@@ -133,7 +133,7 @@
             // Zengin göstermek için küçük bir canlı formül uyguluyoruz.
             const baseLive = Math.max(1, recent.length);
             const extraSimulated = (window.globalVisitCount && window.globalVisitCount > 50) ? (Math.floor(Date.now() / 60000) % 3) : 0;
-            liveEl.textContent = baseLive + extraSimulated;
+            liveEl.innerHTML = `${baseLive + extraSimulated} Çevrimiçi`;
         }
     }
 })();
