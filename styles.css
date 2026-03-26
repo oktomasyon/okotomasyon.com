@@ -1441,8 +1441,55 @@ h4 {
         display: block
     }
 
+    /* Sepet ve dil seçici mobilde küçült */
+    .cart-icon {
+        font-size: 0.85rem;
+        padding: 4px 8px;
+    }
+
+    .cart-count {
+        font-size: 0.65rem;
+        min-width: 16px;
+        height: 16px;
+    }
+
+    .lang-selector {
+        order: 2;
+    }
+
+    .lang-btn {
+        font-size: 0.75rem;
+        padding: 4px 8px;
+    }
+
+    /* Hero mobil — görsel üstte, yazı altta */
+    .hero-inner {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+        text-align: center;
+    }
+
+    .hero-visual {
+        order: -1;
+    }
+
+    .hero-desc {
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    .hero-buttons {
+        justify-content: center;
+        flex-direction: column;
+    }
+
+    .btn-primary, .btn-outline {
+        width: 100%;
+        justify-content: center;
+    }
+
     h1 {
-        font-size: 2.4rem
+        font-size: 2.2rem
     }
 
     .section {
@@ -1458,9 +1505,35 @@ h4 {
         gap: 1.5rem
     }
 
+    /* About — tek kolon */
+    .about-grid {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+    }
+
+    .about-visual {
+        order: -1;
+    }
+
+    /* Ürünler — tek kolon */
+    .products-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .product-card-wide .product-body {
+        grid-template-columns: 1fr;
+    }
+
+    .product-footer {
+        flex-direction: column;
+        gap: 0.75rem;
+        align-items: stretch;
+    }
+
+    /* İklimlendirme — tek kolon */
     .climate-products-grid {
-        grid-template-columns: repeat(2, 1fr);
-        gap: 1rem
+        grid-template-columns: 1fr;
+        gap: 1.25rem;
     }
 
     .climate-product-body h3 {
@@ -1475,8 +1548,48 @@ h4 {
         font-size: 1.2rem
     }
 
-    .lang-selector {
-        order: 2
+    .climate-product-footer {
+        flex-direction: column;
+        gap: 0.75rem;
+        align-items: stretch;
+    }
+
+    .climate-grid {
+        grid-template-columns: 1fr;
+    }
+
+    /* AgriNexus — tek kolon */
+    .agrinexus-grid {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+    }
+
+    .agrinexus-visual {
+        order: -1;
+    }
+
+    .anx-features-grid {
+        grid-template-columns: 1fr;
+    }
+
+    /* Engineering — tek kolon */
+    .engineering-grid {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+    }
+
+    .engineering-visual {
+        order: -1;
+    }
+
+    /* Contact — tek kolon */
+    .contact-grid {
+        grid-template-columns: 1fr;
+    }
+
+    /* Mobil menü padding */
+    .mobile-menu a {
+        font-size: 1.3rem;
     }
 }
 
@@ -2107,5 +2220,483 @@ h4 {
 
     #contact a {
         word-break: break-all;
+    }
+}
+
+/* ═══════════════════════════════════════════
+   MOBİL OPTİMİZASYON — KAPSAMLI
+   ═══════════════════════════════════════════ */
+
+/* --- Ürün Görseli Büyütme (Lightbox) --- */
+.product-lightbox {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0,0,0,0.92);
+    z-index: 10000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+    cursor: zoom-out;
+}
+
+.product-lightbox.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+.product-lightbox img {
+    max-width: 90vw;
+    max-height: 85vh;
+    object-fit: contain;
+    border-radius: 16px;
+    transform: scale(0.9);
+    transition: transform 0.3s ease;
+}
+
+.product-lightbox.active img {
+    transform: scale(1);
+}
+
+.product-lightbox-close {
+    position: absolute;
+    top: 1rem;
+    right: 1.5rem;
+    color: #fff;
+    font-size: 2rem;
+    font-weight: 300;
+    cursor: pointer;
+    width: 44px;
+    height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255,255,255,0.1);
+    border-radius: 50%;
+    transition: background 0.2s;
+}
+
+.product-lightbox-close:hover {
+    background: rgba(255,255,255,0.2);
+}
+
+.product-lightbox-title {
+    position: absolute;
+    bottom: 2rem;
+    left: 50%;
+    transform: translateX(-50%);
+    color: #fff;
+    font-size: 1rem;
+    font-weight: 600;
+    text-align: center;
+    background: rgba(0,0,0,0.5);
+    padding: 0.5rem 1.5rem;
+    border-radius: 50px;
+    backdrop-filter: blur(10px);
+}
+
+/* Tıklanabilir görseller için cursor */
+.product-img-wrap img,
+.climate-product-img img,
+.sensor-card-img img {
+    cursor: zoom-in;
+}
+
+/* --- TABLET: 769px - 1024px --- */
+@media (max-width: 1024px) {
+    .hero-inner {
+        gap: 2rem;
+    }
+
+    .about-grid,
+    .engineering-grid,
+    .agrinexus-grid,
+    .contact-grid {
+        gap: 2.5rem;
+    }
+
+    .anx-features-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .climate-products-grid {
+        grid-template-columns: 1fr 1fr;
+        gap: 1.5rem;
+    }
+
+    .climate-grid {
+        grid-template-columns: 1fr 1fr;
+    }
+}
+
+/* --- MOBİL: 768px ve altı --- */
+@media (max-width: 768px) {
+
+    /* ── Genel ── */
+    body {
+        font-size: 15px;
+    }
+
+    .section {
+        padding: 60px 5%;
+    }
+
+    .section-header {
+        margin-bottom: 2rem;
+    }
+
+    h1 {
+        font-size: clamp(2rem, 8vw, 2.8rem);
+    }
+
+    h2 {
+        font-size: clamp(1.6rem, 6vw, 2.2rem);
+    }
+
+    h3 {
+        font-size: 1.2rem;
+    }
+
+    /* ── NAV ── */
+    .nav-links {
+        display: none;
+    }
+
+    .hamburger {
+        display: block;
+    }
+
+    .nav-cta {
+        display: none;
+    }
+
+    .nav-inner {
+        height: 56px;
+        padding: 0 4%;
+    }
+
+    .logo-k {
+        font-size: 1.8rem;
+        margin-right: 0.3rem;
+    }
+
+    .logo-divider {
+        display: none;
+    }
+
+    .nav-logo .logo-accent {
+        font-size: 0.7rem;
+        letter-spacing: 0.1em;
+    }
+
+    .nav-logo-img {
+        height: 32px;
+        margin-right: 1px;
+    }
+
+    /* ── HERO ── */
+    .hero {
+        padding: 80px 5% 40px;
+    }
+
+    .hero-inner {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+        text-align: center;
+    }
+
+    .hero-desc {
+        margin: 1rem auto 1.5rem;
+        font-size: 1rem;
+    }
+
+    .hero-buttons {
+        justify-content: center;
+    }
+
+    .btn-primary,
+    .btn-outline {
+        padding: 12px 24px;
+        font-size: 0.9rem;
+        width: 100%;
+        justify-content: center;
+    }
+
+    .hero-visual {
+        order: -1;
+    }
+
+    .hero-img {
+        border-radius: 16px;
+    }
+
+    /* ── STATS ── */
+    .stats-inner {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1rem;
+    }
+
+    .stat-number {
+        font-size: clamp(1.8rem, 6vw, 2.5rem);
+    }
+
+    .stat-label {
+        font-size: 0.8rem;
+    }
+
+    /* ── ABOUT ── */
+    .about-grid {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+    }
+
+    .about-visual {
+        order: -1;
+    }
+
+    .about-content > p {
+        font-size: 0.95rem;
+    }
+
+    /* ── ÜRÜNLER ── */
+    .products-grid {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+    }
+
+    .product-card-wide .product-body {
+        grid-template-columns: 1fr;
+    }
+
+    .product-body {
+        padding: 1.25rem 1.25rem 1.5rem;
+    }
+
+    .product-body h3 {
+        font-size: 1.3rem;
+    }
+
+    .product-img-wrap {
+        min-height: 200px;
+        padding: 1.5rem;
+    }
+
+    .product-img-wrap img {
+        max-height: 180px;
+    }
+
+    .product-footer {
+        flex-direction: column;
+        gap: 0.75rem;
+        align-items: flex-start;
+    }
+
+    .product-price {
+        font-size: 1.3rem;
+    }
+
+    /* Ürün butonları mobilde daha büyük */
+    .cart-btn,
+    .product-cta {
+        padding: 12px 20px;
+        font-size: 0.95rem;
+        text-align: center;
+        width: 100%;
+        display: block;
+    }
+
+    /* ── AGRINEXUS ── */
+    .section-agrinexus {
+        padding: 60px 5%;
+    }
+
+    .agrinexus-grid {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+    }
+
+    .anx-features-grid {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+
+    .agrinexus-visual {
+        order: -1;
+    }
+
+    .agrinexus-visual img {
+        border-radius: 14px;
+    }
+
+    .anx-feature p {
+        font-size: 0.82rem;
+    }
+
+    /* ── İKLİMLENDİRME ── */
+    .climate-products-grid {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+    }
+
+    .climate-grid {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+    }
+
+    .climate-product-body {
+        padding: 1rem 1.25rem 1.25rem;
+    }
+
+    .climate-product-body h3 {
+        font-size: 1.15rem;
+    }
+
+    .climate-product-footer {
+        flex-direction: column;
+        gap: 0.75rem;
+        align-items: flex-start;
+    }
+
+    .climate-card {
+        padding: 2rem 1.5rem;
+    }
+
+    /* ── ENGINEERING ── */
+    .engineering-grid {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+    }
+
+    .engineering-visual {
+        order: -1;
+    }
+
+    /* ── CONTACT ── */
+    .contact-grid {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+    }
+
+    .contact-detail {
+        margin-bottom: 1.25rem;
+    }
+
+    /* ── SEPET VE CTA BUTONLARI ── */
+    .cart-btn {
+        border-radius: 12px;
+    }
+
+    .climate-cta,
+    .product-cta {
+        display: inline-block;
+        width: auto;
+    }
+
+    /* ── MOBİL MENÜ ── */
+    .mobile-menu a {
+        font-size: 1.3rem;
+    }
+
+    /* ── FOOTER ── */
+    .footer-inner {
+        grid-template-columns: 1fr;
+        text-align: center;
+    }
+
+    .footer-links {
+        flex-direction: column;
+        gap: 1rem;
+    }
+}
+
+/* --- KÜÇÜK MOBİL: 480px ve altı --- */
+@media (max-width: 480px) {
+
+    .hero {
+        padding: 72px 4% 32px;
+    }
+
+    h1 {
+        font-size: 1.8rem;
+    }
+
+    h2 {
+        font-size: 1.5rem;
+    }
+
+    .hero-desc {
+        font-size: 0.92rem;
+    }
+
+    .section {
+        padding: 48px 4%;
+    }
+
+    .stats-inner {
+        gap: 0.75rem;
+    }
+
+    .stat-number {
+        font-size: 1.6rem;
+    }
+
+    .product-body h3 {
+        font-size: 1.15rem;
+    }
+
+    .product-tagline {
+        font-size: 0.85rem;
+    }
+
+    .product-specs li {
+        font-size: 0.82rem;
+    }
+
+    .product-price {
+        font-size: 1.15rem;
+    }
+
+    .climate-product-body h3 {
+        font-size: 1.05rem;
+    }
+
+    .climate-product-desc {
+        font-size: 0.82rem;
+    }
+
+    .anx-icon {
+        width: 36px;
+        height: 36px;
+        min-width: 36px;
+        font-size: 1.1rem;
+    }
+
+    .anx-feature h4 {
+        font-size: 0.95rem;
+    }
+
+    .about-feature h4 {
+        font-size: 0.95rem;
+    }
+
+    .feature-icon {
+        width: 38px;
+        height: 38px;
+        min-width: 38px;
+    }
+
+    .section-desc {
+        font-size: 0.92rem;
+    }
+
+    .contact-detail {
+        flex-direction: column;
+        gap: 0.5rem;
     }
 }

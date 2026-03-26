@@ -615,3 +615,59 @@ document.addEventListener('DOMContentLoaded', () => {
 
     renderCartUI();
 });
+
+/* ═══════════════════════════════════════════
+   ÜRÜN GÖRSELİ BÜYÜTME (LIGHTBOX)
+   ═══════════════════════════════════════════ */
+(function() {
+    // Lightbox HTML oluştur
+    var lightbox = document.createElement('div');
+    lightbox.className = 'product-lightbox';
+    lightbox.innerHTML = '<span class="product-lightbox-close">&times;</span><img src="" alt=""><div class="product-lightbox-title"></div>';
+    document.body.appendChild(lightbox);
+
+    var lbImg = lightbox.querySelector('img');
+    var lbTitle = lightbox.querySelector('.product-lightbox-title');
+    var lbClose = lightbox.querySelector('.product-lightbox-close');
+
+    // Lightbox aç
+    function openLightbox(src, title) {
+        lbImg.src = src;
+        lbTitle.textContent = title || '';
+        lightbox.classList.add('active');
+        document.body.style.overflow = 'hidden';
+    }
+
+    // Lightbox kapat
+    function closeLightbox() {
+        lightbox.classList.remove('active');
+        document.body.style.overflow = '';
+    }
+
+    // Kapatma eventleri
+    lbClose.addEventListener('click', closeLightbox);
+    lightbox.addEventListener('click', function(e) {
+        if (e.target === lightbox) closeLightbox();
+    });
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') closeLightbox();
+    });
+
+    // Tüm ürün görsellerini tıklanabilir yap
+    document.addEventListener('click', function(e) {
+        var img = e.target;
+        if (img.tagName !== 'IMG') return;
+
+        var wrap = img.closest('.product-img-wrap, .climate-product-img, .sensor-card-img');
+        if (!wrap) return;
+
+        e.preventDefault();
+        var title = '';
+        var card = img.closest('.product-card, .climate-product-card, .sensor-card');
+        if (card) {
+            var h3 = card.querySelector('h3');
+            if (h3) title = h3.textContent;
+        }
+        openLightbox(img.src, title);
+    });
+})();
