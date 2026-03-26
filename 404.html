@@ -1,15 +1,44 @@
 <!DOCTYPE html>
-<html>
+<html lang="tr">
 
 <head>
     <meta charset="utf-8">
-    <title>OK Otomasyon</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sayfa Bulunamadı — OK Otomasyon | Sera Sulama ve Gübreleme Makineleri</title>
+    <meta name="description" content="Aradığınız sayfa bulunamadı. OK Otomasyon ana sayfasına yönlendiriliyorsunuz. Sera sulama makinesi, gübreleme makinesi ve iklimlendirme sistemleri.">
+    <meta name="robots" content="noindex, follow">
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <link rel="canonical" href="https://okotomasyon.com/">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 50%, #0a0a0a 100%);
+            color: #fff;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 2rem;
+        }
+        .error-code { font-size: 8rem; font-weight: 900; background: linear-gradient(135deg, #10b981, #059669); -webkit-background-clip: text; -webkit-text-fill-color: transparent; line-height: 1; }
+        h1 { font-size: 1.5rem; margin: 1rem 0 0.5rem; font-weight: 600; }
+        p { color: #94a3b8; max-width: 480px; line-height: 1.6; margin-bottom: 2rem; }
+        .back-btn {
+            display: inline-block; padding: 0.875rem 2rem; background: linear-gradient(135deg, #10b981, #059669);
+            color: #fff; text-decoration: none; border-radius: 12px; font-weight: 600; font-size: 1rem;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .back-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(16, 185, 129, 0.3); }
+        .redirect-msg { margin-top: 1.5rem; font-size: 0.85rem; color: #64748b; }
+    </style>
     <script>
         // Eski URL'leri ana sayfaya yönlendir
-        // /sulama-makineleri, /urunler vs. -> index.html
         var path = window.location.pathname;
         var hash = '';
-        if (path.includes('sulama') || path.includes('urunler') || path.includes('products')) {
+        if (path.includes('sulama') || path.includes('urunler') || path.includes('products') || path.includes('clients')) {
             hash = '#urunler';
         } else if (path.includes('hakkimizda') || path.includes('about')) {
             hash = '#hakkimizda';
@@ -17,15 +46,33 @@
             hash = '#iletisim';
         } else if (path.includes('iklimlendirme') || path.includes('climate')) {
             hash = '#iklimlendirme';
-        } else if (path.includes('agrinexus')) {
+        } else if (path.includes('agrinexus') || path.includes('scada')) {
             hash = '#agrinexus';
+        } else if (path.includes('vdeolar') || path.includes('video')) {
+            hash = '#hakkimizda';
+        } else if (path.includes('boluk') || path.includes('referans')) {
+            hash = '#urunler';
         }
-        window.location.replace('/' + hash);
+        // 3 saniye sonra otomatik yönlendir
+        setTimeout(function() { window.location.replace('/' + hash); }, 3000);
     </script>
 </head>
 
 <body>
-    <p>Yönlendiriliyorsunuz...</p>
+    <div class="error-code">404</div>
+    <h1>Sayfa Bulunamadı</h1>
+    <p>Aradığınız sayfa mevcut değil veya taşınmış olabilir. 3 saniye içinde ana sayfaya yönlendirileceksiniz.</p>
+    <a href="/" class="back-btn">🏠 Ana Sayfaya Dön</a>
+    <p class="redirect-msg">Otomatik yönlendirme: 3 saniye...</p>
+
+    <!-- SEO: Eski sayfalar için bağlantılar -->
+    <nav style="display:none" aria-hidden="true">
+        <a href="/#urunler">Sera Sulama ve Gübreleme Makineleri</a>
+        <a href="/#agrinexus">AgriNexus SCADA</a>
+        <a href="/#iklimlendirme">Sera İklimlendirme Sistemleri</a>
+        <a href="/#sensorler">EC pH Sensör ve Ölçüm Sistemleri</a>
+        <a href="/#iletisim">İletişim</a>
+    </nav>
 </body>
 
 </html>

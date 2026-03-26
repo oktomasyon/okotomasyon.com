@@ -374,7 +374,7 @@ function renderFooter(L) {
     document.getElementById('footerSection').innerHTML = `
         <div class="footer-inner">
             <div class="footer-brand">
-                <div class="nav-logo"><img src="ok-icon.png" alt="O" class="nav-logo-img"><span class="logo-k">K</span><span class="logo-divider"></span><span class="logo-accent">OTOMASYON</span></div>
+                <div class="nav-logo"><img src="ok-icon.png" alt="OK Otomasyon - Sera Sulama ve Gübreleme Makineleri" class="nav-logo-img" width="40" height="40" loading="lazy"><span class="logo-k">K</span><span class="logo-divider"></span><span class="logo-accent">OTOMASYON</span></div>
                 <p>${f.desc}</p>
             </div>
             <div class="footer-links">

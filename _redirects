@@ -1,20 +1,55 @@
-# Eski Wix sayfalarını ana sayfaya yönlendir (301 kalıcı yönlendirme)
-/sulama-makineleri          /#urunler       301
-/sulama-makineleri/*        /#urunler       301
-/gübreleme-makineleri       /#urunler       301
-/urunler                    /#urunler       301
-/urunler/*                  /#urunler       301
-/hakkimizda                 /#hakkimizda    301
-/about                      /#hakkimizda    301
-/iletisim                   /#iletisim      301
-/contact                    /#iletisim      301
-/iklimlendirme              /#iklimlendirme 301
-/iklim-kontrol              /#iklimlendirme 301
-/agrinexus                  /#agrinexus     301
-/scada                      /#agrinexus     301
-/sera-otomasyonu            /               301
-/sera-sulama                /#urunler       301
-/sera-iklimlendirme         /#iklimlendirme 301
+# OK Otomasyon — URL Yönlendirmeleri (Netlify/Cloudflare)
+# Son güncelleme: 2026-03-26
 
-# Tüm bilinmeyen sayfaları ana sayfaya yönlendir (SPA fallback)
-/*                          /index.html     200
+# ═══════════════════════════════════════════
+# SEO LANDING SAYFALARI — Doğrudan servis et (HTML uzantısız clean URL)
+# ═══════════════════════════════════════════
+/sera-sulama-makinesi       /sera-sulama-makinesi.html       200
+/sera-iklimlendirme         /sera-iklimlendirme.html         200
+/ec-ph-olcum                /ec-ph-olcum.html                200
+/sera-otomasyon             /sera-otomasyon.html             200
+/bitki-gelisim-kontrol      /bitki-gelisim-kontrol.html      200
+
+# ═══════════════════════════════════════════
+# ESKİ WIX SAYFALARI — 301 Kalıcı Yönlendirme
+# ═══════════════════════════════════════════
+/sulama-makineleri          /sera-sulama-makinesi    301
+/sulama-makineleri/*        /sera-sulama-makinesi    301
+/gübreleme-makineleri       /sera-sulama-makinesi    301
+/urunler                    /#urunler                301
+/urunler/*                  /#urunler                301
+/hakkimizda                 /#hakkimizda             301
+/about                      /#hakkimizda             301
+/iletisim                   /#iletisim               301
+/contact                    /#iletisim               301
+/iklimlendirme              /sera-iklimlendirme      301
+/iklim-kontrol              /sera-iklimlendirme      301
+/agrinexus                  /#agrinexus              301
+/scada                      /#agrinexus              301
+/sera-otomasyonu            /sera-otomasyon          301
+/sera-sulama                /sera-sulama-makinesi    301
+/sera-iklimlendirme-sistemi /sera-iklimlendirme      301
+
+# Google'da hala görünen eski Wix sayfaları
+/vdeolar                    /#hakkimizda             301
+/vdeolar/*                  /#hakkimizda             301
+/boluk                      /sera-sulama-makinesi    301
+/boluk/*                    /sera-sulama-makinesi    301
+/clients                    /sera-sulama-makinesi    301
+/clients/*                  /sera-sulama-makinesi    301
+/referanslar                /#hakkimizda             301
+/referanslar/*              /#hakkimizda             301
+
+# Olası eski URL varyasyonları
+/products                   /sera-sulama-makinesi    301
+/products/*                 /sera-sulama-makinesi    301
+/services                   /sera-otomasyon          301
+/services/*                 /sera-otomasyon          301
+/gallery                    /#urunler                301
+/portfolio                  /#urunler                301
+/videos                     /#hakkimizda             301
+
+# ═══════════════════════════════════════════
+# SPA FALLBACK
+# ═══════════════════════════════════════════
+/*                          /index.html              200

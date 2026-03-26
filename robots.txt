@@ -1,12 +1,34 @@
 # OK Otomasyon — robots.txt
+# Son güncelleme: 2026-03-26
+
 User-agent: *
 Allow: /
 Disallow: /admin.html
+Disallow: /tracker.js
 
 # Sitemap
 Sitemap: https://okotomasyon.com/sitemap.xml
 
-# Google
+# Google — özel kurallar
 User-agent: Googlebot
 Allow: /
-Crawl-delay: 1
+Disallow: /admin.html
+
+# Google Görsel
+User-agent: Googlebot-Image
+Allow: /*.png$
+Allow: /*.jpg$
+Allow: /*.webp$
+
+# Bing
+User-agent: Bingbot
+Allow: /
+Disallow: /admin.html
+Crawl-delay: 2
+
+# Yandex
+User-agent: YandexBot
+Allow: /
+Disallow: /admin.html
+Crawl-delay: 2
+Host: https://okotomasyon.com

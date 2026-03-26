@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
-        xmlns:xhtml="http://www.w3.org/1999/xhtml">
+        xmlns:xhtml="http://www.w3.org/1999/xhtml"
+        xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
 
-  <!-- Ana Sayfa — Türkçe (varsayılan) -->
+  <!-- ═══ ANA SAYFA ═══ -->
   <url>
     <loc>https://okotomasyon.com/</loc>
     <xhtml:link rel="alternate" hreflang="tr" href="https://okotomasyon.com/" />
@@ -10,51 +11,126 @@
     <xhtml:link rel="alternate" hreflang="ru" href="https://okotomasyon.com/?lang=ru" />
     <xhtml:link rel="alternate" hreflang="ar" href="https://okotomasyon.com/?lang=ar" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://okotomasyon.com/" />
-    <lastmod>2026-03-02</lastmod>
+    <lastmod>2026-03-26</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
+    <image:image>
+      <image:loc>https://okotomasyon.com/smart-greenhouse.png</image:loc>
+      <image:title>Akıllı Sera Otomasyon Sistemi - OK Otomasyon</image:title>
+    </image:image>
   </url>
 
-  <!-- İngilizce -->
+  <!-- ═══ SEO LANDING SAYFALARI ═══ -->
+
+  <!-- Sera Sulama Makinesi -->
+  <url>
+    <loc>https://okotomasyon.com/sera-sulama-makinesi</loc>
+    <lastmod>2026-03-26</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.95</priority>
+    <image:image>
+      <image:loc>https://okotomasyon.com/minimix.png</image:loc>
+      <image:title>MİNİMİX Sera Sulama ve Gübreleme Makinesi</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://okotomasyon.com/promix.png</image:loc>
+      <image:title>PROMİX Profesyonel Sulama ve Gübreleme Makinesi</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://okotomasyon.com/promax.png</image:loc>
+      <image:title>PROMAX Endüstriyel Sulama ve Gübreleme Makinesi</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://okotomasyon.com/alp2017.png</image:loc>
+      <image:title>ALP 2017 Amiral Gemisi Sulama Sistemi</image:title>
+    </image:image>
+  </url>
+
+  <!-- Sera İklimlendirme -->
+  <url>
+    <loc>https://okotomasyon.com/sera-iklimlendirme</loc>
+    <lastmod>2026-03-26</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.95</priority>
+    <image:image>
+      <image:loc>https://okotomasyon.com/iklim-3sektor.png</image:loc>
+      <image:title>Sera İklimlendirme Sistemi</image:title>
+    </image:image>
+  </url>
+
+  <!-- EC/pH Ölçüm -->
+  <url>
+    <loc>https://okotomasyon.com/ec-ph-olcum</loc>
+    <lastmod>2026-03-26</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.90</priority>
+    <image:image>
+      <image:loc>https://okotomasyon.com/sensor-ec-transmitter.png</image:loc>
+      <image:title>EC Transmitter - Sera EC Ölçüm Sistemi</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://okotomasyon.com/sensor-ph-transmitter.png</image:loc>
+      <image:title>pH Transmitter - Sera pH Ölçüm Sistemi</image:title>
+    </image:image>
+  </url>
+
+  <!-- Sera Otomasyon -->
+  <url>
+    <loc>https://okotomasyon.com/sera-otomasyon</loc>
+    <lastmod>2026-03-26</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.95</priority>
+    <image:image>
+      <image:loc>https://okotomasyon.com/smart-greenhouse.png</image:loc>
+      <image:title>Sera Otomasyon Sistemleri - Akıllı Sera</image:title>
+    </image:image>
+  </url>
+
+  <!-- Bitki Gelişim Kontrol -->
+  <url>
+    <loc>https://okotomasyon.com/bitki-gelisim-kontrol</loc>
+    <lastmod>2026-03-26</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.90</priority>
+    <image:image>
+      <image:loc>https://okotomasyon.com/smart-greenhouse.png</image:loc>
+      <image:title>Bitki Gelişim Kontrol - Topraksız Tarım</image:title>
+    </image:image>
+  </url>
+
+  <!-- ═══ DİL VERSİYONLARI ═══ -->
   <url>
     <loc>https://okotomasyon.com/?lang=en</loc>
     <xhtml:link rel="alternate" hreflang="tr" href="https://okotomasyon.com/" />
     <xhtml:link rel="alternate" hreflang="en" href="https://okotomasyon.com/?lang=en" />
-    <xhtml:link rel="alternate" hreflang="ru" href="https://okotomasyon.com/?lang=ru" />
-    <xhtml:link rel="alternate" hreflang="ar" href="https://okotomasyon.com/?lang=ar" />
-    <lastmod>2026-03-02</lastmod>
+    <lastmod>2026-03-26</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
 
-  <!-- Rusça -->
   <url>
     <loc>https://okotomasyon.com/?lang=ru</loc>
     <xhtml:link rel="alternate" hreflang="tr" href="https://okotomasyon.com/" />
-    <xhtml:link rel="alternate" hreflang="en" href="https://okotomasyon.com/?lang=en" />
     <xhtml:link rel="alternate" hreflang="ru" href="https://okotomasyon.com/?lang=ru" />
-    <xhtml:link rel="alternate" hreflang="ar" href="https://okotomasyon.com/?lang=ar" />
-    <lastmod>2026-03-02</lastmod>
+    <lastmod>2026-03-26</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
 
-  <!-- Arapça -->
   <url>
     <loc>https://okotomasyon.com/?lang=ar</loc>
     <xhtml:link rel="alternate" hreflang="tr" href="https://okotomasyon.com/" />
-    <xhtml:link rel="alternate" hreflang="en" href="https://okotomasyon.com/?lang=en" />
-    <xhtml:link rel="alternate" hreflang="ru" href="https://okotomasyon.com/?lang=ru" />
     <xhtml:link rel="alternate" hreflang="ar" href="https://okotomasyon.com/?lang=ar" />
-    <lastmod>2026-03-02</lastmod>
+    <lastmod>2026-03-26</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
 
-  <!-- Bölümler (tek sayfa anchor'ları) -->
-  <url><loc>https://okotomasyon.com/#urunler</loc><priority>0.9</priority></url>
-  <url><loc>https://okotomasyon.com/#agrinexus</loc><priority>0.9</priority></url>
-  <url><loc>https://okotomasyon.com/#iklimlendirme</loc><priority>0.9</priority></url>
-  <url><loc>https://okotomasyon.com/#hakkimizda</loc><priority>0.7</priority></url>
-  <url><loc>https://okotomasyon.com/#iletisim</loc><priority>0.7</priority></url>
+  <!-- ═══ BÖLÜM ANCHOR'LARI ═══ -->
+  <url><loc>https://okotomasyon.com/#urunler</loc><lastmod>2026-03-26</lastmod><priority>0.9</priority></url>
+  <url><loc>https://okotomasyon.com/#agrinexus</loc><lastmod>2026-03-26</lastmod><priority>0.9</priority></url>
+  <url><loc>https://okotomasyon.com/#iklimlendirme</loc><lastmod>2026-03-26</lastmod><priority>0.9</priority></url>
+  <url><loc>https://okotomasyon.com/#sensorler</loc><lastmod>2026-03-26</lastmod><priority>0.8</priority></url>
+  <url><loc>https://okotomasyon.com/#hakkimizda</loc><lastmod>2026-03-26</lastmod><priority>0.7</priority></url>
+  <url><loc>https://okotomasyon.com/#iletisim</loc><lastmod>2026-03-26</lastmod><priority>0.7</priority></url>
 </urlset>
