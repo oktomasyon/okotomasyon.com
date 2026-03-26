@@ -1,64 +1,23 @@
 /* ═══════════════════════════════════════════
-   OK OTOMASYON — Gelişmiş Ziyaretçi Takip Sistemi v2
-   Gerçek zamanlı çevrimiçi + toplam ziyaret + günlük/haftalık istatistik
+   OK OTOMASYON — Gerçek Zamanlı Ziyaretçi Takip v3
+   Firebase Realtime Database ile
+   - Anlık bağlı ziyaretçi (gerçek zamanlı)
+   - Sayfa yenilemede artmaz
+   - Günlük / Haftalık / Aylık / Yıllık toplam
    ═══════════════════════════════════════════ */
 
 (function () {
-    const STORAGE_KEY = 'okVisitors';
-    const DAILY_KEY = 'okDailyStats';
-    const MAX_RECORDS = 1000;
-    const HEARTBEAT_INTERVAL = 30000; // 30 saniye
-    const ONLINE_TIMEOUT = 60000; // 60 saniye — bu süre geçince offline say
-
-    // ─── Cihaz / Tarayıcı Bilgileri ───
-    function getDeviceType() {
-        const ua = navigator.userAgent;
-        if (/Mobi|Android.*Mobile|iPhone|iPod/i.test(ua)) return 'Mobil';
-        if (/iPad|Android(?!.*Mobile)|Tablet/i.test(ua)) return 'Tablet';
-        return 'Masaüstü';
-    }
-
-    function getBrowser() {
-        const ua = navigator.userAgent;
-        if (ua.includes('Firefox/')) return 'Firefox';
-        if (ua.includes('Edg/')) return 'Edge';
-        if (ua.includes('OPR/') || ua.includes('Opera/')) return 'Opera';
-        if (ua.includes('YaBrowser/')) return 'Yandex';
-        if (ua.includes('SamsungBrowser/')) return 'Samsung';
-        if (ua.includes('Chrome/') && ua.includes('Safari/')) return 'Chrome';
-        if (ua.includes('Safari/') && !ua.includes('Chrome')) return 'Safari';
-        return 'Diğer';
-    }
-
-    function getOS() {
-        const ua = navigator.userAgent;
-        if (ua.includes('Windows')) return 'Windows';
-        if (ua.includes('Mac OS')) return 'macOS';
-        if (ua.includes('Android')) return 'Android';
-        if (/iPhone|iPad|iPod/.test(ua)) return 'iOS';
-        if (ua.includes('Linux')) return 'Linux';
-        return 'Diğer';
-    }
-
-    function getReferrerSource() {
-        const ref = document.referrer;
-        if (!ref) return 'Doğrudan';
-        try {
-            const host = new URL(ref).hostname.toLowerCase();
-            if (host.includes('google')) return 'Google';
-            if (host.includes('yandex')) return 'Yandex';
-            if (host.includes('bing')) return 'Bing';
-            if (host.includes('facebook') || host.includes('fb.com')) return 'Facebook';
-            if (host.includes('instagram')) return 'Instagram';
-            if (host.includes('twitter') || host.includes('x.com')) return 'X/Twitter';
-            if (host.includes('linkedin')) return 'LinkedIn';
-            if (host.includes('youtube')) return 'YouTube';
-            if (host.includes('whatsapp')) return 'WhatsApp';
-            if (host.includes('telegram')) return 'Telegram';
-            if (host.includes('tiktok')) return 'TikTok';
-            return host;
-        } catch { return 'Diğer'; }
-    }
+    // Firebase SDK zaten index.html'de yükleniyor
+    const FIREBASE_CONFIG = {
+        apiKey: "AIzaSyAPc6IV1tzCPLO7Jj5ZcRNuJNsjQdMiK6k",
+        authDomain: "okotomasyon-tracker.firebaseapp.com",
+        databaseURL: "https://okotomasyon-tracker-default-rtdb.firebaseio.com",
+        projectId: "okotomasyon-tracker",
+        storageBucket: "okotomasyon-tracker.firebasestorage.app",
+        messagingSenderId: "917865787896",
+        appId: "1:917865787896:web:d62475c8cf39f53ad8260d",
+        measurementId: "G-6K5PEXJY7G"
+    };
 
     // ─── Benzersiz Ziyaretçi ID ───
     function getVisitorId() {
@@ -71,228 +30,266 @@
     }
 
     // ─── Tarih Yardımcıları ───
-    function getTodayKey() {
-        return new Date().toISOString().split('T')[0]; // "2026-03-26"
-    }
-
-    function getWeekStart() {
+    function getTodayKey() { return new Date().toISOString().split('T')[0]; }
+    function getWeekKey() {
         const d = new Date();
-        d.setDate(d.getDate() - d.getDay() + 1); // Pazartesi
-        return d.toISOString().split('T')[0];
+        const onejan = new Date(d.getFullYear(), 0, 1);
+        const week = Math.ceil((((d - onejan) / 86400000) + onejan.getDay() + 1) / 7);
+        return d.getFullYear() + '-W' + String(week).padStart(2, '0');
     }
+    function getMonthKey() { const d = new Date(); return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0'); }
+    function getYearKey() { return String(new Date().getFullYear()); }
 
-    // ─── Günlük İstatistik Yönetimi ───
-    function getDailyStats() {
+    // ─── Cihaz Bilgileri ───
+    function getDeviceType() {
+        const ua = navigator.userAgent;
+        if (/Mobi|Android.*Mobile|iPhone|iPod/i.test(ua)) return 'Mobil';
+        if (/iPad|Android(?!.*Mobile)|Tablet/i.test(ua)) return 'Tablet';
+        return 'Masaüstü';
+    }
+    function getBrowser() {
+        const ua = navigator.userAgent;
+        if (ua.includes('Firefox/')) return 'Firefox';
+        if (ua.includes('Edg/')) return 'Edge';
+        if (ua.includes('OPR/')) return 'Opera';
+        if (ua.includes('YaBrowser/')) return 'Yandex';
+        if (ua.includes('Chrome/') && ua.includes('Safari/')) return 'Chrome';
+        if (ua.includes('Safari/') && !ua.includes('Chrome')) return 'Safari';
+        return 'Diğer';
+    }
+    function getReferrerSource() {
+        const ref = document.referrer;
+        if (!ref) return 'Doğrudan';
         try {
-            return JSON.parse(localStorage.getItem(DAILY_KEY) || '{}');
-        } catch { return {}; }
+            const host = new URL(ref).hostname.toLowerCase();
+            if (host.includes('google')) return 'Google';
+            if (host.includes('yandex')) return 'Yandex';
+            if (host.includes('bing')) return 'Bing';
+            if (host.includes('facebook') || host.includes('fb.com')) return 'Facebook';
+            if (host.includes('instagram')) return 'Instagram';
+            if (host.includes('whatsapp')) return 'WhatsApp';
+            return host;
+        } catch { return 'Diğer'; }
     }
 
-    function saveDailyStats(stats) {
-        localStorage.setItem(DAILY_KEY, JSON.stringify(stats));
-    }
-
-    function incrementDailyVisit() {
-        const stats = getDailyStats();
-        const today = getTodayKey();
-        if (!stats[today]) stats[today] = { visits: 0, uniqueVisitors: [] };
-        stats[today].visits++;
-        const vid = getVisitorId();
-        if (!stats[today].uniqueVisitors.includes(vid)) {
-            stats[today].uniqueVisitors.push(vid);
-        }
-        // Son 30 günü tut, eskilerini sil
-        const keys = Object.keys(stats).sort();
-        while (keys.length > 30) {
-            delete stats[keys.shift()];
-        }
-        saveDailyStats(stats);
-        return stats;
-    }
-
-    // ─── Çevrimiçi Ziyaretçi Takibi (BroadcastChannel + localStorage) ───
-    const ONLINE_KEY = 'okOnlineUsers';
     const visitorId = getVisitorId();
+    let db = null;
+    let onlineCount = 1;
 
-    function getOnlineUsers() {
+    // ─── Firebase Başlat ───
+    function initFirebase() {
         try {
-            const data = JSON.parse(localStorage.getItem(ONLINE_KEY) || '{}');
-            // Timeout geçen kullanıcıları temizle
-            const now = Date.now();
-            const active = {};
-            for (const [id, ts] of Object.entries(data)) {
-                if (now - ts < ONLINE_TIMEOUT) {
-                    active[id] = ts;
-                }
+            // Firebase zaten yüklü mü kontrol et
+            if (typeof firebase === 'undefined') {
+                console.warn('⚠️ Firebase SDK yüklenmemiş, yerel mod kullanılıyor');
+                fallbackMode();
+                return;
             }
-            return active;
-        } catch { return {}; }
-    }
 
-    function heartbeat() {
-        const users = getOnlineUsers();
-        users[visitorId] = Date.now();
-        localStorage.setItem(ONLINE_KEY, JSON.stringify(users));
-    }
-
-    function removeOnlineUser() {
-        const users = getOnlineUsers();
-        delete users[visitorId];
-        localStorage.setItem(ONLINE_KEY, JSON.stringify(users));
-    }
-
-    // ─── Global Sayaç (Birden Fazla API ile Yedekli) ───
-    async function getGlobalCount() {
-        // API 1: CountAPI.xyz
-        try {
-            const res = await fetch('https://api.countapi.xyz/hit/okotomasyon.com/visits');
-            if (res.ok) {
-                const data = await res.json();
-                if (data.value) return data.value;
+            // Firebase'i başlat (zaten başlatılmışsa tekrar başlatma)
+            if (!firebase.apps.length) {
+                firebase.initializeApp(FIREBASE_CONFIG);
             }
-        } catch {}
+            db = firebase.database();
 
-        // API 2: CounterAPI.dev (yedek)
-        try {
-            const res = await fetch('https://api.counterapi.dev/v1/okotomasyon_com/visits/up');
-            if (res.ok) {
-                const data = await res.json();
-                if (data.count) return data.count;
-            }
-        } catch {}
-
-        // Fallback: localStorage
-        const visits = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
-        return visits.length;
+            // Anonim giriş yap
+            firebase.auth().signInAnonymously().then(() => {
+                setupPresence();
+                recordVisit();
+                listenToStats();
+            }).catch(err => {
+                console.warn('Firebase auth hatası:', err.message);
+                fallbackMode();
+            });
+        } catch (e) {
+            console.warn('Firebase başlatma hatası:', e.message);
+            fallbackMode();
+        }
     }
 
-    // ─── Ziyaret Kaydet ───
-    async function recordVisit() {
-        const visit = {
-            ts: Date.now(),
-            date: new Date().toLocaleString('tr-TR'),
-            page: location.pathname + location.hash,
+    // ─── PRESENCE (Anlık Çevrimiçi) ───
+    function setupPresence() {
+        const presenceRef = db.ref('presence/' + visitorId);
+        const connectedRef = db.ref('.info/connected');
+
+        connectedRef.on('value', (snap) => {
+            if (snap.val() === true) {
+                // Bağlıyız
+                presenceRef.set({
+                    online: true,
+                    lastSeen: firebase.database.ServerValue.TIMESTAMP,
+                    device: getDeviceType(),
+                    browser: getBrowser(),
+                    page: location.pathname
+                });
+
+                // Bağlantı koptuğunda otomatik sil
+                presenceRef.onDisconnect().remove();
+            }
+        });
+
+        // Anlık çevrimiçi sayısını dinle
+        db.ref('presence').on('value', (snap) => {
+            const data = snap.val();
+            onlineCount = data ? Object.keys(data).length : 0;
+            updateBadge();
+        });
+    }
+
+    // ─── ZİYARET KAYDET (Tekrar sayma korumalı) ───
+    function recordVisit() {
+        // Session kontrolü: Bu oturumda zaten sayıldı mı?
+        if (sessionStorage.getItem('okVisitCounted')) {
+            return; // Sayfa yenilemede tekrar saymaz!
+        }
+        sessionStorage.setItem('okVisitCounted', 'true');
+
+        const today = getTodayKey();
+        const week = getWeekKey();
+        const month = getMonthKey();
+        const year = getYearKey();
+
+        // Toplam ziyareti artır (transaction ile güvenli)
+        db.ref('stats/total').transaction(val => (val || 0) + 1);
+
+        // Günlük
+        db.ref('stats/daily/' + today).transaction(val => (val || 0) + 1);
+
+        // Haftalık
+        db.ref('stats/weekly/' + week).transaction(val => (val || 0) + 1);
+
+        // Aylık
+        db.ref('stats/monthly/' + month).transaction(val => (val || 0) + 1);
+
+        // Yıllık
+        db.ref('stats/yearly/' + year).transaction(val => (val || 0) + 1);
+
+        // Detaylı kayıt (son 100 ziyaret)
+        db.ref('visits').push({
+            visitorId: visitorId,
+            timestamp: firebase.database.ServerValue.TIMESTAMP,
+            page: location.pathname,
             device: getDeviceType(),
             browser: getBrowser(),
-            os: getOS(),
             source: getReferrerSource(),
-            referrer: document.referrer || '',
-            screen: screen.width + 'x' + screen.height,
-            lang: navigator.language || '',
-            siteLang: localStorage.getItem('okLang') || 'tr',
-            visitorId: visitorId,
-            ip: '',
-            country: '',
-            city: '',
-            isp: ''
-        };
-
-        // IP bilgisi (sessizce dene)
-        try {
-            const res = await fetch('https://ipapi.co/json/');
-            if (res.ok) {
-                const data = await res.json();
-                visit.ip = data.ip || '';
-                visit.country = data.country_name || '';
-                visit.city = data.city || '';
-                visit.isp = data.org || '';
-            }
-        } catch {}
-
-        // localStorage'a kaydet
-        let visits = [];
-        try { visits = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]'); } catch { visits = []; }
-        visits.push(visit);
-        if (visits.length > MAX_RECORDS) {
-            visits = visits.slice(visits.length - MAX_RECORDS);
-        }
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(visits));
-
-        // Günlük istatistik güncelle
-        incrementDailyVisit();
-
-        // Global sayaç
-        window.globalVisitCount = await getGlobalCount();
+            screen: screen.width + 'x' + screen.height
+        });
     }
 
-    // ─── Badge Güncelle ───
-    function updateVisitorBadge() {
-        const onlineUsers = getOnlineUsers();
-        const onlineCount = Object.keys(onlineUsers).length;
+    // ─── İSTATİSTİKLERİ DİNLE ───
+    function listenToStats() {
+        const today = getTodayKey();
+        const week = getWeekKey();
+        const month = getMonthKey();
+        const year = getYearKey();
 
-        const totalEl = document.getElementById('totalVisits');
+        // Toplam
+        db.ref('stats/total').on('value', snap => {
+            window.okStats = window.okStats || {};
+            window.okStats.total = snap.val() || 0;
+            updateBadge();
+        });
+
+        // Günlük
+        db.ref('stats/daily/' + today).on('value', snap => {
+            window.okStats = window.okStats || {};
+            window.okStats.daily = snap.val() || 0;
+            updateBadge();
+        });
+
+        // Haftalık
+        db.ref('stats/weekly/' + week).on('value', snap => {
+            window.okStats = window.okStats || {};
+            window.okStats.weekly = snap.val() || 0;
+            updateBadge();
+        });
+
+        // Aylık
+        db.ref('stats/monthly/' + month).on('value', snap => {
+            window.okStats = window.okStats || {};
+            window.okStats.monthly = snap.val() || 0;
+            updateBadge();
+        });
+
+        // Yıllık
+        db.ref('stats/yearly/' + year).on('value', snap => {
+            window.okStats = window.okStats || {};
+            window.okStats.yearly = snap.val() || 0;
+            updateBadge();
+        });
+    }
+
+    // ─── BADGE GÜNCELLE ───
+    function updateBadge() {
+        const stats = window.okStats || {};
+
         const liveEl = document.getElementById('liveCount');
         const dailyEl = document.getElementById('dailyVisits');
         const weeklyEl = document.getElementById('weeklyVisits');
+        const totalEl = document.getElementById('totalVisits');
 
-        // Toplam ziyaret (sadece sayıyı güncelle, etiket HTML'de zaten var)
-        if (totalEl) {
-            const total = window.globalVisitCount || JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]').length;
-            totalEl.textContent = total.toLocaleString('tr-TR');
-        }
+        if (liveEl) liveEl.textContent = onlineCount;
+        if (dailyEl) dailyEl.textContent = '📅 ' + (stats.daily || 0) + ' Bugün';
+        if (weeklyEl) weeklyEl.textContent = '📊 ' + (stats.weekly || 0) + ' Bu Hafta';
+        if (totalEl) totalEl.textContent = (stats.total || 0).toLocaleString('tr-TR');
+    }
 
-        // Çevrimiçi (sadece sayıyı güncelle)
-        if (liveEl) {
-            liveEl.textContent = onlineCount;
-        }
+    // ─── FALLBACK (Firebase yoksa) ───
+    function fallbackMode() {
+        // sessionStorage ile yenileme koruması
+        if (!sessionStorage.getItem('okVisitCounted')) {
+            sessionStorage.setItem('okVisitCounted', 'true');
 
-        // Günlük ziyaret
-        if (dailyEl) {
-            const stats = getDailyStats();
+            // Yerel sayaç
+            let total = parseInt(localStorage.getItem('okTotalVisits') || '0');
+            total++;
+            localStorage.setItem('okTotalVisits', String(total));
+
+            // Günlük sayaç
             const today = getTodayKey();
-            const todayVisits = stats[today] ? stats[today].visits : 0;
-            dailyEl.textContent = '📅 ' + todayVisits + ' Bugün';
+            let dailyData = {};
+            try { dailyData = JSON.parse(localStorage.getItem('okDailyStats') || '{}'); } catch {}
+            if (!dailyData[today]) dailyData[today] = 0;
+            dailyData[today]++;
+            localStorage.setItem('okDailyStats', JSON.stringify(dailyData));
         }
 
-        // Haftalık ziyaret
+        // Badge güncelle
+        const total = parseInt(localStorage.getItem('okTotalVisits') || '0');
+        const dailyData = JSON.parse(localStorage.getItem('okDailyStats') || '{}');
+        const today = getTodayKey();
+        const weekStart = getWeekKey();
+
+        const liveEl = document.getElementById('liveCount');
+        const dailyEl = document.getElementById('dailyVisits');
+        const weeklyEl = document.getElementById('weeklyVisits');
+        const totalEl = document.getElementById('totalVisits');
+
+        if (liveEl) liveEl.textContent = '1';
+        if (dailyEl) dailyEl.textContent = '📅 ' + (dailyData[today] || 0) + ' Bugün';
+        if (totalEl) totalEl.textContent = total.toLocaleString('tr-TR');
+
+        // Haftalık hesapla
         if (weeklyEl) {
-            const stats = getDailyStats();
-            const weekStart = getWeekStart();
             let weeklyTotal = 0;
-            for (const [date, data] of Object.entries(stats)) {
-                if (date >= weekStart) weeklyTotal += data.visits;
+            const now = new Date();
+            for (let i = 0; i < 7; i++) {
+                const d = new Date(now);
+                d.setDate(d.getDate() - i);
+                const key = d.toISOString().split('T')[0];
+                weeklyTotal += (dailyData[key] || 0);
             }
             weeklyEl.textContent = '📊 ' + weeklyTotal + ' Bu Hafta';
         }
     }
 
-    // ─── Çalıştır ───
+    // ─── BAŞLAT ───
     if (!location.pathname.includes('admin')) {
-        // İlk heartbeat
-        heartbeat();
-
-        // Ziyaret kaydet ve badge güncelle
-        recordVisit().then(() => {
-            updateVisitorBadge();
-        });
-
-        // Düzenli heartbeat (30 saniyede bir)
-        setInterval(() => {
-            heartbeat();
-            updateVisitorBadge();
-        }, HEARTBEAT_INTERVAL);
-
-        // Sayfa kapandığında çevrimiçi listesinden çıkar
-        window.addEventListener('beforeunload', removeOnlineUser);
-        document.addEventListener('visibilitychange', () => {
-            if (document.hidden) {
-                // Sekme arka plana geçti — hala çevrimiçi say ama heartbeat yavaşlat
-            } else {
-                heartbeat();
-                updateVisitorBadge();
-            }
-        });
-    }
-
-    // Admin panel için global erişim
-    window.okTracker = {
-        getVisits: () => JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]'),
-        getDailyStats: getDailyStats,
-        getOnlineCount: () => Object.keys(getOnlineUsers()).length,
-        clearData: () => {
-            localStorage.removeItem(STORAGE_KEY);
-            localStorage.removeItem(DAILY_KEY);
-            localStorage.removeItem(ONLINE_KEY);
+        // Firebase SDK'yı bekle
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', () => setTimeout(initFirebase, 500));
+        } else {
+            setTimeout(initFirebase, 500);
         }
-    };
+    }
 })();
