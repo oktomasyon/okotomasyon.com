@@ -1,11 +1,45 @@
+# OK Otomasyon — HTTP Başlıkları (Netlify/Cloudflare)
+# Güvenlik + Performans + SEO Optimizasyonu
+
+# Tüm sayfalar — SEO & Güvenlik
 /*
-  Cache-Control: no-cache, no-store, must-revalidate
+  X-Frame-Options: SAMEORIGIN
+  X-Content-Type-Options: nosniff
+  X-XSS-Protection: 1; mode=block
+  Referrer-Policy: strict-origin-when-cross-origin
+  Permissions-Policy: camera=(), microphone=(), geolocation=(self)
 
-/*.js
-  Cache-Control: no-cache, must-revalidate
-
-/*.css
-  Cache-Control: no-cache, must-revalidate
-
+# HTML dosyaları — Her zaman taze al (SEO güncellemeleri anında yansısın)
 /*.html
-  Cache-Control: no-cache, no-store, must-revalidate
+  Cache-Control: no-cache, must-revalidate
+  X-Robots-Tag: index, follow
+
+# CSS dosyaları — Kısa süreli cache (1 saat)
+/*.css
+  Cache-Control: public, max-age=3600, must-revalidate
+
+# JavaScript dosyaları — Kısa süreli cache (1 saat)
+/*.js
+  Cache-Control: public, max-age=3600, must-revalidate
+
+# Görseller — Uzun süreli cache (30 gün)
+/*.png
+  Cache-Control: public, max-age=2592000, immutable
+
+/*.jpg
+  Cache-Control: public, max-age=2592000, immutable
+
+/*.webp
+  Cache-Control: public, max-age=2592000, immutable
+
+/*.svg
+  Cache-Control: public, max-age=2592000, immutable
+
+# Sitemap & Robots — Her zaman taze
+/sitemap.xml
+  Cache-Control: no-cache, must-revalidate
+  Content-Type: application/xml; charset=utf-8
+
+/robots.txt
+  Cache-Control: no-cache, must-revalidate
+  Content-Type: text/plain; charset=utf-8
