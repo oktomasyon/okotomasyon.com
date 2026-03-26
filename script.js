@@ -402,6 +402,10 @@ function renderFooter(L) {
         <div class="visitor-bar">
             <span class="visitor-live"><span class="pulse-dot"></span> <span id="liveCount">1</span> ${SITE.visitorBar ? SITE.visitorBar[L]?.online || 'Çevrimiçi' : 'Çevrimiçi'}</span>
             <span class="visitor-sep">|</span>
+            <span id="dailyVisits" class="visitor-daily">📅 0 Bugün</span>
+            <span class="visitor-sep">|</span>
+            <span id="weeklyVisits" class="visitor-weekly">📊 0 Bu Hafta</span>
+            <span class="visitor-sep">|</span>
             <span class="visitor-total">👁 <span id="totalVisits">0</span> ${SITE.visitorBar ? SITE.visitorBar[L]?.total || 'Toplam Ziyaret' : 'Toplam Ziyaret'}</span>
         </div>
         <div class="footer-bottom">${f.copyright}</div>`;

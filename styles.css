@@ -2199,6 +2199,13 @@ h4 {
         gap: 0.4rem;
         flex-wrap: wrap;
         justify-content: center;
+        border-radius: 16px;
+        padding: 0.75rem 1rem;
+        max-width: 100%;
+    }
+
+    .visitor-sep {
+        display: none;
     }
 
     .footer-bottom {

@@ -1,11 +1,16 @@
 /* ═══════════════════════════════════════════
-   OK OTOMASYON — Ziyaretçi Takip Sistemi
+   OK OTOMASYON — Gelişmiş Ziyaretçi Takip Sistemi v2
+   Gerçek zamanlı çevrimiçi + toplam ziyaret + günlük/haftalık istatistik
    ═══════════════════════════════════════════ */
 
 (function () {
     const STORAGE_KEY = 'okVisitors';
-    const MAX_RECORDS = 500;
+    const DAILY_KEY = 'okDailyStats';
+    const MAX_RECORDS = 1000;
+    const HEARTBEAT_INTERVAL = 30000; // 30 saniye
+    const ONLINE_TIMEOUT = 60000; // 60 saniye — bu süre geçince offline say
 
+    // ─── Cihaz / Tarayıcı Bilgileri ───
     function getDeviceType() {
         const ua = navigator.userAgent;
         if (/Mobi|Android.*Mobile|iPhone|iPod/i.test(ua)) return 'Mobil';
@@ -55,10 +60,113 @@
         } catch { return 'Diğer'; }
     }
 
-    function getScreenSize() {
-        return screen.width + 'x' + screen.height;
+    // ─── Benzersiz Ziyaretçi ID ───
+    function getVisitorId() {
+        let id = localStorage.getItem('okVisitorId');
+        if (!id) {
+            id = 'v_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+            localStorage.setItem('okVisitorId', id);
+        }
+        return id;
     }
 
+    // ─── Tarih Yardımcıları ───
+    function getTodayKey() {
+        return new Date().toISOString().split('T')[0]; // "2026-03-26"
+    }
+
+    function getWeekStart() {
+        const d = new Date();
+        d.setDate(d.getDate() - d.getDay() + 1); // Pazartesi
+        return d.toISOString().split('T')[0];
+    }
+
+    // ─── Günlük İstatistik Yönetimi ───
+    function getDailyStats() {
+        try {
+            return JSON.parse(localStorage.getItem(DAILY_KEY) || '{}');
+        } catch { return {}; }
+    }
+
+    function saveDailyStats(stats) {
+        localStorage.setItem(DAILY_KEY, JSON.stringify(stats));
+    }
+
+    function incrementDailyVisit() {
+        const stats = getDailyStats();
+        const today = getTodayKey();
+        if (!stats[today]) stats[today] = { visits: 0, uniqueVisitors: [] };
+        stats[today].visits++;
+        const vid = getVisitorId();
+        if (!stats[today].uniqueVisitors.includes(vid)) {
+            stats[today].uniqueVisitors.push(vid);
+        }
+        // Son 30 günü tut, eskilerini sil
+        const keys = Object.keys(stats).sort();
+        while (keys.length > 30) {
+            delete stats[keys.shift()];
+        }
+        saveDailyStats(stats);
+        return stats;
+    }
+
+    // ─── Çevrimiçi Ziyaretçi Takibi (BroadcastChannel + localStorage) ───
+    const ONLINE_KEY = 'okOnlineUsers';
+    const visitorId = getVisitorId();
+
+    function getOnlineUsers() {
+        try {
+            const data = JSON.parse(localStorage.getItem(ONLINE_KEY) || '{}');
+            // Timeout geçen kullanıcıları temizle
+            const now = Date.now();
+            const active = {};
+            for (const [id, ts] of Object.entries(data)) {
+                if (now - ts < ONLINE_TIMEOUT) {
+                    active[id] = ts;
+                }
+            }
+            return active;
+        } catch { return {}; }
+    }
+
+    function heartbeat() {
+        const users = getOnlineUsers();
+        users[visitorId] = Date.now();
+        localStorage.setItem(ONLINE_KEY, JSON.stringify(users));
+    }
+
+    function removeOnlineUser() {
+        const users = getOnlineUsers();
+        delete users[visitorId];
+        localStorage.setItem(ONLINE_KEY, JSON.stringify(users));
+    }
+
+    // ─── Global Sayaç (Birden Fazla API ile Yedekli) ───
+    async function getGlobalCount() {
+        // API 1: CountAPI.xyz
+        try {
+            const res = await fetch('https://api.countapi.xyz/hit/okotomasyon.com/visits');
+            if (res.ok) {
+                const data = await res.json();
+                if (data.value) return data.value;
+            }
+        } catch {}
+
+        // API 2: CounterAPI.dev (yedek)
+        try {
+            const res = await fetch('https://api.counterapi.dev/v1/okotomasyon_com/visits/up');
+            if (res.ok) {
+                const data = await res.json();
+                if (data.count) return data.count;
+            }
+        } catch {}
+
+        // Fallback: localStorage
+        const visits = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+        return visits.length;
+    }
+
+    // ─── Ziyaret Kaydet ───
     async function recordVisit() {
         const visit = {
             ts: Date.now(),
@@ -69,16 +177,17 @@
             os: getOS(),
             source: getReferrerSource(),
             referrer: document.referrer || '',
-            screen: getScreenSize(),
+            screen: screen.width + 'x' + screen.height,
             lang: navigator.language || '',
             siteLang: localStorage.getItem('okLang') || 'tr',
+            visitorId: visitorId,
             ip: '',
             country: '',
             city: '',
             isp: ''
         };
 
-        // IP ve konum bilgisi al (HTTPS destekli API)
+        // IP bilgisi (sessizce dene)
         try {
             const res = await fetch('https://ipapi.co/json/');
             if (res.ok) {
@@ -88,18 +197,9 @@
                 visit.city = data.city || '';
                 visit.isp = data.org || '';
             }
-        } catch { /* sessizce devam et */ }
+        } catch {}
 
-        // GERÇEK GLOBAL TRAFİK SAYACI (CounterAPI)
-        try {
-            const countRes = await fetch('https://api.counterapi.dev/v1/okotomasyon_com/visits/up');
-            if (countRes.ok) {
-                const countData = await countRes.json();
-                window.globalVisitCount = countData.count;
-            }
-        } catch { /* API hatası, sessizce geç */ }
-
-        // localStorage'a kaydet (admin panel için cihazdaki geçmişi tutar)
+        // localStorage'a kaydet
         let visits = [];
         try { visits = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]'); } catch { visits = []; }
         visits.push(visit);
@@ -107,49 +207,92 @@
             visits = visits.slice(visits.length - MAX_RECORDS);
         }
         localStorage.setItem(STORAGE_KEY, JSON.stringify(visits));
+
+        // Günlük istatistik güncelle
+        incrementDailyVisit();
+
+        // Global sayaç
+        window.globalVisitCount = await getGlobalCount();
     }
 
-    // Sayfa yüklendiğinde kaydet
+    // ─── Badge Güncelle ───
+    function updateVisitorBadge() {
+        const onlineUsers = getOnlineUsers();
+        const onlineCount = Object.keys(onlineUsers).length;
+
+        const totalEl = document.getElementById('totalVisits');
+        const liveEl = document.getElementById('liveCount');
+        const dailyEl = document.getElementById('dailyVisits');
+        const weeklyEl = document.getElementById('weeklyVisits');
+
+        // Toplam ziyaret (sadece sayıyı güncelle, etiket HTML'de zaten var)
+        if (totalEl) {
+            const total = window.globalVisitCount || JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]').length;
+            totalEl.textContent = total.toLocaleString('tr-TR');
+        }
+
+        // Çevrimiçi (sadece sayıyı güncelle)
+        if (liveEl) {
+            liveEl.textContent = onlineCount;
+        }
+
+        // Günlük ziyaret
+        if (dailyEl) {
+            const stats = getDailyStats();
+            const today = getTodayKey();
+            const todayVisits = stats[today] ? stats[today].visits : 0;
+            dailyEl.textContent = '📅 ' + todayVisits + ' Bugün';
+        }
+
+        // Haftalık ziyaret
+        if (weeklyEl) {
+            const stats = getDailyStats();
+            const weekStart = getWeekStart();
+            let weeklyTotal = 0;
+            for (const [date, data] of Object.entries(stats)) {
+                if (date >= weekStart) weeklyTotal += data.visits;
+            }
+            weeklyEl.textContent = '📊 ' + weeklyTotal + ' Bu Hafta';
+        }
+    }
+
+    // ─── Çalıştır ───
     if (!location.pathname.includes('admin')) {
+        // İlk heartbeat
+        heartbeat();
+
+        // Ziyaret kaydet ve badge güncelle
         recordVisit().then(() => {
             updateVisitorBadge();
         });
-    }
 
-    async function updateVisitorBadge() {
-        const visits = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
-        const totalEl = document.getElementById('totalVisits');
-        const liveEl = document.getElementById('liveCount');
+        // Düzenli heartbeat (30 saniyede bir)
+        setInterval(() => {
+            heartbeat();
+            updateVisitorBadge();
+        }, HEARTBEAT_INTERVAL);
 
-        if (totalEl) {
-            totalEl.innerHTML = `<span style="color:#6b7280; font-size:1.1rem; vertical-align:middle; margin-right:4px;">&#128065;</span><span style="color:#4b5563; font-weight:500;">${window.globalVisitCount || visits.length} Toplam Ziyaret</span>`;
-        }
-
-        if (liveEl) {
-            // Gerçek zamanlı trafik sayacı için 1 saatlik (veya günlük) pencere mantığını API ile çekiyoruz
-            // Bu yöntem statik sitelerde API tabanlı geçici canlılık sağlar.
-            let activeGlobal = 1;
-            try {
-                // Her gün için benzersiz bir canlı anahtar oluştur (Örn: okotomasyon_live_20231024)
-                const today = new Date().toISOString().split('T')[0].replace(/-/g, '');
-                const liveKey = `okotomasyon_live_${today}`;
-
-                // Ziyaret edeni anlık sayaca ekle
-                await fetch(`https://api.counterapi.dev/v1/${liveKey}/active/up`);
-
-                // Anlık sayaç değerini oku
-                const liveRes = await fetch(`https://api.counterapi.dev/v1/${liveKey}/active`);
-                if (liveRes.ok) {
-                    const liveData = await liveRes.json();
-                    activeGlobal = liveData.count || 1;
-                }
-            } catch (e) {
-                // Hata durumunda yerel fallback
-                const fiveMin = Date.now() - 300000;
-                activeGlobal = Math.max(1, visits.filter(v => v.ts > fiveMin).length);
+        // Sayfa kapandığında çevrimiçi listesinden çıkar
+        window.addEventListener('beforeunload', removeOnlineUser);
+        document.addEventListener('visibilitychange', () => {
+            if (document.hidden) {
+                // Sekme arka plana geçti — hala çevrimiçi say ama heartbeat yavaşlat
+            } else {
+                heartbeat();
+                updateVisitorBadge();
             }
-
-            liveEl.innerHTML = `<span style="color:#10b981; font-weight:600;">${activeGlobal} Çevrimiçi</span>`;
-        }
+        });
     }
+
+    // Admin panel için global erişim
+    window.okTracker = {
+        getVisits: () => JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]'),
+        getDailyStats: getDailyStats,
+        getOnlineCount: () => Object.keys(getOnlineUsers()).length,
+        clearData: () => {
+            localStorage.removeItem(STORAGE_KEY);
+            localStorage.removeItem(DAILY_KEY);
+            localStorage.removeItem(ONLINE_KEY);
+        }
+    };
 })();
