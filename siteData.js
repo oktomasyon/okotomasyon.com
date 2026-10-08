@@ -1,6 +1,6 @@
 /* ═══════════════════════════════════════════
    OK OTOMASYON — Site İçerik Verisi
-   Güncelleme: 11.09.2026 16:08:02
+   Güncelleme: 08.10.2026 15:12:26
    ═══════════════════════════════════════════ */
 
 const SITE = {
@@ -389,8 +389,8 @@ const SITE = {
             "id": "promix",
             "name": "PROMİX",
             "image": "promix.png",
-            "price": "₺317.061",
             "priceUSD": 7200,
+            "price": "₺425.705",
             "badge": {
                 "tr": "Çok Tercih Edilen",
                 "en": "Most Popular",
@@ -406,27 +406,30 @@ const SITE = {
             "specs": {
                 "tr": [
                     "Saatte 2 barda 85m³ sulama",
-                    "4+1 kanallı dozajlama",
+                    "2+1 kanallı dozajlama",
                     "5 bara kadar çalışma aralığı",
                     "Krom pompa, tüm gövde ful krom",
                     "Bypass bağlantı + Mix tanklı",
-                    "Kullanıcı dostu arayüz"
+                    "Kullanıcı dostu arayüz",
+                    "Uzatan bağlantı ve kontrol"
                 ],
                 "en": [
                     "85m³/h irrigation at 2 bar",
-                    "4+1 channel dosing",
+                    "2+1 channel dosing",
                     "Up to 5 bar working range",
                     "Chrome pump, full chrome body",
                     "Bypass + mixing tank",
-                    "User-friendly interface"
+                    "User-friendly interface",
+                    "Remote connection and control"
                 ],
                 "ru": [
                     "85м³/ч при 2 бар",
-                    "4+1 канала дозирования",
+                    "2+1 канала дозирования",
                     "Рабочий диапазон до 5 бар",
                     "Хромированный корпус",
                     "Байпас + миксерный бак",
-                    "Удобный интерфейс"
+                    "Удобный интерфейс",
+                    "Удаленное подключение и управление"
                 ],
                 "ar": [
                     "85م³/ساعة عند 2 بار",
@@ -434,7 +437,8 @@ const SITE = {
                     "نطاق عمل حتى 5 بار",
                     "هيكل كروم كامل",
                     "Bypass + خزان خلط",
-                    "واجهة سهلة الاستخدام"
+                    "واجهة سهلة الاستخدام",
+                    "الاتصال والتحكم عن بعد"
                 ]
             },
             "specLabels": [
@@ -451,8 +455,8 @@ const SITE = {
             "id": "promax",
             "name": "PROMAX",
             "image": "promax.png",
-            "price": "₺394.125",
-            "priceUSD": 8950,
+            "priceUSD": 9250,
+            "price": "₺546.913",
             "badge": {
                 "tr": "Yüksek Kapasite",
                 "en": "High Capacity",
