@@ -1,6 +1,6 @@
 /* ═══════════════════════════════════════════
    OK OTOMASYON — Site İçerik Verisi
-   Güncelleme: 08.10.2026 15:21:14
+   Güncelleme: 08.10.2026 15:28:24
    ═══════════════════════════════════════════ */
 
 const SITE = {
@@ -476,7 +476,7 @@ const SITE = {
                     "Yüksek basınçlı çalışma",
                     "Tam krom endüstriyel yapı",
                     "Bypass + Mix + Çoklu hat",
-                    "SCADA entegre kontrol"
+                    "Kullanıcı dostu arayüz, Uzaktan Bağlantı ve Kontrol"
                 ],
                 "en": [
                     "Industrial high-flow capacity",
@@ -484,7 +484,7 @@ const SITE = {
                     "High-pressure operation",
                     "Full chrome industrial build",
                     "Bypass + Mix + Multi-line",
-                    "SCADA integrated control"
+                    "User-friendly interface, remote connection and control"
                 ],
                 "ru": [
                     "Высокий промышленный расход",
@@ -492,7 +492,7 @@ const SITE = {
                     "Высокое давление",
                     "Хромированный промышленный корпус",
                     "Байпас + Микс + Многолинейный",
-                    "Интеграция со SCADA"
+                    "Удобный интерфейс, удаленное подключение и управление."
                 ],
                 "ar": [
                     "سعة تدفق صناعية عالية",
@@ -500,7 +500,7 @@ const SITE = {
                     "ضغط عالي",
                     "هيكل صناعي كروم كامل",
                     "Bypass + خلط + متعدد الخطوط",
-                    "تحكم SCADA متكامل"
+                    "واجهة سهلة الاستخدام، اتصال وتحكم عن بعد."
                 ]
             },
             "specLabels": [
