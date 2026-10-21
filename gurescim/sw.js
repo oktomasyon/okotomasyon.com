@@ -1,0 +1,31 @@
+// Güreşçim PWA Service Worker (v20261021)
+const CACHE_NAME = 'gurescim-pwa-v20261021';
+
+self.addEventListener('install', (event) => {
+    self.skipWaiting();
+});
+
+self.addEventListener('activate', (event) => {
+    event.waitUntil(
+        caches.keys().then((keys) => {
+            return Promise.all(
+                keys.map((key) => {
+                    if (key !== CACHE_NAME) {
+                        return caches.delete(key);
+                    }
+                })
+            );
+        }).then(() => self.clients.claim())
+    );
+});
+
+self.addEventListener('fetch', (event) => {
+    // Firebase veritabanı veya harici API isteklerini önbellekleme
+    if (event.request.url.includes('firebaseio.com') || event.request.method !== 'GET') {
+        return;
+    }
+
+    event.respondWith(
+        fetch(event.request).catch(() => caches.match(event.request))
+    );
+});

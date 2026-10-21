@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>🤼 Güreşçim - Kulüp Yönetim Masası</title>
+    <meta name="description" content="Güreşçim: Güreş kulüpleri için sporcu, yoklama, antrenman, lisans ve veli takip sistemi.">
+    <!-- iOS / Safari PWA Tam Ekran Desteği -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Güreşçim">
+    <meta name="theme-color" content="#070d18">
+    <link rel="manifest" href="/manifest.json">
+    <link rel="apple-touch-icon" href="https://img.icons8.com/color/180/wrestling.png">
+    <link rel="stylesheet" href="./app.css?v=20261021" />
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            background-color: #070d18;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            color: #ffffff;
+            -webkit-user-select: none;
+            user-select: none;
+        }
+        #out { width: 100%; height: 100%; }
+        #loading {
+            position: fixed;
+            inset: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background: radial-gradient(circle at 50% 30%, #16243d 0%, #070d18 80%);
+            z-index: 1000;
+            transition: opacity 0.4s ease-out;
+        }
+        .loader-spinner {
+            width: 54px;
+            height: 54px;
+            border: 4px solid rgba(56, 189, 248, 0.2);
+            border-top: 4px solid #38bdf8;
+            border-radius: 50%;
+            animation: spin 0.9s cubic-bezier(0.5, 0.1, 0.4, 0.9) infinite;
+            margin-bottom: 20px;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        .logo-text {
+            font-size: 26px;
+            font-weight: 800;
+            letter-spacing: 0.5px;
+            margin-bottom: 8px;
+            background: linear-gradient(135deg, #ffffff 0%, #cbd5e1 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .sub-text { font-size: 13px; color: #94a3b8; font-weight: 500; text-align: center; padding: 0 24px; }
+    </style>
+</head>
+<body>
+    <div id="loading">
+        <div style="font-size: 48px; margin-bottom: 12px;">🤼</div>
+        <div class="logo-text">GÜREŞÇİM</div>
+        <div class="sub-text" style="margin-bottom: 24px;">Kulüp Yönetim Masası &amp; Sporcu Takip</div>
+        <div class="loader-spinner"></div>
+        <div class="sub-text" id="status-label">Uygulama yükleniyor, lütfen bekleyin...</div>
+    </div>
+
+    <main id="out"></main>
+
+    <noscript>Güreşçim uygulamasını kullanmak için JavaScript'i etkinleştirin.</noscript>
+
+    <script>
+        /**
+         * iOS Safari uyumluluk yaması:
+         * Avalonia çizim kodu her karede `canvas instanceof OffscreenCanvas` kontrolü yapar.
+         * OffscreenCanvas olmayan WebKit sürümlerinde (iOS 16.4 öncesi Safari vb.) bu satır
+         * ReferenceError fırlatır ve hiçbir kare ekrana basılmaz (siyah ekran).
+         * Boş bir sınıf tanımlayarak kontrolün güvenle `false` dönmesi sağlanır.
+         */
+        if (typeof window.OffscreenCanvas === 'undefined') {
+            window.OffscreenCanvas = function OffscreenCanvas() {
+                throw new Error('OffscreenCanvas bu tarayıcıda desteklenmiyor');
+            };
+        }
+
+        /** Yükleme ekranını kapatır (C# uygulama hazır olduğunda çağırır). */
+        window.gurescimHazir = function () {
+            const l = document.getElementById('loading');
+            if (!l || l.dataset.kapandi) return;
+            l.dataset.kapandi = '1';
+            setTimeout(function () {
+                l.style.opacity = '0';
+                setTimeout(function () { l.style.display = 'none'; }, 400);
+            }, 300);
+        };
+        // Güvenlik: 120 sn içinde sinyal gelmezse yine de kapat
+        setTimeout(window.gurescimHazir, 120000);
+        // Yükleme süresince kullanıcıyı bilgilendir (yavaş mobil ağlar için)
+        setTimeout(function () {
+            const s = document.getElementById('status-label');
+            if (s) s.textContent = 'İlk açılış biraz sürebilir (~30 MB). Sonraki açılışlar hızlıdır...';
+        }, 8000);
+        // Hata yakalama: kullanıcıya boş ekran yerine mesaj göster
+        window.addEventListener('error', function (e) {
+            const s = document.getElementById('status-label');
+            if (s) s.textContent = 'Hata: ' + (e.message || 'bilinmeyen');
+        });
+    </script>
+    <!-- Uygulama artık tamamen Firebase Realtime DB üzerinden Serverless olarak çalışmaktadır. -->
+    <script type="module" src="./main.js?v=20261021"></script>
+</body>
+</html>

@@ -2,6 +2,12 @@
 # Son güncelleme: 2026-03-26
 
 # ═══════════════════════════════════════════
+# GÜREŞÇİM KULÜP UYGULAMASI (WASM PWA)
+# ═══════════════════════════════════════════
+/gurescim/*                  /gurescim/:splat                 200
+/gurescim                    /gurescim/index.html             200
+
+# ═══════════════════════════════════════════
 # SEO LANDING SAYFALARI — Doğrudan servis et (HTML uzantısız clean URL)
 # ═══════════════════════════════════════════
 /sera-sulama-makinesi       /sera-sulama-makinesi.html       200
