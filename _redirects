@@ -6,6 +6,8 @@
 # ═══════════════════════════════════════════
 /gurescim/*                  /gurescim/:splat                 200
 /gurescim                    /gurescim/index.html             200
+/scada/*                     /scada/:splat                    200
+/scada                       /scada/index.html                200
 
 # ═══════════════════════════════════════════
 # SEO LANDING SAYFALARI — Doğrudan servis et (HTML uzantısız clean URL)
@@ -31,7 +33,6 @@
 /iklimlendirme              /sera-iklimlendirme      301
 /iklim-kontrol              /sera-iklimlendirme      301
 /agrinexus                  /#agrinexus              301
-/scada                      /#agrinexus              301
 /sera-otomasyonu            /sera-otomasyon          301
 /sera-sulama                /sera-sulama-makinesi    301
 /sera-iklimlendirme-sistemi /sera-iklimlendirme      301
