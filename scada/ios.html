@@ -2093,7 +2093,8 @@ async function fetchScadaStatus() {
         g_FastLanHost = '';
       } else if (Date.now() - g_LastLanProbeMs > 6000) {
         g_LastLanProbeMs = Date.now();
-        for (const host of ['http://192.168.1.106:8088', 'http://127.0.0.1:8088']) {
+        for (const host of [g_DirectHost, 'http://192.168.1.101:8088', 'http://192.168.1.150:8088', 'http://192.168.1.106:8088', 'http://127.0.0.1:8088']) {
+          if (!host) continue;
           const d = await tryFastFetchJson(host + '/api/status?t=' + Date.now(), 380);
           if (d) {
             g_FastLanHost = host;
@@ -2108,12 +2109,17 @@ async function fetchScadaStatus() {
     const tok = await getFirebaseToken();
     if (tok) {
       const fbData = await tryFastFetchJson(FB_DB_URL + '/agrinexus_scada/status.json?auth=' + tok + '&t=' + Date.now(), 1400);
-      if (fbData) return fbData;
+      if (fbData) {
+        if (fbData.lan_ip && location.protocol !== 'https:') {
+          g_DirectHost = 'http://' + fbData.lan_ip + ':8088';
+        }
+        return fbData;
+      }
     }
 
     // 4) Yedek: Yerel ağda ESP32-S3 veya PC Gateway'i dene
     if (location.protocol !== 'https:') {
-      for (const host of ['http://192.168.1.106:8088', 'http://192.168.1.109', 'http://192.168.4.1']) {
+      for (const host of ['http://192.168.1.101:8088', 'http://192.168.1.150:8088', 'http://192.168.1.106:8088', 'http://192.168.1.109', 'http://192.168.4.1']) {
         const d = await tryFastFetchJson(host + '/api/status?t=' + Date.now(), 800);
         if (d) {
           g_ActiveHost = host;
@@ -2222,7 +2228,7 @@ function saveRecipeStep(recNo, adimNo) {
 
 let g_DeviceSerial = localStorage.getItem('ok_dev_serial') || 'OK-ARM-F407-001';
 let g_DevicePin    = localStorage.getItem('ok_dev_pin') || 'OK2026';
-let g_DirectHost   = localStorage.getItem('ok_dev_host') || 'http://192.168.1.106:8088';
+let g_DirectHost   = localStorage.getItem('ok_dev_host') || 'http://192.168.1.101:8088';
 
 function openDeviceModal() {
   document.getElementById('inpDevSerial').value = g_DeviceSerial;
@@ -2261,7 +2267,8 @@ function saveDevicePairing() {
 async function autoDiscoverLocalDevice() {
   const logEl = document.getElementById('secDiscoveryLog');
   logEl.textContent = '🔍 Yerel modem Wi-Fi / LAN ağı taranıyor...';
-  const candidates = [g_DirectHost, 'http://192.168.1.106:8088', 'http://127.0.0.1:8088', 'http://192.168.1.109', 'http://192.168.4.1'];
+  const dynLan = (g_LastData && g_LastData.lan_ip) ? ('http://' + g_LastData.lan_ip + ':8088') : '';
+  const candidates = [dynLan, g_DirectHost, 'http://192.168.1.101:8088', 'http://192.168.1.150:8088', 'http://192.168.1.106:8088', 'http://127.0.0.1:8088', 'http://192.168.1.109', 'http://192.168.4.1'];
   for (const host of candidates) {
     if (!host) continue;
     const d = await tryFastFetchJson(host + '/api/status?t=' + Date.now(), 450);
@@ -3281,6 +3288,22 @@ function openNewWebMonitorWindow() {
   window.open(url.toString(), '_blank', 'width=1360,height=840,noopener');
 }
 
+function applyPcTvScale() {
+  const sh = document.getElementById('pcScadaShell');
+  if (!sh) return;
+  if (g_UiDeviceMode === 'pc' && window.innerWidth >= 600 && window.innerWidth < 1340) {
+    const z = Math.max(0.62, Math.min(0.95, window.innerWidth / 1400));
+    sh.style.zoom = z.toFixed(3);
+    sh.style.width = Math.round(window.innerWidth / z) + 'px';
+    sh.style.height = Math.round(window.innerHeight / z) + 'px';
+  } else {
+    sh.style.zoom = '';
+    sh.style.width = '100vw';
+    sh.style.height = '100vh';
+  }
+}
+window.addEventListener('resize', applyPcTvScale);
+
 function setUiDeviceMode(mode, savePref = true) {
   g_UiDeviceMode = (mode === 'mobile') ? 'mobile' : 'pc';
   if (savePref) {
@@ -3288,6 +3311,7 @@ function setUiDeviceMode(mode, savePref = true) {
   }
   if (g_UiDeviceMode === 'pc') {
     document.body.classList.add('pc-scada-mode');
+    applyPcTvScale();
     populatePcSlotSelects();
     for (let i = 0; i < 4; i++) {
       const b = document.getElementById('pcSlotBody-' + i);
@@ -3296,6 +3320,7 @@ function setUiDeviceMode(mode, savePref = true) {
     mountPanesForCurrentMode();
   } else {
     document.body.classList.remove('pc-scada-mode');
+    applyPcTvScale();
     switchTab('sulama');
   }
   if (g_LastData) renderScada(g_LastData);
@@ -3361,18 +3386,24 @@ function saveAllPcPeriodsTable(slotIdx) {
   showToast('💾 8 Periyot (P1-P8) Parametre Cetveli ARM CPU Hafızasına Kaydedildi');
 }
 
-function savePcWindRow(slotIdx, idx) {
-  const r = g_WindMatrixRows[idx];
-  if (!r) return;
-  const g = (f) => document.getElementById(`pcw-s${slotIdx}-${idx}-${f}`);
-  if (g('yagmur')) r.yagmur = g('yagmur').value === '1';
-  if (g('yonAktif')) r.yonAktif = g('yonAktif').value === '1';
-  if (g('hizAlt')) r.hizAlt = Number(g('hizAlt').value);
-  if (g('hizUst')) r.hizUst = Number(g('hizUst').value);
-  if (g('yonStr')) r.yonStr = g('yonStr').value;
-  if (g('doguMax')) r.doguMax = Number(g('doguMax').value);
-  if (g('batiMax')) r.batiMax = Number(g('batiMax').value);
-  showToast(`💾 Rüzgar Matrisi ${r.kod} Satırı Güncellendi`);
+function savePcWindRow(slotIdx, kuralAd) {
+  const g = (f) => document.getElementById(`pcw-s${slotIdx}-${kuralAd}-${f}`);
+  const payload = { action: 'update_wind_rule', ad: String(kuralAd) };
+  if (g('limitHiz')) payload.limitHiz = Number(g('limitHiz').value);
+  if (g('doguMax')) {
+    const dVal = Number(g('doguMax').value);
+    payload.p1 = dVal; payload.p3 = dVal; payload.p5 = dVal; payload.p7 = dVal;
+  }
+  if (g('batiMax')) {
+    const bVal = Number(g('batiMax').value);
+    payload.p2 = bVal; payload.p4 = bVal; payload.p6 = bVal; payload.p8 = bVal;
+  }
+  sendScadaCmd(payload);
+}
+
+function saveAllPcWindMatrix(slotIdx) {
+  ['D1','D2','D3','D4','D5','D6','D7','D8'].forEach(ad => savePcWindRow(slotIdx, ad));
+  showToast('💾 Rüzgar Yön Matrisi (D1-D8) ARM CPU Hafızasına Kaydedildi');
 }
 
 function saveAllPcRecipeStudio(slotIdx) {
@@ -3394,6 +3425,44 @@ function saveAllPcRecipeStudio(slotIdx) {
   showToast('💾 Tüm Sulama Adımları ve G1..G6 Gübre Reçeteleri ARM CPU Hafızasına Kaydedildi');
 }
 
+/**
+ * PC'den gelen TV/Büyük Monitör ekran komutunu uygular.
+ * 1x1 dahil her düzende önce düzen (layout) sonra slot sayfaları kesin olarak ayarlanır.
+ * @param {{layout:string, slots:string[]}} tv  PC'nin gönderdiği düzen
+ * @param {boolean} showMsg  Kullanıcıya bildirim gösterilsin mi
+ */
+function applyRemoteTvLayout(tv, showMsg) {
+  try {
+    if (g_UiDeviceMode !== 'pc') setUiDeviceMode('pc', false);
+    const validLayouts = ['1x1', '1x2', '2x1', '1p2', '1x3', '2x2'];
+    let lay = (tv.layout === '1+2' || tv.layout === '2+1') ? '1p2' : String(tv.layout || '1x1');
+    if (!validLayouts.includes(lay)) lay = '1x1';
+    const validCodes = PC_PAGES.map(p => p.code);
+    if (Array.isArray(tv.slots)) {
+      for (let i = 0; i < 4 && i < tv.slots.length; i++) {
+        const c = String(tv.slots[i]);
+        if (validCodes.includes(c)) g_PcSlotCodes[i] = c;
+      }
+    }
+    for (let i = 0; i < 4; i++) {
+      const b = document.getElementById('pcSlotBody-' + i);
+      if (b) b.dataset.forceRender = '1';
+    }
+    g_PcActiveSlot = 0;
+    setPcSplitLayout(lay, lay !== '1x1');
+    // Sol menü vurgusu ve üst başlık ilk slot sayfasını göstersin
+    document.querySelectorAll('.pc-menu-btn').forEach(b => b.classList.remove('active'));
+    const navBtn = document.getElementById('pcnav-' + g_PcSlotCodes[0]);
+    if (navBtn) navBtn.classList.add('active');
+    const pg = PC_PAGES.find(p => p.code === g_PcSlotCodes[0]);
+    const titleEl = document.getElementById('pcActiveTitle');
+    if (titleEl && pg) titleEl.textContent = pg.title;
+    if (showMsg) showToast(`📺 PC'den ekran yansıtıldı: [${lay}] ${g_PcSlotCodes.slice(0, getSlotCountForLayout(lay)).join(' + ')}`);
+  } catch (e) {
+    console.error('TV düzeni uygulanamadı:', e);
+  }
+}
+
 function renderPcScadaViews(data, ag, sera, sek, sul, dis, sensorOk, istOn, istTop) {
   // 0) PC UYGULAMASINDAN ("📺 ANDROID TV'YE YANSIT") GELEN UZAKTAN EKRAN KOMUTUNU YAKALA
   if (ag && ag.tvMonitor && Number(ag.tvMonitor.cmdId) > 0) {
@@ -3401,34 +3470,13 @@ function renderPcScadaViews(data, ag, sera, sek, sul, dis, sensorOk, istOn, istT
     const isApkOrPortraitPhone = (window.location.protocol === 'file:') || (/iPhone|iPod/i.test(navigator.userAgent || '')) || (window.innerWidth > 0 && window.innerWidth < 560 && window.innerHeight > window.innerWidth);
     const params = new URLSearchParams(window.location.search);
     const hasExplicitPageParam = !!params.get('page');
+    const isFirst = (g_LastTvCmdId === 0);
 
-    if (g_LastTvCmdId === 0) {
+    if (incomingId !== g_LastTvCmdId) {
       g_LastTvCmdId = incomingId;
-      // İlk açılışta (veya TV'de link açıldığında) PC'den gönderilmiş son düzeni direkt uygula!
-      if (!isApkOrPortraitPhone && !hasExplicitPageParam) {
-        if (g_UiDeviceMode !== 'pc') setUiDeviceMode('pc', false);
-        const lay = (ag.tvMonitor.layout === '1+2' || ag.tvMonitor.layout === '2+1') ? '1p2' : (ag.tvMonitor.layout || '1x1');
-        if (Array.isArray(ag.tvMonitor.slots)) {
-          for (let i = 0; i < 4 && i < ag.tvMonitor.slots.length; i++) g_PcSlotCodes[i] = String(ag.tvMonitor.slots[i]);
-        }
-        if (lay === '1x1') switchPcPage(g_PcSlotCodes[0]);
-        else setPcSplitLayout(lay, true);
-      }
-    } else if (incomingId !== g_LastTvCmdId) {
-      g_LastTvCmdId = incomingId;
-      if (!isApkOrPortraitPhone) {
-        if (g_UiDeviceMode !== 'pc') setUiDeviceMode('pc', false);
-        const lay = (ag.tvMonitor.layout === '1+2' || ag.tvMonitor.layout === '2+1') ? '1p2' : (ag.tvMonitor.layout || '1x1');
-        if (Array.isArray(ag.tvMonitor.slots)) {
-          for (let i = 0; i < 4 && i < ag.tvMonitor.slots.length; i++) g_PcSlotCodes[i] = String(ag.tvMonitor.slots[i]);
-        }
-        for (let i = 0; i < 4; i++) {
-          const b = document.getElementById('pcSlotBody-' + i);
-          if (b) b.dataset.forceRender = '1';
-        }
-        if (lay === '1x1') switchPcPage(g_PcSlotCodes[0]);
-        else setPcSplitLayout(lay, true);
-        showToast(`📺 PC Komuta Merkezinden Ekran Yansıtıldı: [${lay}] ${g_PcSlotCodes.slice(0, getSlotCountForLayout(lay)).join(' + ')}`);
+      // İlk açılışta ?page= ile özel sayfa istenmişse PC'nin düzenini ezme; sonraki her yeni komut uygulanır
+      if (!isApkOrPortraitPhone && !(isFirst && hasExplicitPageParam)) {
+        applyRemoteTvLayout(ag.tvMonitor, !isFirst);
       }
     }
   }
@@ -3880,6 +3928,17 @@ function buildPcDesktopPageHtml(slotIdx, code, data, ag, sera, sek, sul, dis, se
   // [12] RÜZGAR YÖN MATRİSİ (D1-D8) — PC RuzgarMatrisView.axaml 1:1 KLAVYE & MOUSE DATAGRID
   // ═══════════════════════════════════════════════════════════════════════════
   if (code === '12') {
+    const liveWindRules = (ag && Array.isArray(ag.ruzgarKurallari) && ag.ruzgarKurallari.length > 0)
+      ? ag.ruzgarKurallari
+      : g_WindMatrixRows.map(r => ({
+          ad: r.kod,
+          yagmur: r.yagmur ? 'VAR' : 'YOK',
+          yon: r.yonStr,
+          hizDurumu: 'ÜSTÜNDE',
+          limitHiz: r.hizUst,
+          p1: r.doguMax,
+          p2: r.batiMax
+        }));
     return `
       <div class="pc-panel-box">
         <div style="display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #1e293b;padding-bottom:8px;margin-bottom:10px;flex-wrap:wrap;gap:8px;">
@@ -3887,38 +3946,32 @@ function buildPcDesktopPageHtml(slotIdx, code, data, ag, sera, sek, sul, dis, se
             <span style="font-size:13px;font-weight:900;color:#38bdf8;">🌬️ [12] RÜZGAR YÖN MATRİSİ VE FIRTINA GÜVENLİK LİMİTLERİ (D1 — D8)</span>
             <span style="margin-left:10px;font-size:11px;color:#4ade80;font-weight:800;">Anlık Rüzgar: ${dis.ruzgarHiz} km/h (${getCompassDirLabel(dis.ruzgarYon)}) • Aktif Kural: ${doguW.ruzgarKurali || 'D1'}</span>
           </div>
-          <button class="pc-dg-btn pc-dg-btn-green" onclick="showToast('💾 Rüzgar Yön Matrisi (D1-D8) ARM CPU Hafızasına Kaydedildi')">💾 RÜZGAR MATRİSİNİ KAYDET</button>
+          <button class="pc-dg-btn pc-dg-btn-green" onclick="saveAllPcWindMatrix(${slotIdx})">💾 RÜZGAR MATRİSİNİ KAYDET</button>
         </div>
         <div style="overflow-x:auto;">
           <table class="pc-ind-table">
             <thead>
               <tr>
-                <th>DURUM KODU</th><th>YAĞMUR ŞARTI</th><th>YÖN KORUMASI</th><th>ALT HIZ (km/h)</th><th>ÜST HIZ (km/h)</th><th>RÜZGAR YÖN BÖLGESİ</th><th>DOĞU PENCERE MAX (%)</th><th>BATI PENCERE MAX (%)</th><th>DURUM</th>
+                <th>DURUM KODU</th><th>YAĞMUR ŞARTI</th><th>RÜZGAR YÖN BÖLGESİ</th><th>HIZ ŞARTI</th><th>LİMİT HIZ (km/h)</th><th>DOĞU PENCERE MAX (%)</th><th>BATI PENCERE MAX (%)</th><th>KAYDET</th><th>DURUM</th>
               </tr>
             </thead>
             <tbody>
-              ${g_WindMatrixRows.map((r, idx) => {
-                const isAct = (doguW.ruzgarKurali || 'D1') === r.kod;
+              ${liveWindRules.map(r => {
+                const kod = r.ad || r.kod || 'D1';
+                const isAct = (doguW.ruzgarKurali || 'D1') === kod;
+                const dMax = r.p1 != null ? r.p1 : (r.doguMax != null ? r.doguMax : 100);
+                const bMax = r.p2 != null ? r.p2 : (r.batiMax != null ? r.batiMax : 100);
+                const limHiz = r.limitHiz != null ? r.limitHiz : (r.hizUst != null ? r.hizUst : 25);
                 return `
                   <tr style="${isAct ? 'background:rgba(16,185,129,0.16);' : ''}">
-                    <td style="font-weight:900;color:${isAct ? '#34d399' : '#38bdf8'};">${r.kod}</td>
-                    <td>
-                      <select id="pcw-s${slotIdx}-${idx}-yagmur" class="pc-dg-select" onchange="savePcWindRow(${slotIdx},${idx})">
-                        <option value="0" ${!r.yagmur ? 'selected' : ''}>YOK (KURU)</option>
-                        <option value="1" ${r.yagmur ? 'selected' : ''}>YAĞIŞ VAR</option>
-                      </select>
-                    </td>
-                    <td>
-                      <select id="pcw-s${slotIdx}-${idx}-yonAktif" class="pc-dg-select" onchange="savePcWindRow(${slotIdx},${idx})">
-                        <option value="0" ${!r.yonAktif ? 'selected' : ''}>TÜM YÖNLER</option>
-                        <option value="1" ${r.yonAktif ? 'selected' : ''}>YÖNE GÖRE</option>
-                      </select>
-                    </td>
-                    <td><input id="pcw-s${slotIdx}-${idx}-hizAlt" type="number" step="1" class="pc-dg-input" value="${r.hizAlt}" onchange="savePcWindRow(${slotIdx},${idx})"></td>
-                    <td><input id="pcw-s${slotIdx}-${idx}-hizUst" type="number" step="1" class="pc-dg-input" value="${r.hizUst}" onchange="savePcWindRow(${slotIdx},${idx})"></td>
-                    <td><input id="pcw-s${slotIdx}-${idx}-yonStr" type="text" class="pc-dg-input" style="text-align:left;min-width:170px;" value="${r.yonStr}" onchange="savePcWindRow(${slotIdx},${idx})"></td>
-                    <td><input id="pcw-s${slotIdx}-${idx}-doguMax" type="number" step="5" class="pc-dg-input" style="color:#38bdf8;" value="${r.doguMax}" onchange="savePcWindRow(${slotIdx},${idx})"></td>
-                    <td><input id="pcw-s${slotIdx}-${idx}-batiMax" type="number" step="5" class="pc-dg-input" style="color:#4ade80;" value="${r.batiMax}" onchange="savePcWindRow(${slotIdx},${idx})"></td>
+                    <td style="font-weight:900;color:${isAct ? '#34d399' : '#38bdf8'};">${kod}</td>
+                    <td><span class="badge ${String(r.yagmur).toUpperCase().includes('VAR') ? 'badge-blue' : 'badge-muted'}">${r.yagmur || 'FARK ETMEZ'}</span></td>
+                    <td style="font-weight:800;color:#cbd5e1;">${r.yon || 'HER YÖN'}</td>
+                    <td><span class="badge badge-amber">${r.hizDurumu || 'ÜSTÜNDE'}</span></td>
+                    <td><input id="pcw-s${slotIdx}-${kod}-limitHiz" type="number" step="1" class="pc-dg-input" value="${limHiz}" onchange="savePcWindRow(${slotIdx},'${kod}')"></td>
+                    <td><input id="pcw-s${slotIdx}-${kod}-doguMax" type="number" step="5" class="pc-dg-input" style="color:#38bdf8;" value="${dMax}" onchange="savePcWindRow(${slotIdx},'${kod}')"></td>
+                    <td><input id="pcw-s${slotIdx}-${kod}-batiMax" type="number" step="5" class="pc-dg-input" style="color:#4ade80;" value="${bMax}" onchange="savePcWindRow(${slotIdx},'${kod}')"></td>
+                    <td><button class="pc-dg-btn pc-dg-btn-blue" onclick="savePcWindRow(${slotIdx},'${kod}')">💾</button></td>
                     <td><span class="badge ${isAct ? 'badge-green' : 'badge-muted'}">${isAct ? '● AKTİF KURAL' : 'HAZIR'}</span></td>
                   </tr>
                 `;
@@ -4225,13 +4278,16 @@ function buildPcDesktopPageHtml(slotIdx, code, data, ag, sera, sek, sul, dis, se
   const valves = (sul && Array.isArray(sul.vanalar)) ? sul.vanalar : [];
   const chans = (sul && Array.isArray(sul.kanallar)) ? sul.kanallar : [];
   const gProgs = (sul && Array.isArray(sul.gubreProgramlari)) ? sul.gubreProgramlari : [];
-  const steps = (sul && Array.isArray(sul.adimlar)) ? sul.adimlar : [];
+  const steps = (sul && sul.receteler && sul.receteler[0] && Array.isArray(sul.receteler[0].adimlar))
+    ? sul.receteler[0].adimlar
+    : ((sul && Array.isArray(sul.adimlar)) ? sul.adimlar : []);
 
   // ═══════════════════════════════════════════════════════════════════════════
   // [40] ISA-101 PROSES P&ID & SOLÜSYON TANKI FIFO SCADA (PC ProsesPidSchematicControl 1:1 + Klavye/Mouse Tablo)
   // ═══════════════════════════════════════════════════════════════════════════
   if (code === '40') {
-    const cleanPump = pumps[0] || { kisaAd: 'Pompa 1', calisiyor: false };
+    const cleanPump = pumps[0] || { kisaAd: 'Pompa 1', ad: 'Pompa 1', calisiyor: false };
+    const cleanPumpName = cleanPump.kisaAd || cleanPump.ad || shortUnitName(cleanPump.kimlik) || 'Pompa 1';
     const anyFill = tanks.some(t => t.dolumVanasiAcik);
     const anyDis  = tanks.some(t => t.tahliyeVanasiAcik);
     const mainFlow = (sul && sul.calisiyor) || cleanPump.calisiyor || anyFill;
@@ -4241,7 +4297,8 @@ function buildPcDesktopPageHtml(slotIdx, code, data, ag, sera, sek, sul, dis, se
       const isAkt = t.aktif !== false;
       const isF = !!t.dolumVanasiAcik;
       const isD = !!t.tahliyeVanasiAcik;
-      const tPump = pumps[idx + 1] || { kisaAd: 'Pompa ' + (idx + 2), calisiyor: isD };
+      const tPump = pumps[idx + 1] || { kisaAd: 'Pompa ' + (idx + 2), ad: 'Pompa ' + (idx + 2), calisiyor: isD };
+      const tPumpName = tPump.kisaAd || tPump.ad || shortUnitName(tPump.kimlik) || ('Pompa ' + (idx + 2));
       const pRun = !!tPump.calisiyor || isD;
       const strokeCol = !isAkt ? '#475569' : (isF ? '#38bdf8' : (isD ? '#10b981' : '#64748b'));
       const stateTxt = !isAkt ? 'PASİF' : (isF ? 'DOLUYOR' : (isD ? 'BOŞALIYOR' : (t.doluSwitch ? 'DOLU (ÜST=1)' : (t.bosSwitch ? 'BOŞ (ALT=1)' : 'HAZIR'))));
@@ -4262,7 +4319,7 @@ function buildPcDesktopPageHtml(slotIdx, code, data, ag, sera, sek, sul, dis, se
           <line x1="128" y1="45" x2="215" y2="45" stroke="${pRun ? '#10b981' : '#334155'}" stroke-width="4.5"/>
           <circle cx="172" cy="45" r="16" fill="${pRun ? '#065f46' : '#0f172a'}" stroke="${pRun ? '#34d399' : '#475569'}" stroke-width="2.2"/>
           <text x="172" y="49" text-anchor="middle" fill="#fff" font-size="9.5" font-weight="900">P${idx + 2}</text>
-          <text x="172" y="72" text-anchor="middle" fill="${pRun ? '#34d399' : '#94a3b8'}" font-size="8.5" font-weight="800">${tPump.kisaAd}</text>
+          <text x="172" y="72" text-anchor="middle" fill="${pRun ? '#34d399' : '#94a3b8'}" font-size="8.5" font-weight="800">${tPumpName}</text>
         </g>
       `;
     }).join('');
@@ -4295,10 +4352,10 @@ function buildPcDesktopPageHtml(slotIdx, code, data, ag, sera, sek, sul, dis, se
           </div>
         </div>
         <div style="width:100%;overflow-x:auto;background:#070c17;border:1px solid #1e293b;border-radius:6px;padding:8px;">
-          <svg viewBox="0 0 990 340" style="width:100%;min-width:860px;height:auto;display:block;">
-            <text x="18" y="18" fill="#38bdf8" font-size="10" font-weight="900">AŞAMA 1: HAM SU &amp; TEMİZ SU POMPASI (1 ADET)</text>
-            <text x="235" y="18" fill="#f59e0b" font-size="10" font-weight="900">AŞAMA 2: FİLTRE &amp; BYPASS GÜBRE/ASİT DOZAJ MAKİNESİ</text>
-            <text x="505" y="18" fill="#34d399" font-size="10" font-weight="900">AŞAMA 3: 3 SOLÜSYON TANKI + 3 BOŞALTMA POMPASI + 12 VANA</text>
+          <svg viewBox="0 0 990 340" style="width:100%;height:auto;display:block;">
+            <text x="18" y="18" fill="#38bdf8" font-size="9.5" font-weight="900">1. HAM SU &amp; TEMİZ SU POMPASI (1 ADET)</text>
+            <text x="235" y="18" fill="#f59e0b" font-size="9.5" font-weight="900">2. BYPASS GÜBRE/ASİT DOZAJ ÜNİTESİ</text>
+            <text x="505" y="18" fill="#34d399" font-size="9.5" font-weight="900">3. 3 SOLÜSYON TANKI + 3 BOŞALTMA POMPASI + 12 VANA</text>
             <rect x="16" y="88" width="92" height="145" rx="8" fill="#0b1324" stroke="#0284c7" stroke-width="2.2"/>
             <rect x="20" y="128" width="84" height="101" rx="5" fill="rgba(2,132,199,0.32)"/>
             <text x="62" y="112" text-anchor="middle" fill="#38bdf8" font-size="10" font-weight="900">🌊 HAM SU</text>
@@ -4306,16 +4363,16 @@ function buildPcDesktopPageHtml(slotIdx, code, data, ag, sera, sek, sul, dis, se
             <line x1="108" y1="165" x2="235" y2="165" stroke="${mainFlow ? '#38bdf8' : '#334155'}" stroke-width="5"/>
             <circle cx="168" cy="165" r="22" fill="${cleanPump.calisiyor ? '#065f46' : '#0f172a'}" stroke="${cleanPump.calisiyor ? '#34d399' : '#38bdf8'}" stroke-width="2.5"/>
             <text x="168" y="169" text-anchor="middle" fill="#fff" font-size="11" font-weight="900">P1</text>
-            <text x="168" y="202" text-anchor="middle" fill="${cleanPump.calisiyor ? '#34d399' : '#cbd5e1'}" font-size="9.5" font-weight="800">TEMİZ SU (${cleanPump.kisaAd})</text>
+            <text x="168" y="202" text-anchor="middle" fill="${cleanPump.calisiyor ? '#34d399' : '#cbd5e1'}" font-size="9.5" font-weight="800">TEMİZ SU (${cleanPumpName})</text>
             <rect x="235" y="52" width="205" height="225" rx="10" fill="#0b1324" stroke="${sul?.calisiyor ? '#10b981' : '#334155'}" stroke-width="2.2"/>
             <text x="337" y="74" text-anchor="middle" fill="#f8fafc" font-size="11" font-weight="900">🚀 GÜBRE &amp; ASİT DOZAJ ÜNİTESİ</text>
-            <text x="337" y="92" text-anchor="middle" fill="#38bdf8" font-size="9.5" font-weight="800">EC: ${sensorOk && sul ? sul.ecReal.toFixed(2) : '---'} / ${sul ? sul.ecSet.toFixed(2) : '2.40'} mS • pH: ${sensorOk && sul ? sul.phReal.toFixed(2) : '---'} / ${sul ? sul.phSet.toFixed(2) : '5.80'}</text>
+            <text x="337" y="92" text-anchor="middle" fill="#38bdf8" font-size="9.5" font-weight="800">EC: ${sensorOk && sul ? Number(sul.ecReal || 0).toFixed(2) : '---'} / ${sul ? Number(sul.ecSet || 2.4).toFixed(2) : '2.40'} mS • pH: ${sensorOk && sul ? Number(sul.phReal || 0).toFixed(2) : '---'} / ${sul ? Number(sul.phSet || 5.8).toFixed(2) : '5.80'}</text>
             ${chans.slice(0, 3).map((ch, ci) => {
               const cx = 252 + ci * 60;
-              return `<g transform="translate(${cx}, 108)"><rect x="0" y="0" width="52" height="72" rx="6" fill="#070c17" stroke="${ch.renk}" stroke-width="1.8"/><text x="26" y="18" text-anchor="middle" fill="${ch.renk}" font-size="9.5" font-weight="900">${ch.kisaKod}</text><text x="26" y="38" text-anchor="middle" fill="#fff" font-size="12" font-weight="900">%${ch.dutyPct.toFixed(0)}</text><text x="26" y="56" text-anchor="middle" fill="#94a3b8" font-size="8">${ch.anlikLh.toFixed(0)} L/h</text></g>`;
+              return `<g transform="translate(${cx}, 108)"><rect x="0" y="0" width="52" height="72" rx="6" fill="#070c17" stroke="${ch.renk}" stroke-width="1.8"/><text x="26" y="18" text-anchor="middle" fill="${ch.renk}" font-size="9.5" font-weight="900">${ch.kisaKod}</text><text x="26" y="38" text-anchor="middle" fill="#fff" font-size="12" font-weight="900">%${Number(ch.dutyPct || 0).toFixed(0)}</text><text x="26" y="56" text-anchor="middle" fill="#94a3b8" font-size="8">${Number(ch.anlikLh || 0).toFixed(0)} L/h</text></g>`;
             }).join('')}
             <text x="337" y="206" text-anchor="middle" fill="#34d399" font-size="10" font-weight="800">${sul ? sul.fazTurkce : 'BEKLEMEDE'}</text>
-            <text x="337" y="224" text-anchor="middle" fill="#cbd5e1" font-size="9.5">Hat Debisi: ${sul ? sul.debiLh.toFixed(0) : 0} L/h • Verilen: ${sul ? sul.toplamVerilenL.toFixed(1) : 0}/${sul ? sul.hedefHacimL.toFixed(0) : 80} L</text>
+            <text x="337" y="224" text-anchor="middle" fill="#cbd5e1" font-size="9.5">Hat Debisi: ${sul ? Number(sul.debiLh || 0).toFixed(0) : 0} L/h • Verilen: ${sul ? Number(sul.toplamVerilenL || 0).toFixed(1) : 0}/${sul ? Number(sul.hedefHacimL || 80).toFixed(0) : 80} L</text>
             <text x="337" y="255" text-anchor="middle" fill="#fbbf24" font-size="9.5" font-weight="800">Aktif Reçete: ${sul ? sul.aktifReceteAdi : 'Periyot 1'} (Adım ${sul?.aktifAdimNo || 1}/${sul?.toplamAdimSayisi || 6})</text>
             <line x1="440" y1="165" x2="460" y2="165" stroke="${mainFlow ? '#38bdf8' : '#334155'}" stroke-width="5"/>
             <line x1="460" y1="56" x2="460" y2="260" stroke="${mainFlow ? '#38bdf8' : '#334155'}" stroke-width="5"/>
@@ -4343,7 +4400,8 @@ function buildPcDesktopPageHtml(slotIdx, code, data, ag, sera, sek, sul, dis, se
             <tbody>
               ${tanks.map((t, idx) => {
                 const isAkt = t.aktif !== false;
-                const tPump = pumps[idx + 1] || { kisaAd: 'Pompa ' + (idx + 2), calisiyor: false };
+                const tPump = pumps[idx + 1] || { kisaAd: 'Pompa ' + (idx + 2), ad: 'Pompa ' + (idx + 2), calisiyor: false };
+                const tPumpName = tPump.kisaAd || tPump.ad || shortUnitName(tPump.kimlik) || ('Pompa ' + (idx + 2));
                 return `
                   <tr>
                     <td style="font-weight:900;color:#38bdf8;">🛢️ TANK-${t.tankNo} (${t.kapasiteL}L)</td>
@@ -4366,7 +4424,7 @@ function buildPcDesktopPageHtml(slotIdx, code, data, ag, sera, sek, sul, dis, se
                     </td>
                     <td><span class="badge ${t.dolumVanasiAcik ? 'badge-blue' : 'badge-muted'}">${t.dolumVanasiAcik ? '🌊 AÇIK' : 'KAPALI'}</span></td>
                     <td><span class="badge ${t.karistiriciAcik ? 'badge-amber' : 'badge-muted'}">${t.karistiriciAcik ? '🌀 AKTİF' : 'DURDU'}</span></td>
-                    <td><span class="badge ${(t.tahliyeVanasiAcik || tPump.calisiyor) ? 'badge-green' : 'badge-muted'}">${tPump.kisaAd}: ${(t.tahliyeVanasiAcik || tPump.calisiyor) ? '🟢 BASIYOR' : 'DURDU'}</span></td>
+                    <td><span class="badge ${(t.tahliyeVanasiAcik || tPump.calisiyor) ? 'badge-green' : 'badge-muted'}">${tPumpName}: ${(t.tahliyeVanasiAcik || tPump.calisiyor) ? '🟢 BASIYOR' : 'DURDU'}</span></td>
                     <td>
                       <div style="display:flex;gap:4px;">
                         <button class="pc-dg-btn pc-dg-btn-blue" onclick="sendScadaCmd({action:'tank_control',tankNo:${t.tankNo},dolumTetikle:true})">📥 Doldur</button>
@@ -4391,8 +4449,10 @@ function buildPcDesktopPageHtml(slotIdx, code, data, ag, sera, sek, sul, dis, se
     const ecVal = sensorOk && sul ? Number(sul.ecReal || 0).toFixed(2) + ' mS' : '--- mS';
     const phVal = sensorOk && sul ? Number(sul.phReal || 0).toFixed(2) + ' pH' : '--- pH';
     const flVal = sensorOk && sul ? Number(sul.debiLh || 0).toFixed(0) + ' L/h' : '--- L/h';
-    const g1 = buildPcSemiNeedleGaugeSvg('⚡ EC SENSÖR & PID KADRANI', ecVal, `${Number(sul?.ecSet || 2.4).toFixed(2)} mS/cm`, `PID %${Number(sul?.ecPidPct || 0).toFixed(1)}`, '#38bdf8', 0, 5.0, Number(sul?.ecReal || 0), Number(sul?.ecSet || 2.4));
-    const g2 = buildPcSemiNeedleGaugeSvg('🧪 pH SENSÖR & ASİT PID KADRANI', phVal, `${Number(sul?.phSet || 5.8).toFixed(2)} pH`, `ASİT %${Number(sul?.phPidPct || 0).toFixed(1)}`, '#f59e0b', 3.5, 8.5, Number(sul?.phReal || 0), Number(sul?.phSet || 5.8));
+    const ecPid = Number(sul?.ecPidOut ?? sul?.ecPidPct ?? 0);
+    const phPid = Number(sul?.phPidOut ?? sul?.phPidPct ?? 0);
+    const g1 = buildPcSemiNeedleGaugeSvg('⚡ EC SENSÖR & PID KADRANI', ecVal, `${Number(sul?.ecSet || 2.4).toFixed(2)} mS/cm`, `PID %${ecPid.toFixed(1)}`, '#38bdf8', 0, 5.0, Number(sul?.ecReal || 0), Number(sul?.ecSet || 2.4));
+    const g2 = buildPcSemiNeedleGaugeSvg('🧪 pH SENSÖR & ASİT PID KADRANI', phVal, `${Number(sul?.phSet || 5.8).toFixed(2)} pH`, `ASİT %${phPid.toFixed(1)}`, '#f59e0b', 3.5, 8.5, Number(sul?.phReal || 0), Number(sul?.phSet || 5.8));
     const g3 = buildPcSemiNeedleGaugeSvg('🌊 ANLIK HAT DEBİSİ & HACİM', flVal, `${Number(sul?.toplamVerilenL || 0).toFixed(1)} / ${Number(sul?.hedefHacimL || 80).toFixed(0)} L`, `ADIM ${sul?.aktifAdimNo || 1}/${sul?.toplamAdimSayisi || 6}`, '#10b981', 0, 3000, Number(sul?.debiLh || 0), 1500);
     const fKod = Number(sul?.fazKodu || 0);
     const f1Act = sul?.calisiyor && fKod === 1;
@@ -4403,7 +4463,7 @@ function buildPcDesktopPageHtml(slotIdx, code, data, ag, sera, sek, sul, dis, se
       <div class="pc-panel-box" style="margin-bottom:8px;">
         <div style="display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #1e293b;padding-bottom:8px;margin-bottom:8px;flex-wrap:wrap;gap:8px;">
           <div>
-            <span style="font-size:13px;font-weight:900;color:#38bdf8;">🚀 [41] CANLI SULAMA &amp; GÜBRE/ASİT PID DOZAJ KOKPİTİ (${sul?.makineKimlik || 'DNM1_SKTR1_GUBRELEME_1'})</span>
+            <span style="font-size:13px;font-weight:900;color:#38bdf8;">🚀 [41] CANLI SULAMA &amp; GÜBRE/ASİT PID DOZAJ KOKPİTİ (${sul?.kimlik || sul?.makineKimlik || 'DNM1_SKTR1_GUBRELEME_1'})</span>
             <span style="margin-left:10px;font-size:11px;font-weight:900;color:${sul?.calisiyor ? '#34d399' : '#94a3b8'};">${sul ? sul.fazTurkce : 'BEKLEMEDE'} — ${sul?.aktifReceteAdi || 'Periyot 1'}</span>
           </div>
           <div style="display:flex;align-items:center;gap:6px;">
@@ -4437,17 +4497,23 @@ function buildPcDesktopPageHtml(slotIdx, code, data, ag, sera, sek, sul, dis, se
               <tr><th>KANAL</th><th>TIP</th><th>REÇETE BAZ (L/h)</th><th>PID ÇARPAN</th><th>ANLIK DEBİ (L/h)</th><th>PWM DUTY (%)</th><th>VALF</th></tr>
             </thead>
             <tbody>
-              ${chans.map(ch => `
-                <tr>
-                  <td style="font-weight:900;color:${ch.renk};">${ch.ad}</td>
-                  <td>${ch.asitMi ? 'ASİT (pH)' : 'GÜBRE (EC)'}</td>
-                  <td>${ch.bazLh.toFixed(0)} L/h</td>
-                  <td>x${ch.pidCarpan.toFixed(2)}</td>
-                  <td style="font-weight:900;color:#fff;">${ch.anlikLh.toFixed(0)} L/h</td>
-                  <td style="font-weight:900;color:${ch.renk};">%${ch.dutyPct.toFixed(0)}</td>
-                  <td><span class="badge ${ch.valfAcik ? 'badge-green' : 'badge-muted'}">${ch.valfAcik ? '🟢 AÇIK' : 'KAPALI'}</span></td>
-                </tr>
-              `).join('')}
+              ${chans.map(ch => {
+                const bazLh = Number(ch.startLh ?? ch.bazLh ?? ch.kapasiteLh ?? 0);
+                const pidMult = Number(ch.pidCarpan ?? (ch.asitMi ? sul?.phDozCarpani : sul?.ecDozCarpani) ?? 1.0);
+                const anlikLh = Number(ch.anlikLh ?? 0);
+                const dutyPct = Number(ch.dutyPct ?? 0);
+                return `
+                  <tr>
+                    <td style="font-weight:900;color:${ch.renk};">${ch.ad}</td>
+                    <td>${ch.asitMi ? 'ASİT (pH)' : 'GÜBRE (EC)'}</td>
+                    <td>${bazLh.toFixed(0)} L/h</td>
+                    <td>x${pidMult.toFixed(2)}</td>
+                    <td style="font-weight:900;color:#fff;">${anlikLh.toFixed(0)} L/h</td>
+                    <td style="font-weight:900;color:${ch.renk};">%${dutyPct.toFixed(0)}</td>
+                    <td><span class="badge ${ch.valfAcik ? 'badge-green' : 'badge-muted'}">${ch.valfAcik ? '🟢 AÇIK' : 'KAPALI'}</span></td>
+                  </tr>
+                `;
+              }).join('')}
             </tbody>
           </table>
         </div>
@@ -4462,7 +4528,7 @@ function buildPcDesktopPageHtml(slotIdx, code, data, ag, sera, sek, sul, dis, se
             <tbody>
               ${pumps.map((p, idx) => `
                 <tr>
-                  <td style="font-weight:900;color:#38bdf8;">P${idx + 1} (${p.kisaAd})</td>
+                  <td style="font-weight:900;color:#38bdf8;">P${idx + 1} (${p.kisaAd || p.ad || shortUnitName(p.kimlik)})</td>
                   <td>${p.kimlik}</td>
                   <td>${idx === 0 ? '🌊 Temiz Su & Tank Dolum Pompası' : `🛢️ Tank-${idx} Seraya Boşaltma Pompası`}</td>
                   <td><span class="badge ${p.calisiyor ? 'badge-green' : 'badge-muted'}">${p.calisiyor ? '🟢 ÇALIŞIYOR' : '⚪ BEKLEMEDE'}</span></td>
@@ -4479,7 +4545,7 @@ function buildPcDesktopPageHtml(slotIdx, code, data, ag, sera, sek, sul, dis, se
         <div style="display:grid;grid-template-columns:repeat(6,1fr);gap:6px;">
           ${valves.map(v => `
             <div style="background:${v.acik ? 'rgba(16,185,129,0.2)' : '#09101f'};border:1px solid ${v.acik ? '#10b981' : '#1e293b'};border-radius:4px;padding:6px 8px;display:flex;justify-content:space-between;align-items:center;">
-              <span style="font-size:11px;font-weight:900;color:#fff;">🚰 ${v.kisaAd}</span>
+              <span style="font-size:11px;font-weight:900;color:#fff;">🚰 ${v.kisaAd || v.ad || ('Vana ' + v.siraNo)}</span>
               <span class="badge ${v.acik ? 'badge-green' : 'badge-muted'}">${v.acik ? '🟢 AÇIK' : 'KAPALI'}</span>
             </div>
           `).join('')}
@@ -4518,22 +4584,27 @@ function buildPcDesktopPageHtml(slotIdx, code, data, ag, sera, sek, sul, dis, se
                   <tr><th>ADIM</th><th>AÇIK VANALAR</th><th>POMPA</th><th>GÜBRE PROG (G0..G6)</th><th>SÜRE (dk)</th><th>HEDEF HACİM (L)</th><th>KAYDET</th></tr>
                 </thead>
                 <tbody>
-                  ${steps.map(st => `
-                    <tr style="${st.aktifMi ? 'background:rgba(16,185,129,0.16);' : ''}">
-                      <td style="font-weight:900;color:${st.aktifMi ? '#34d399' : '#38bdf8'};">ADIM ${st.no}</td>
-                      <td style="font-weight:800;">Vana ${(st.vanalar || []).join(', ')}</td>
-                      <td>Pompa ${(st.pompalar || [1]).join(', ')}</td>
-                      <td>
-                        <select id="pc42-s${slotIdx}-a${st.no}-gp" class="pc-dg-select" onchange="sendScadaCmd({action:'update_recipe_step',receteNo:1,adimNo:${st.no},gubreProgramNo:Number(this.value),sureDk:Number(document.getElementById('pc42-s${slotIdx}-a${st.no}-sure').value),hacimL:Number(document.getElementById('pc42-s${slotIdx}-a${st.no}-hacim').value)})">
-                          <option value="0" ${Number(st.gubreProgramNo) === 0 ? 'selected' : ''}>G0 — Saf Su</option>
-                          ${gProgs.map(gp => `<option value="${gp.no}" ${Number(st.gubreProgramNo) === Number(gp.no) ? 'selected' : ''}>G${gp.no} (${gp.ecHedef} mS / ${gp.phHedef} pH)</option>`).join('')}
-                        </select>
-                      </td>
-                      <td><input id="pc42-s${slotIdx}-a${st.no}-sure" type="number" step="1" class="pc-dg-input" value="${st.sureDk}" onchange="sendScadaCmd({action:'update_recipe_step',receteNo:1,adimNo:${st.no},gubreProgramNo:Number(document.getElementById('pc42-s${slotIdx}-a${st.no}-gp').value),sureDk:Number(this.value),hacimL:Number(document.getElementById('pc42-s${slotIdx}-a${st.no}-hacim').value)})"></td>
-                      <td><input id="pc42-s${slotIdx}-a${st.no}-hacim" type="number" step="5" class="pc-dg-input" value="${st.hacimL}" onchange="sendScadaCmd({action:'update_recipe_step',receteNo:1,adimNo:${st.no},gubreProgramNo:Number(document.getElementById('pc42-s${slotIdx}-a${st.no}-gp').value),sureDk:Number(document.getElementById('pc42-s${slotIdx}-a${st.no}-sure').value),hacimL:Number(this.value)})"></td>
-                      <td><button class="pc-dg-btn pc-dg-btn-blue" onclick="sendScadaCmd({action:'update_recipe_step',receteNo:1,adimNo:${st.no},gubreProgramNo:Number(document.getElementById('pc42-s${slotIdx}-a${st.no}-gp').value),sureDk:Number(document.getElementById('pc42-s${slotIdx}-a${st.no}-sure').value),hacimL:Number(document.getElementById('pc42-s${slotIdx}-a${st.no}-hacim').value)})">💾</button></td>
-                    </tr>
-                  `).join('')}
+                  ${steps.map(st => {
+                    const isStActive = !!(st.calisiyorMu || st.aktifMi);
+                    const vList = Array.isArray(st.vanalar) ? st.vanalar.map(shortUnitName).join(', ') : '';
+                    const pList = Array.isArray(st.pompalar) ? st.pompalar.map(shortUnitName).join(', ') : 'Pompa 1';
+                    return `
+                      <tr style="${isStActive ? 'background:rgba(16,185,129,0.16);' : ''}">
+                        <td style="font-weight:900;color:${isStActive ? '#34d399' : '#38bdf8'};">ADIM ${st.no}</td>
+                        <td style="font-weight:800;">${vList || ('Vana ' + st.no)}</td>
+                        <td>${pList}</td>
+                        <td>
+                          <select id="pc42-s${slotIdx}-a${st.no}-gp" class="pc-dg-select" onchange="sendScadaCmd({action:'update_recipe_step',receteNo:1,adimNo:${st.no},gubreProgramNo:Number(this.value),sureDk:Number(document.getElementById('pc42-s${slotIdx}-a${st.no}-sure').value),hacimL:Number(document.getElementById('pc42-s${slotIdx}-a${st.no}-hacim').value)})">
+                            <option value="0" ${Number(st.gubreProgramNo) === 0 ? 'selected' : ''}>G0 — Saf Su</option>
+                            ${gProgs.map(gp => `<option value="${gp.no}" ${Number(st.gubreProgramNo) === Number(gp.no) ? 'selected' : ''}>G${gp.no} (${gp.ecHedef} mS / ${gp.phHedef} pH)</option>`).join('')}
+                          </select>
+                        </td>
+                        <td><input id="pc42-s${slotIdx}-a${st.no}-sure" type="number" step="1" class="pc-dg-input" value="${st.sureDk}" onchange="sendScadaCmd({action:'update_recipe_step',receteNo:1,adimNo:${st.no},gubreProgramNo:Number(document.getElementById('pc42-s${slotIdx}-a${st.no}-gp').value),sureDk:Number(this.value),hacimL:Number(document.getElementById('pc42-s${slotIdx}-a${st.no}-hacim').value)})"></td>
+                        <td><input id="pc42-s${slotIdx}-a${st.no}-hacim" type="number" step="5" class="pc-dg-input" value="${st.hacimL}" onchange="sendScadaCmd({action:'update_recipe_step',receteNo:1,adimNo:${st.no},gubreProgramNo:Number(document.getElementById('pc42-s${slotIdx}-a${st.no}-gp').value),sureDk:Number(document.getElementById('pc42-s${slotIdx}-a${st.no}-sure').value),hacimL:Number(this.value)})"></td>
+                        <td><button class="pc-dg-btn pc-dg-btn-blue" onclick="sendScadaCmd({action:'update_recipe_step',receteNo:1,adimNo:${st.no},gubreProgramNo:Number(document.getElementById('pc42-s${slotIdx}-a${st.no}-gp').value),sureDk:Number(document.getElementById('pc42-s${slotIdx}-a${st.no}-sure').value),hacimL:Number(document.getElementById('pc42-s${slotIdx}-a${st.no}-hacim').value)})">💾</button></td>
+                      </tr>
+                    `;
+                  }).join('')}
                 </tbody>
               </table>
             </div>
@@ -4551,18 +4622,24 @@ function buildPcDesktopPageHtml(slotIdx, code, data, ag, sera, sek, sul, dis, se
                   <tr><th>KOD</th><th>REÇETE ADI</th><th>HEDEF EC (mS/cm)</th><th>HEDEF pH</th><th>ASİT (L/h)</th><th>GÜBRE A (L/h)</th><th>GÜBRE B (L/h)</th><th>KAYDET</th></tr>
                 </thead>
                 <tbody>
-                  ${gProgs.map(gp => `
-                    <tr>
-                      <td style="font-weight:900;color:#38bdf8;">G${gp.no}</td>
-                      <td style="font-weight:800;">${gp.ad}</td>
-                      <td><input id="pc42-s${slotIdx}-g${gp.no}-ec" type="number" step="0.05" class="pc-dg-input" style="color:#38bdf8;" value="${Number(gp.ecHedef).toFixed(2)}" onchange="sendScadaCmd({action:'update_gubre_prog',no:${gp.no},ecHedef:Number(this.value),phHedef:Number(document.getElementById('pc42-s${slotIdx}-g${gp.no}-ph').value)})"></td>
-                      <td><input id="pc42-s${slotIdx}-g${gp.no}-ph" type="number" step="0.05" class="pc-dg-input" style="color:#fbbf24;" value="${Number(gp.phHedef).toFixed(2)}" onchange="sendScadaCmd({action:'update_gubre_prog',no:${gp.no},ecHedef:Number(document.getElementById('pc42-s${slotIdx}-g${gp.no}-ec').value),phHedef:Number(this.value)})"></td>
-                      <td>${gp.kanalLh ? gp.kanalLh[0] : 50} L/h</td>
-                      <td>${gp.kanalLh ? gp.kanalLh[1] : 120} L/h</td>
-                      <td>${gp.kanalLh ? gp.kanalLh[2] : 120} L/h</td>
-                      <td><button class="pc-dg-btn pc-dg-btn-green" onclick="sendScadaCmd({action:'update_gubre_prog',no:${gp.no},ecHedef:Number(document.getElementById('pc42-s${slotIdx}-g${gp.no}-ec').value),phHedef:Number(document.getElementById('pc42-s${slotIdx}-g${gp.no}-ph').value)})">💾</button></td>
-                    </tr>
-                  `).join('')}
+                  ${gProgs.map(gp => {
+                    const kb = gp.kanalBaslangicLh || {};
+                    const asitLh = kb.ACID ?? (gp.kanalLh ? gp.kanalLh[0] : 50);
+                    const fertALh = kb.FERT_A ?? (gp.kanalLh ? gp.kanalLh[1] : 120);
+                    const fertBLh = kb.FERT_B ?? (gp.kanalLh ? gp.kanalLh[2] : 120);
+                    return `
+                      <tr>
+                        <td style="font-weight:900;color:#38bdf8;">G${gp.no}</td>
+                        <td style="font-weight:800;">${gp.ad}</td>
+                        <td><input id="pc42-s${slotIdx}-g${gp.no}-ec" type="number" step="0.05" class="pc-dg-input" style="color:#38bdf8;" value="${Number(gp.ecHedef).toFixed(2)}" onchange="sendScadaCmd({action:'update_gubre_prog',no:${gp.no},ecHedef:Number(this.value),phHedef:Number(document.getElementById('pc42-s${slotIdx}-g${gp.no}-ph').value)})"></td>
+                        <td><input id="pc42-s${slotIdx}-g${gp.no}-ph" type="number" step="0.05" class="pc-dg-input" style="color:#fbbf24;" value="${Number(gp.phHedef).toFixed(2)}" onchange="sendScadaCmd({action:'update_gubre_prog',no:${gp.no},ecHedef:Number(document.getElementById('pc42-s${slotIdx}-g${gp.no}-ec').value),phHedef:Number(this.value)})"></td>
+                        <td>${asitLh} L/h</td>
+                        <td>${fertALh} L/h</td>
+                        <td>${fertBLh} L/h</td>
+                        <td><button class="pc-dg-btn pc-dg-btn-green" onclick="sendScadaCmd({action:'update_gubre_prog',no:${gp.no},ecHedef:Number(document.getElementById('pc42-s${slotIdx}-g${gp.no}-ec').value),phHedef:Number(document.getElementById('pc42-s${slotIdx}-g${gp.no}-ph').value)})">💾</button></td>
+                      </tr>
+                    `;
+                  }).join('')}
                 </tbody>
               </table>
             </div>
