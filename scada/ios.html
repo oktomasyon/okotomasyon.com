@@ -1121,8 +1121,8 @@ body.pc-scada-mode .equip-card {
   <!-- 1. ÜST ENDÜSTRİYEL SCADA KOMUT VE DURUM ŞERİDİ -->
   <div class="pc-topbar">
     <span class="pc-brand-badge">OK OTOMASYON SCADA</span>
-    <span id="pcActiveTitle" class="pc-screen-title">[11] PENCERE CANLI İKLİM VE ORANSAL HESAPLAMA KOKPİTİ</span>
-    <span id="pcSetupSummary" class="pc-top-pill">TESİS: 1 SERA / 1 SEKTÖR | İSTASYON: 3/3 ONLINE</span>
+    <span id="pcActiveTitle" class="pc-screen-title">[00] GENEL SAHA &amp; SEKTÖR İZLEME CETVELİ</span>
+    <span id="pcSetupSummary" class="pc-top-pill">TESİS: 0 SERA / 0 SEKTÖR | İSTASYON: 0/0 ONLINE</span>
     <button class="pc-top-btn" style="background:#0369a1;border-color:#38bdf8;" onclick="switchPcPage('80')" title="Sulama, Solüsyon Tankları, İklim, Reçete ve Trendleri aynı ekranda 1x2 veya 2x2 dinamik bölünmüş ekranda yan yana açar">🔲 BÖLÜNMÜŞ EKRAN (1x2 / 2x2)</button>
     <button class="pc-top-btn" style="background:#1e3a8a;border-color:#3b82f6;color:#93c5fd;" onclick="openNewWebMonitorWindow()" title="İkinci veya üçüncü monitöre taşımak üzere bağımsız yeni SCADA penceresi açar">🖥️ + YENİ MONİTÖRDE AÇ</button>
     <button class="pc-top-btn" style="background:#065f46;border-color:#10b981;" onclick="openDeviceModal()">🔒 CİHAZ: <span id="pcHdrSerial">F407-001</span></button>
@@ -1168,59 +1168,59 @@ body.pc-scada-mode .equip-card {
               <polygon points="90,154 85,128 90,133 95,128" fill="#38bdf8"/>
             </g>
             <!-- Merkez Dijital Rüzgar Hızı & Yönü -->
-            <text id="pcCompassSpeed" x="90" y="86" text-anchor="middle" fill="#38bdf8" font-size="13" font-weight="900">2,5</text>
+            <text id="pcCompassSpeed" x="90" y="86" text-anchor="middle" fill="#38bdf8" font-size="13" font-weight="900">---</text>
             <text x="115" y="86" fill="#64748b" font-size="7.5" font-weight="700">km/h</text>
-            <text id="pcCompassDir" x="90" y="103" text-anchor="middle" fill="#e2e8f0" font-size="10" font-weight="800">180° G</text>
+            <text id="pcCompassDir" x="90" y="103" text-anchor="middle" fill="#e2e8f0" font-size="10" font-weight="800">**</text>
           </svg>
         </div>
         <div class="pc-meteo-subgrid">
           <div class="pc-meteo-mini">
             <div class="lbl">DIŞ ISI</div>
-            <div id="pcMeteoTemp" class="val" style="color:#fbbf24;">20,0°C</div>
+            <div id="pcMeteoTemp" class="val" style="color:#fbbf24;">---</div>
           </div>
           <div class="pc-meteo-mini">
             <div class="lbl">DIŞ NEM</div>
-            <div id="pcMeteoRh" class="val" style="color:#38bdf8;">%50</div>
+            <div id="pcMeteoRh" class="val" style="color:#38bdf8;">**</div>
           </div>
           <div class="pc-meteo-mini">
             <div class="lbl">GÜNEŞ</div>
-            <div id="pcMeteoRad" class="val" style="color:#34d399;">450 W</div>
+            <div id="pcMeteoRad" class="val" style="color:#34d399;">---</div>
           </div>
         </div>
       </div>
 
-      <!-- SOL ORTA: NUMARALI ENDÜSTRİYEL SCADA MODÜL AĞACI (PC MainWindow.axaml 1:1 AYNISI) -->
+      <!-- SOL ORTA: NUMARALI ENDÜSTRİYEL SCADA MODÜL AĞACI (PC MainWindow.axaml 1:1 AYNISI — YALNIZCA KURULU BİRİMLER GÖSTERİLİR) -->
       <div class="pc-nav-scroll">
-        <div class="pc-grp-hdr">00 - GENEL SAHA İZLEME</div>
-        <button class="pc-menu-btn" id="pcnav-00" onclick="switchPcPage('00')">00&nbsp;&nbsp;GENEL SAHA &amp; SEKTÖR CETVELİ</button>
+        <div class="pc-grp-hdr" id="pcGrp00">00 - GENEL SAHA İZLEME</div>
+        <button class="pc-menu-btn active" id="pcnav-00" onclick="switchPcPage('00')">00&nbsp;&nbsp;GENEL SAHA &amp; SEKTÖR CETVELİ</button>
         <button class="pc-menu-btn" id="pcnav-01" onclick="switchPcPage('01')">01&nbsp;&nbsp;SİNOPTİK SAHA GÖRÜNÜMÜ</button>
 
-        <div class="pc-grp-hdr">10 - HAVALANDIRMA KONTROL</div>
+        <div class="pc-grp-hdr" id="pcGrp10">10 - HAVALANDIRMA KONTROL</div>
         <button class="pc-menu-btn" id="pcnav-10" onclick="switchPcPage('10')">10&nbsp;&nbsp;PENCERE PERİYOT (P1-P8)</button>
-        <button class="pc-menu-btn active" id="pcnav-11" onclick="switchPcPage('11')">11&nbsp;&nbsp;PENCERE İKLİM KOKPİTİ</button>
+        <button class="pc-menu-btn" id="pcnav-11" onclick="switchPcPage('11')">11&nbsp;&nbsp;PENCERE İKLİM KOKPİTİ</button>
         <button class="pc-menu-btn" id="pcnav-12" onclick="switchPcPage('12')">12&nbsp;&nbsp;RÜZGAR YÖN MATRİSİ (D1-D8)</button>
 
-        <div class="pc-grp-hdr">20 - ISITMA &amp; ENERJİ</div>
+        <div class="pc-grp-hdr" id="pcGrp20">20 - ISITMA &amp; ENERJİ</div>
         <button class="pc-menu-btn" id="pcnav-20" onclick="switchPcPage('20')">20&nbsp;&nbsp;ISITMA PERİYOT &amp; EĞRİ</button>
         <button class="pc-menu-btn" id="pcnav-21" onclick="switchPcPage('21')">21&nbsp;&nbsp;KAZAN &amp; KOLEKTÖR MERKEZİ</button>
 
-        <div class="pc-grp-hdr">30 - İKLİM EKİPMANLARI</div>
+        <div class="pc-grp-hdr" id="pcGrp30">30 - İKLİM EKİPMANLARI</div>
         <button class="pc-menu-btn" id="pcnav-30" onclick="switchPcPage('30')">30&nbsp;&nbsp;İKLİM EKİPMAN KOKPİTİ</button>
         <button class="pc-menu-btn" id="pcnav-31" onclick="switchPcPage('31')">31&nbsp;&nbsp;PERDE SİSTEMLERİ</button>
         <button class="pc-menu-btn" id="pcnav-33" onclick="switchPcPage('33')">33&nbsp;&nbsp;YÜKSEK BASINÇ SİSLEME</button>
         <button class="pc-menu-btn" id="pcnav-34" onclick="switchPcPage('34')">34&nbsp;&nbsp;SİRKÜLASYON FANLARI</button>
 
-        <div class="pc-grp-hdr">40 - SULAMA &amp; GÜBRELEME</div>
+        <div class="pc-grp-hdr" id="pcGrp40">40 - SULAMA &amp; GÜBRELEME</div>
         <button class="pc-menu-btn" id="pcnav-40" onclick="switchPcPage('40')">40&nbsp;&nbsp;PROSES P&amp;ID &amp; SOLÜSYON SCADA</button>
         <button class="pc-menu-btn" id="pcnav-41" onclick="switchPcPage('41')">41&nbsp;&nbsp;CANLI SULAMA &amp; DOZAJ KOKPİTİ</button>
         <button class="pc-menu-btn" id="pcnav-42" onclick="switchPcPage('42')">42&nbsp;&nbsp;SULAMA &amp; GÜBRE REÇETELERİ</button>
         <button class="pc-menu-btn" id="pcnav-43" onclick="switchPcPage('43')">43&nbsp;&nbsp;SULAMA TREND &amp; GRAFİKLER</button>
 
-        <div class="pc-grp-hdr">50 - KOORDİNASYON &amp; ANALİZ</div>
+        <div class="pc-grp-hdr" id="pcGrp50">50 - KOORDİNASYON &amp; ANALİZ</div>
         <button class="pc-menu-btn" id="pcnav-50" onclick="switchPcPage('50')">50&nbsp;&nbsp;ORKESTRATÖR (MASTER)</button>
         <button class="pc-menu-btn" id="pcnav-60" onclick="switchPcPage('60')">60&nbsp;&nbsp;AI AGRONOMİST RAPORU</button>
 
-        <div class="pc-grp-hdr">70 - KAYITLAR &amp; ÇOKLU MONİTÖR</div>
+        <div class="pc-grp-hdr" id="pcGrp70">70 - KAYITLAR &amp; ÇOKLU MONİTÖR</div>
         <button class="pc-menu-btn" id="pcnav-70" onclick="switchPcPage('70')">70&nbsp;&nbsp;HABERLEŞME &amp; ALARM KAYITLARI</button>
         <button class="pc-menu-btn" id="pcnav-80" onclick="switchPcPage('80')" style="color:#38bdf8;">80&nbsp;&nbsp;ÇOKLU MONİTÖR &amp; BÖLÜNMÜŞ EKRAN</button>
         <button class="pc-menu-btn" onclick="openNewWebMonitorWindow()" style="color:#6ee7b7;">81&nbsp;&nbsp;+ YENİ MONİTÖR PENCERESİ AÇ</button>
@@ -1294,7 +1294,7 @@ body.pc-scada-mode .equip-card {
 
   <!-- 3. ALT ALARM BANNER (PC MainWindow.axaml ile Birebir) -->
   <div id="pcAlarmStrip" class="pc-alarm-strip">
-    <div><span style="color:#fca5a5;margin-right:8px;">[DURUM / ALARM]</span><span id="pcAlarmText">SİSTEM NORMAL — TÜM İSTASYONLAR VE SENSÖR HATLARI ONLINE</span></div>
+    <div><span style="color:#fca5a5;margin-right:8px;">[DURUM / ALARM]</span><span id="pcAlarmText">⚪ KURULUM BEKLENİYOR — PC KURULUM EKRANINDAN SERA, SEKTÖR VE BİRİM EKLEYİNİZ</span></div>
     <span id="pcAlarmCountBadge" style="background:#991b1b;padding:1px 7px;border-radius:3px;">0</span>
   </div>
 
@@ -1302,7 +1302,7 @@ body.pc-scada-mode .equip-card {
   <div class="pc-statusbar">
     <div style="display:flex;gap:20px;">
       <span>AKTİF YETKİ: <b style="color:#34d399;">ADMIN (MÜHENDİSLİK &amp; KONTROL YETKİSİ)</b></span>
-      <span>SAHA HABERLEŞME: <b id="pcCommStatusTxt" style="color:#38bdf8;">MODBUS ONLINE</b></span>
+      <span>SAHA HABERLEŞME: <b id="pcCommStatusTxt" style="color:#94a3b8;">KURULUM YOK</b></span>
       <span>ADRES HARİTASI: <b style="color:#a7f3d0;">PC + TV WEB + iOS + ANDROID .APK 1:1 SENKRON</b></span>
     </div>
     <span>OK OTOMASYON ENDÜSTRİYEL KONTROL SİSTEMİ — ANTALYA</span>
@@ -1315,19 +1315,19 @@ body.pc-scada-mode .equip-card {
     <div class="brand">
       <div class="brand-logo">OK</div>
       <div>
-        <div class="brand-title">AgriNexus SCADA <span id="hdrSeraAd" class="sera-badge">DNM1 / SKTR1</span></div>
+        <div class="brand-title">AgriNexus SCADA <span id="hdrSeraAd" class="sera-badge">KURULUM BEKLENİYOR</span></div>
         <div class="brand-sub">
           <span id="hdrRtc">--.--.---- --:--:--</span>
           <span>•</span>
-          <span id="hdrPeriyot" style="color:#38bdf8;font-weight:700;">Periyot 7 (18:00)</span>
+          <span id="hdrPeriyot" style="color:#38bdf8;font-weight:700;">Periyot: ---</span>
         </div>
       </div>
     </div>
     <div class="hw-pills">
-      <div id="pillAgri" class="hw-pill"><span class="dot"></span><span id="pillAgriTxt">İstasyon 3/3</span></div>
-      <div id="pillArm" class="hw-pill"><span class="dot"></span>ARM PLC</div>
-      <div id="pillPsoc" class="hw-pill"><span class="dot"></span>PSoC I/O</div>
-      <div id="pillEsp" class="hw-pill"><span class="dot"></span>ESP32 Wi-Fi</div>
+      <div id="pillAgri" class="hw-pill off"><span class="dot"></span><span id="pillAgriTxt">İstasyon 0/0</span></div>
+      <div id="pillArm" class="hw-pill off"><span class="dot"></span>ARM PLC</div>
+      <div id="pillPsoc" class="hw-pill off"><span class="dot"></span>PSoC I/O</div>
+      <div id="pillEsp" class="hw-pill off"><span class="dot"></span>ESP32 Wi-Fi</div>
       <button onclick="openDeviceModal()" class="hw-pill" style="background:rgba(56,189,248,0.16);color:#38bdf8;border-color:rgba(56,189,248,0.45);cursor:pointer;">🔒 <span id="hdrDevSerial">OK-ARM-001</span></button>
       <button onclick="setUiDeviceMode('pc')" class="hw-pill" style="background:linear-gradient(135deg,#0284c7,#1e3a8a);color:#fff;border-color:#38bdf8;cursor:pointer;">🖥️ TV / PC SCADA Görünümü</button>
       <a href="OK_AgriNexus_Mobil_SCADA.apk" download="OK_AgriNexus_Mobil_SCADA.apk" class="hw-pill" style="background:linear-gradient(135deg,#059669,#0284c7);color:#fff;border-color:#38bdf8;text-decoration:none;cursor:pointer;">📲 Mobil .APK İndir</a>
@@ -1335,18 +1335,18 @@ body.pc-scada-mode .equip-card {
   </div>
 
   <!-- CANLI SULAMA & İKLİM DURUM ŞERİDİ -->
-  <div id="liveRibbon" class="live-ribbon active-irrig">
+  <div id="liveRibbon" class="live-ribbon">
     <div class="ribbon-left">
-      <span id="ribbonBeacon" class="pulse-beacon"></span>
-      <span id="ribbonStatusTxt">🟢 SULAMA AKTİF: GÜBRE & ASİT DOZLAMA (Periyot 1 — Adım 1/6)</span>
+      <span id="ribbonBeacon" class="pulse-beacon idle"></span>
+      <span id="ribbonStatusTxt">⚪ SİSTEM DURUMU: PC Kurulum Senkronu Bekleniyor</span>
     </div>
     <div class="ribbon-metrics">
-      <span>🌡️ İç: <b id="ribTemp">24.5°C</b></span>
-      <span>💧 Nem: <b id="ribRh">%65</b></span>
-      <span>🧪 EC: <b id="ribEc">1.85 / 2.40</b></span>
-      <span>⚗️ pH: <b id="ribPh">6.15 / 5.80</b></span>
-      <span>🪟 Pencere: <b id="ribWin">%0</b></span>
-      <span>🛡️ Perde: <b id="ribCur">%36</b></span>
+      <span id="ribTempBox">🌡️ İç: <b id="ribTemp">--- °C</b></span>
+      <span id="ribRhBox">💧 Nem: <b id="ribRh">**</b></span>
+      <span id="ribEcBox">🧪 EC: <b id="ribEc">--- / ---</b></span>
+      <span id="ribPhBox">⚗️ pH: <b id="ribPh">--- / ---</b></span>
+      <span id="ribWinBox">🪟 Pencere: <b id="ribWin">---</b></span>
+      <span id="ribCurBox">🛡️ Perde: <b id="ribCur">---</b></span>
     </div>
   </div>
 </header>
@@ -1361,16 +1361,29 @@ body.pc-scada-mode .equip-card {
     <button class="d-tab" onclick="switchTab('donanim')" id="dtab-donanim">🔌 Donanım & Röle I/O</button>
   </nav>
 
+  <!-- KURULUM BOŞ İKEN GÖSTERİLEN BİLGİLENDİRME PANELİ (iOS / MOBİL / ANDROID APK) -->
+  <div id="mobileEmptySetupBanner" class="card" style="display:none;border-color:#f59e0b;background:rgba(245,158,11,0.10);margin-bottom:12px;">
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:6px;">
+      <span style="font-size:20px;">🛠️</span>
+      <div style="font-size:14px;font-weight:900;color:#fbbf24;">[KURULUM BEKLENİYOR] — HENÜZ KURULMUŞ SERA VEYA AKTİF BİRİM BULUNMAMAKTADIR</div>
+    </div>
+    <div style="font-size:12px;color:#cbd5e1;line-height:1.6;">
+      PC <b>Sistem Kurulumu</b> ekranında şu an kayıtlı bir sera, sektör, pompa, vana, solüsyon tankı veya iklim birimi bulunmamaktadır.
+      Kurulumda eklenmeyen hiçbir birim mobil (.APK / iOS) veya Web SCADA ekranlarında sahte olarak gösterilmez.
+      PC üzerinden sera ve ekipmanlarınızı eklediğiniz anda bu ekran otomatik olarak güncellenecektir.
+    </div>
+  </div>
+
   <!-- ====================================================================== -->
   <!-- 1. SEKME: SULAMA & GÜBRELEME CANLI OPERASYON MERKEZİ                    -->
   <!-- ====================================================================== -->
   <section id="pane-sulama" class="tab-pane active">
     <!-- AKTİF SULAMA KOMUTA KARTI -->
-    <div class="card card-glow-green" style="margin-bottom:12px;">
+    <div id="fertMasterCard" class="card card-glow-green" style="margin-bottom:12px;">
       <div class="card-hdr">
         <div class="card-title">
           <span>🚀</span>
-          <span id="fertHeaderTitle">SULAMA & GÜBRELEME MAKİNESİ (DNM1_SKTR1_GUBRELEME_1)</span>
+          <span id="fertHeaderTitle">SULAMA & GÜBRELEME MAKİNESİ</span>
         </div>
         <div class="btn-group">
           <button class="btn btn-green" onclick="sendScadaCmd({action:'fert_start'})">▶ Sulama Başlat</button>
@@ -1383,10 +1396,10 @@ body.pc-scada-mode .equip-card {
         <div>
           <div style="font-size:11px;color:var(--muted);font-weight:700;">AKTİF FAZ & REÇETE ADIMI</div>
           <div id="fertPhaseBanner" style="font-size:15px;font-weight:900;color:#34d399;margin-top:2px;">
-            🟢 GÜBRE & ASİT DOZLAMA — Periyot 1 | Adım 1 / 6 (Tekrar 1 / 100)
+            ⚪ BEKLEMEDE
           </div>
           <div id="fertActiveEquipTxt" style="font-size:11px;color:#cbd5e1;margin-top:3px;">
-            Açık Vanalar: <b>Vana 1, Vana 2</b> • Çalışan Pompalar: <b>Pompa 1 + Dozaj Pompası</b>
+            Açık Vanalar: <b>YOK</b> • Çalışan Pompalar: <b>YOK</b>
           </div>
         </div>
         <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
@@ -1409,23 +1422,23 @@ body.pc-scada-mode .equip-card {
         <div class="card" style="background:rgba(11,17,30,0.85);padding:12px;">
           <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
             <span style="font-size:12px;font-weight:800;color:#38bdf8;">⚡ EC KONTROL (SET vs REAL)</span>
-            <span id="ecBadge" class="badge badge-blue">PID %64.3</span>
+            <span id="ecBadge" class="badge badge-blue">PID %0.0</span>
           </div>
           <div class="simit-wrap">
             <div class="simit-svg-box">
               <svg class="simit-svg" viewBox="0 0 100 100">
                 <circle class="simit-bg" cx="50" cy="50" r="40"></circle>
-                <circle id="simitEcFg" class="simit-fg" cx="50" cy="50" r="40" stroke="#38bdf8" stroke-dasharray="251.2" stroke-dashoffset="100"></circle>
+                <circle id="simitEcFg" class="simit-fg" cx="50" cy="50" r="40" stroke="#38bdf8" stroke-dasharray="251.2" stroke-dashoffset="251.2"></circle>
               </svg>
               <div class="simit-center">
-                <div id="simitEcVal" class="simit-val" style="color:#38bdf8;">1.85</div>
+                <div id="simitEcVal" class="simit-val" style="color:#38bdf8;">---</div>
                 <div class="simit-unit">mS/cm REAL</div>
               </div>
             </div>
             <div class="simit-info">
-              <div class="simit-row"><span>🎯 Hedef (SET)</span><b id="ecSetTxt" style="color:#38bdf8;">2.40 mS/cm</b></div>
-              <div class="simit-row"><span>📡 Ölçülen (REAL)</span><b id="ecRealTxt">1.85 mS/cm</b></div>
-              <div class="simit-row"><span>⚙️ PID / Çarpan</span><b id="ecPidTxt">%64.3 (x1.60)</b></div>
+              <div class="simit-row"><span>🎯 Hedef (SET)</span><b id="ecSetTxt" style="color:#38bdf8;">--- mS/cm</b></div>
+              <div class="simit-row"><span>📡 Ölçülen (REAL)</span><b id="ecRealTxt">--- mS/cm</b></div>
+              <div class="simit-row"><span>⚙️ PID / Çarpan</span><b id="ecPidTxt">%0.0 (x1.00)</b></div>
               <div class="simit-row"><span>🛡️ Güvenlik Sınırı</span><b id="ecLimTxt">1.5 - 4.0</b></div>
             </div>
           </div>
@@ -1435,23 +1448,23 @@ body.pc-scada-mode .equip-card {
         <div class="card" style="background:rgba(11,17,30,0.85);padding:12px;">
           <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
             <span style="font-size:12px;font-weight:800;color:#f59e0b;">🧪 pH KONTROL (SET vs REAL)</span>
-            <span id="phBadge" class="badge badge-amber">ASİT PID %34.0</span>
+            <span id="phBadge" class="badge badge-amber">ASİT PID %0.0</span>
           </div>
           <div class="simit-wrap">
             <div class="simit-svg-box">
               <svg class="simit-svg" viewBox="0 0 100 100">
                 <circle class="simit-bg" cx="50" cy="50" r="40"></circle>
-                <circle id="simitPhFg" class="simit-fg" cx="50" cy="50" r="40" stroke="#f59e0b" stroke-dasharray="251.2" stroke-dashoffset="80"></circle>
+                <circle id="simitPhFg" class="simit-fg" cx="50" cy="50" r="40" stroke="#f59e0b" stroke-dasharray="251.2" stroke-dashoffset="251.2"></circle>
               </svg>
               <div class="simit-center">
-                <div id="simitPhVal" class="simit-val" style="color:#fbbf24;">6.15</div>
+                <div id="simitPhVal" class="simit-val" style="color:#fbbf24;">---</div>
                 <div class="simit-unit">pH REAL</div>
               </div>
             </div>
             <div class="simit-info">
-              <div class="simit-row"><span>🎯 Hedef (SET)</span><b id="phSetTxt" style="color:#fbbf24;">5.80 pH</b></div>
-              <div class="simit-row"><span>📡 Ölçülen (REAL)</span><b id="phRealTxt">6.15 pH</b></div>
-              <div class="simit-row"><span>⚙️ Asit PID Çıkışı</span><b id="phPidTxt">%34.0 (x1.36)</b></div>
+              <div class="simit-row"><span>🎯 Hedef (SET)</span><b id="phSetTxt" style="color:#fbbf24;">--- pH</b></div>
+              <div class="simit-row"><span>📡 Ölçülen (REAL)</span><b id="phRealTxt">--- pH</b></div>
+              <div class="simit-row"><span>⚙️ Asit PID Çıkışı</span><b id="phPidTxt">%0.0 (x1.00)</b></div>
               <div class="simit-row"><span>🛡️ Güvenlik Sınırı</span><b id="phLimTxt">5.0 - 7.0</b></div>
             </div>
           </div>
@@ -1461,24 +1474,24 @@ body.pc-scada-mode .equip-card {
         <div class="card" style="background:rgba(11,17,30,0.85);padding:12px;">
           <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
             <span style="font-size:12px;font-weight:800;color:#10b981;">⏱️ ADIM & SU İLERLEME</span>
-            <span id="stepProgBadge" class="badge badge-green">ADIM 1 / 6</span>
+            <span id="stepProgBadge" class="badge badge-green">BEKLEMEDE</span>
           </div>
           <div class="simit-wrap">
             <div class="simit-svg-box">
               <svg class="simit-svg" viewBox="0 0 100 100">
                 <circle class="simit-bg" cx="50" cy="50" r="40"></circle>
-                <circle id="simitStepFg" class="simit-fg" cx="50" cy="50" r="40" stroke="#10b981" stroke-dasharray="251.2" stroke-dashoffset="220"></circle>
+                <circle id="simitStepFg" class="simit-fg" cx="50" cy="50" r="40" stroke="#10b981" stroke-dasharray="251.2" stroke-dashoffset="251.2"></circle>
               </svg>
               <div class="simit-center">
-                <div id="simitStepVal" class="simit-val" style="color:#34d399;">%6</div>
+                <div id="simitStepVal" class="simit-val" style="color:#34d399;">%0</div>
                 <div class="simit-unit">TAMAMLANDI</div>
               </div>
             </div>
             <div class="simit-info">
-              <div class="simit-row"><span>🚰 Verilen / Hedef</span><b id="volProgTxt" style="color:#34d399;">20.7 / 80.0 L</b></div>
-              <div class="simit-row"><span>⏳ Geçen / Süre</span><b id="timeProgTxt">00:51 / 15:00</b></div>
-              <div class="simit-row"><span>🌊 Anlık Hat Debisi</span><b id="flowLhTxt">1500 L/h</b></div>
-              <div class="simit-row"><span>🔁 Tekrar Sayacı</span><b id="repeatTxt">1 / 100 Tur</b></div>
+              <div class="simit-row"><span>🚰 Verilen / Hedef</span><b id="volProgTxt" style="color:#34d399;">0.0 / 0.0 L</b></div>
+              <div class="simit-row"><span>⏳ Geçen / Süre</span><b id="timeProgTxt">00:00 / 00:00</b></div>
+              <div class="simit-row"><span>🌊 Anlık Hat Debisi</span><b id="flowLhTxt">0 L/h</b></div>
+              <div class="simit-row"><span>🔁 Tekrar Sayacı</span><b id="repeatTxt">0 / 0 Tur</b></div>
             </div>
           </div>
         </div>
@@ -1486,9 +1499,9 @@ body.pc-scada-mode .equip-card {
     </div>
 
     <!-- GÜBRE & ASİT DOZLAMA ÇIKIŞLARI (PWM ENJEKTÖR KARTLARI) -->
-    <div class="card" style="margin-bottom:12px;">
+    <div id="dosingChannelsCard" class="card" style="margin-bottom:12px;">
       <div class="card-hdr">
-        <div class="card-title">💉 GÜBRE & ASİT DOZLAMA ENJEKTÖR ÇIKIŞLARI (3000ms PWM PALS & ANLIK DEBİ)</div>
+        <div class="card-title">💉 GÜBRE & ASİT DOZLAMA ENJEKTÖR ÇIKIŞLARI (PWM PALS & ANLIK DEBİ)</div>
         <span id="pwmWindowBadge" class="badge badge-blue">PWM Periyot: 3000 ms</span>
       </div>
       <div id="dosingChannelsContainer" class="grid-3" style="margin-bottom:0;">
@@ -1496,24 +1509,24 @@ body.pc-scada-mode .equip-card {
       </div>
     </div>
 
-    <!-- POMPALAR VE SULAMA VANALARI (1..12) CANLI AKIŞ MATRİSİ -->
-    <div class="grid-2">
+    <!-- POMPALAR VE SULAMA VANALARI CANLI AKIŞ MATRİSİ -->
+    <div id="pumpsAndValvesGrid" class="grid-2">
       <!-- POMPALAR -->
-      <div class="card">
+      <div id="pumpsCard" class="card">
         <div class="card-hdr">
-          <div class="card-title">⚙️ KURULU POMPALAR (1 TEMİZ SU + 3 TANK BOŞALTMA = 4 POMPA)</div>
-          <span id="pumpActiveCountBadge" class="badge badge-green">0 / 4 ÇALIŞIYOR</span>
+          <div id="pumpsCardTitle" class="card-title">⚙️ KURULU POMPALAR</div>
+          <span id="pumpActiveCountBadge" class="badge badge-green">0 / 0 ÇALIŞIYOR</span>
         </div>
         <div id="pumpsContainer" class="equip-grid">
           <!-- JS ile canlı doldurulur -->
         </div>
       </div>
 
-      <!-- SULAMA VANALARI 1..12 -->
-      <div class="card">
+      <!-- SULAMA VANALARI -->
+      <div id="valvesCard" class="card">
         <div class="card-hdr">
-          <div class="card-title">🚰 KURULU SULAMA VANALARI (SULAMA_1 .. SULAMA_12)</div>
-          <span id="valveActiveCountBadge" class="badge badge-green">2 AÇIK</span>
+          <div id="valvesCardTitle" class="card-title">🚰 KURULU SULAMA VANALARI</div>
+          <span id="valveActiveCountBadge" class="badge badge-green">0 / 0 AÇIK</span>
         </div>
         <div id="valvesContainer" class="equip-grid">
           <!-- JS ile canlı doldurulur -->
@@ -1521,11 +1534,11 @@ body.pc-scada-mode .equip-card {
       </div>
     </div>
 
-    <!-- SOLÜSYON TANKLARI (SOLUSYON_TANKI_1..3 — 1000L FIFO) -->
-    <div class="card">
+    <!-- SOLÜSYON TANKLARI -->
+    <div id="tanksCard" class="card">
       <div class="card-hdr">
-        <div class="card-title">🛢️ KURULU SOLÜSYON TANKLARI (1000L FIFO DOLUM & TRANSFER KUYRUĞU)</div>
-        <span id="tankQueueBadge" class="badge badge-blue">3 TANK KURULU</span>
+        <div id="tanksCardTitle" class="card-title">🛢️ KURULU SOLÜSYON TANKLARI</div>
+        <span id="tankQueueBadge" class="badge badge-blue">0 TANK KURULU</span>
       </div>
       <div id="tanksContainer" class="grid-3" style="margin-bottom:0;">
         <!-- JS ile canlı doldurulur -->
@@ -1568,20 +1581,20 @@ body.pc-scada-mode .equip-card {
   <!-- ====================================================================== -->
   <section id="pane-iklim" class="tab-pane">
     <!-- CANLI ANİMASYONLU SERA KESİTİ (KELEBEK PENCERELER, PERDE, SİSLEME, FAN, RAY ISITMA) -->
-    <div class="sera-svg-stage">
+    <div id="seraCrossSectionStage" class="sera-svg-stage">
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;padding:0 4px;flex-wrap:wrap;gap:6px;">
         <div style="font-size:12px;font-weight:800;color:#38bdf8;">
-          🏛️ CANLI ANİMASYONLU SERA KESİTİ — <span id="svgSeraTitle">DNM1 / SKTR1</span>
+          🏛️ CANLI ANİMASYONLU SERA KESİTİ — <span id="svgSeraTitle">KURULUM BEKLENİYOR</span>
         </div>
         <div style="font-size:11px;color:#cbd5e1;display:flex;gap:10px;flex-wrap:wrap;">
-          <span>☀️ Radyasyon: <b id="svgRadTxt">450 W/m²</b></span>
-          <span>🌬️ Rüzgar: <b id="svgWindTxt">2.5 km/h (180°)</b></span>
-          <span>🌡️ Dış Isı: <b id="svgOutTempTxt">20.0°C</b></span>
-          <span>🌿 VPD: <b id="svgVpdTxt">1.08 kPa</b></span>
+          <span>☀️ Radyasyon: <b id="svgRadTxt">--- W/m²</b></span>
+          <span>🌬️ Rüzgar: <b id="svgWindTxt">--- km/h (**)</b></span>
+          <span>🌡️ Dış Isı: <b id="svgOutTempTxt">--- °C</b></span>
+          <span>🌿 VPD: <b id="svgVpdTxt">--- kPa</b></span>
         </div>
       </div>
 
-      <svg viewBox="0 0 800 230" style="width:100%;height:auto;max-height:220px;display:block;">
+      <svg id="seraCrossSectionSvg" viewBox="0 0 800 230" style="width:100%;height:auto;max-height:220px;display:block;">
         <defs>
           <linearGradient id="skyGrad" x1="0" y1="0" x2="0" y2="1">
             <stop offset="0%" stop-color="#0c192c"/>
@@ -1597,8 +1610,8 @@ body.pc-scada-mode .equip-card {
         <!-- Güneş & Radyasyon Işınları -->
         <circle cx="75" cy="42" r="18" fill="#fbbf24" opacity="0.85"/>
         <circle cx="75" cy="42" r="26" fill="#f59e0b" opacity="0.25"/>
-        <text x="110" y="40" fill="#fde68a" font-size="11" font-weight="bold" id="svgSunLabel">450 W/m²</text>
-        <text x="110" y="55" fill="#94a3b8" font-size="10" id="svgOutLabel">Dış: 20.0°C | Rüzgar: 2.5 km/h</text>
+        <text x="110" y="40" fill="#fde68a" font-size="11" font-weight="bold" id="svgSunLabel">--- W/m²</text>
+        <text x="110" y="55" fill="#94a3b8" font-size="10" id="svgOutLabel">Dış: --- °C | Rüzgar: ---</text>
 
         <!-- Sera Ana Gövde Çerçevesi -->
         <line x1="140" y1="100" x2="140" y2="210" stroke="#475569" stroke-width="4"/>
@@ -1611,59 +1624,68 @@ body.pc-scada-mode .equip-card {
         <!-- Çatı Mahya Noktası (400, 32) -->
         <circle cx="400" cy="32" r="5" fill="#38bdf8"/>
 
-        <!-- BATI KANAT KELEBEK PENCERE (Sol Mahya Kanadı: 400,32 -> 290,58) -->
-        <g id="svgWestWing" style="transform-origin: 400px 32px; transition: transform 0.6s ease;">
-          <line x1="400" y1="32" x2="290" y2="58" stroke="#38bdf8" stroke-width="5" stroke-linecap="round"/>
-        </g>
-        <text x="275" y="34" fill="#38bdf8" font-size="11" font-weight="bold" id="svgWestText">BATI PENCERE: %0</text>
-
-        <!-- DOĞU KANAT KELEBEK PENCERE (Sağ Mahya Kanadı: 400,32 -> 510,58) -->
-        <g id="svgEastWing" style="transform-origin: 400px 32px; transition: transform 0.6s ease;">
-          <line x1="400" y1="32" x2="510" y2="58" stroke="#10b981" stroke-width="5" stroke-linecap="round"/>
-        </g>
-        <text x="445" y="34" fill="#34d399" font-size="11" font-weight="bold" id="svgEastText">DOĞU PENCERE: %0</text>
-
-        <!-- TERMAL & GÖLGELEME PERDESİ (Ray: x=150..650, y=102) -->
-        <line x1="150" y1="102" x2="650" y2="102" stroke="#334155" stroke-width="2" stroke-dasharray="5,5"/>
-        <rect id="svgCurtainLeft" x="150" y="98" width="90" height="8" rx="3" fill="url(#screenGrad)" style="transition: width 0.6s ease;"/>
-        <rect id="svgCurtainRight" x="560" y="98" width="90" height="8" rx="3" fill="url(#screenGrad)" style="transition: all 0.6s ease;"/>
-        <text x="400" y="118" text-anchor="middle" fill="#fbbf24" font-size="11" font-weight="bold" id="svgCurtainText">PERDE_1 (Kombine Isı+Radyasyon): %35.9 SERİLİ</text>
-
-        <!-- SİRKÜLASYON FANI (x=235, y=145) -->
-        <g transform="translate(235, 145)">
-          <circle cx="0" cy="0" r="18" fill="#0f172a" stroke="#38bdf8" stroke-width="2"/>
-          <g id="svgFanRotor">
-            <path d="M-12,-4 L12,4 M-4,12 L4,-12" stroke="#38bdf8" stroke-width="4" stroke-linecap="round"/>
-            <circle cx="0" cy="0" r="4" fill="#e2e8f0"/>
+        <!-- BATI & DOĞU KANAT KELEBEK PENCERE GRUBU (Kurulumda pencere yoksa gizlenir) -->
+        <g id="svgWinGroup">
+          <g id="svgWestWing" style="transform-origin: 400px 32px; transition: transform 0.6s ease;">
+            <line x1="400" y1="32" x2="290" y2="58" stroke="#38bdf8" stroke-width="5" stroke-linecap="round"/>
           </g>
-        </g>
-        <text x="235" y="177" text-anchor="middle" fill="#94a3b8" font-size="10" font-weight="bold" id="svgFanText">SİRK. FAN: %0</text>
+          <text x="275" y="34" fill="#38bdf8" font-size="11" font-weight="bold" id="svgWestText">BATI PENCERE: %0</text>
 
-        <!-- YÜKSEK BASINÇ SİSLEME NOZULLARI (x=400, y=132) -->
-        <g transform="translate(400, 132)">
-          <line x1="-60" y1="0" x2="60" y2="0" stroke="#06b6d4" stroke-width="3"/>
-          <circle cx="-40" cy="3" r="3" fill="#22d3ee"/>
-          <circle cx="0" cy="3" r="3" fill="#22d3ee"/>
-          <circle cx="40" cy="3" r="3" fill="#22d3ee"/>
-          <g id="svgFogMist" opacity="0.25">
-            <circle cx="-40" cy="14" r="7" fill="#67e8f9"/>
-            <circle cx="0" cy="16" r="8" fill="#67e8f9"/>
-            <circle cx="40" cy="14" r="7" fill="#67e8f9"/>
+          <g id="svgEastWing" style="transform-origin: 400px 32px; transition: transform 0.6s ease;">
+            <line x1="400" y1="32" x2="510" y2="58" stroke="#10b981" stroke-width="5" stroke-linecap="round"/>
           </g>
+          <text x="445" y="34" fill="#34d399" font-size="11" font-weight="bold" id="svgEastText">DOĞU PENCERE: %0</text>
         </g>
-        <text x="400" y="168" text-anchor="middle" fill="#22d3ee" font-size="10" font-weight="bold" id="svgFogText">SİSLEME: BEKLEMEDE (VPD 1.08 kPa)</text>
 
-        <!-- RAY ISITMA BORULARI (x=565, y=155) -->
-        <g transform="translate(565, 152)">
-          <rect x="-45" y="-12" width="90" height="24" rx="6" fill="#0f172a" stroke="#ef4444" stroke-width="1.8" id="svgHeatBox"/>
-          <line x1="-35" y1="-4" x2="35" y2="-4" stroke="#f97316" stroke-width="3" stroke-linecap="round"/>
-          <line x1="-35" y1="5" x2="35" y2="5" stroke="#38bdf8" stroke-width="3" stroke-linecap="round"/>
+        <!-- TERMAL & GÖLGELEME PERDESİ GRUBU (Kurulumda perde yoksa gizlenir) -->
+        <g id="svgCurtainGroup">
+          <line x1="150" y1="102" x2="650" y2="102" stroke="#334155" stroke-width="2" stroke-dasharray="5,5"/>
+          <rect id="svgCurtainLeft" x="150" y="98" width="0" height="8" rx="3" fill="url(#screenGrad)" style="transition: width 0.6s ease;"/>
+          <rect id="svgCurtainRight" x="650" y="98" width="0" height="8" rx="3" fill="url(#screenGrad)" style="transition: all 0.6s ease;"/>
+          <text x="400" y="118" text-anchor="middle" fill="#fbbf24" font-size="11" font-weight="bold" id="svgCurtainText">PERDE: %0</text>
         </g>
-        <text x="565" y="177" text-anchor="middle" fill="#fca5a5" font-size="10" font-weight="bold" id="svgHeatText">RAY ISITMA: Vana %0 (48°C)</text>
+
+        <!-- SİRKÜLASYON FANI GRUBU (Kurulumda sirkülasyon fanı yoksa gizlenir) -->
+        <g id="svgFanGroup">
+          <g transform="translate(235, 145)">
+            <circle cx="0" cy="0" r="18" fill="#0f172a" stroke="#38bdf8" stroke-width="2"/>
+            <g id="svgFanRotor">
+              <path d="M-12,-4 L12,4 M-4,12 L4,-12" stroke="#38bdf8" stroke-width="4" stroke-linecap="round"/>
+              <circle cx="0" cy="0" r="4" fill="#e2e8f0"/>
+            </g>
+          </g>
+          <text x="235" y="177" text-anchor="middle" fill="#94a3b8" font-size="10" font-weight="bold" id="svgFanText">SİRK. FAN: %0</text>
+        </g>
+
+        <!-- YÜKSEK BASINÇ SİSLEME NOZULLARI GRUBU (Kurulumda sisleme yoksa gizlenir) -->
+        <g id="svgFogGroup">
+          <g transform="translate(400, 132)">
+            <line x1="-60" y1="0" x2="60" y2="0" stroke="#06b6d4" stroke-width="3"/>
+            <circle cx="-40" cy="3" r="3" fill="#22d3ee"/>
+            <circle cx="0" cy="3" r="3" fill="#22d3ee"/>
+            <circle cx="40" cy="3" r="3" fill="#22d3ee"/>
+            <g id="svgFogMist" opacity="0.25">
+              <circle cx="-40" cy="14" r="7" fill="#67e8f9"/>
+              <circle cx="0" cy="16" r="8" fill="#67e8f9"/>
+              <circle cx="40" cy="14" r="7" fill="#67e8f9"/>
+            </g>
+          </g>
+          <text x="400" y="168" text-anchor="middle" fill="#22d3ee" font-size="10" font-weight="bold" id="svgFogText">SİSLEME: BEKLEMEDE</text>
+        </g>
+
+        <!-- RAY ISITMA BORULARI GRUBU (Kurulumda ısıtma yoksa gizlenir) -->
+        <g id="svgHeatGroup">
+          <g transform="translate(565, 152)">
+            <rect x="-45" y="-12" width="90" height="24" rx="6" fill="#0f172a" stroke="#ef4444" stroke-width="1.8" id="svgHeatBox"/>
+            <line x1="-35" y1="-4" x2="35" y2="-4" stroke="#f97316" stroke-width="3" stroke-linecap="round"/>
+            <line x1="-35" y1="5" x2="35" y2="5" stroke="#38bdf8" stroke-width="3" stroke-linecap="round"/>
+          </g>
+          <text x="565" y="177" text-anchor="middle" fill="#fca5a5" font-size="10" font-weight="bold" id="svgHeatText">RAY ISITMA: Vana %0</text>
+        </g>
 
         <!-- Sera İçi Bitki & Sensör Özeti -->
         <text x="400" y="202" text-anchor="middle" fill="#e2e8f0" font-size="12" font-weight="bold" id="svgInsideSummary">
-          SERA İÇİ: 24.5°C | %65.0 Nem | Çiğ Noktası: 17.5°C | PAR: 945 µmol | CO₂: 440 ppm
+          SERA İÇİ: --- °C | ** Nem
         </text>
       </svg>
     </div>
@@ -1671,9 +1693,9 @@ body.pc-scada-mode .equip-card {
     <!-- KURULMUŞ İKLİM BİRİMLERİ DETAY & KONTROL KARTLARI -->
     <div class="grid-2">
       <!-- 1. ÇATI KELEBEK PENCERELERİ (DOĞU & BATI KANAT) -->
-      <div class="card card-glow-blue">
+      <div id="winCard" class="card card-glow-blue">
         <div class="card-hdr">
-          <div class="card-title">🦋 ÇATI KELEBEK PENCERELERİ (DNM1_SKTR1_PENCERE_1)</div>
+          <div id="winCardTitle" class="card-title">🦋 ÇATI KELEBEK PENCERELERİ</div>
           <span id="winRuleBadge" class="badge badge-blue">Rüzgar Kuralı: D1</span>
         </div>
         <div id="windowsContainer" class="grid-2" style="margin-bottom:10px;">
@@ -1693,10 +1715,10 @@ body.pc-scada-mode .equip-card {
         </div>
       </div>
 
-      <!-- 2. TERMAL & GÖLGELEME PERDESİ (DNM1_SKTR1_PERDE_1) -->
-      <div class="card card-glow-amber">
+      <!-- 2. TERMAL & GÖLGELEME PERDESİ -->
+      <div id="curtainCard" class="card card-glow-amber">
         <div class="card-hdr">
-          <div class="card-title">🛡️ TERMAL & GÖLGELEME PERDESİ (DNM1_SKTR1_PERDE_1)</div>
+          <div id="curtainCardTitle" class="card-title">🛡️ TERMAL & GÖLGELEME PERDESİ</div>
           <span id="curtainModeBadge" class="badge badge-amber">Kombine (Isı+Radyasyon)</span>
         </div>
         <div id="curtainsContainer" style="margin-bottom:10px;">
@@ -1718,10 +1740,10 @@ body.pc-scada-mode .equip-card {
     </div>
 
     <div class="grid-3">
-      <!-- 3. YÜKSEK BASINÇ SİSLEME (DNM1_SKTR1_SISLEME_1) -->
-      <div class="card">
+      <!-- 3. YÜKSEK BASINÇ SİSLEME -->
+      <div id="fogCard" class="card">
         <div class="card-hdr">
-          <div class="card-title">💨 YÜKSEK BASINÇ SİSLEME (SISLEME_1)</div>
+          <div id="fogCardTitle" class="card-title">💨 YÜKSEK BASINÇ SİSLEME</div>
           <span id="fogStateBadge" class="badge badge-muted">BEKLEMEDE</span>
         </div>
         <div id="fogContainer" style="margin-bottom:10px;"></div>
@@ -1737,10 +1759,10 @@ body.pc-scada-mode .equip-card {
         </div>
       </div>
 
-      <!-- 4. SİRKÜLASYON FANI (DNM1_SKTR1_SIRK_FAN_1) -->
-      <div class="card">
+      <!-- 4. SİRKÜLASYON FANI -->
+      <div id="fanCard" class="card">
         <div class="card-hdr">
-          <div class="card-title">🌀 SİRKÜLASYON FANI (SIRK_FAN_1)</div>
+          <div id="fanCardTitle" class="card-title">🌀 SİRKÜLASYON FANI</div>
           <span id="fanStateBadge" class="badge badge-muted">OTOMATİK</span>
         </div>
         <div id="fanContainer" style="margin-bottom:10px;"></div>
@@ -1752,9 +1774,9 @@ body.pc-scada-mode .equip-card {
       </div>
 
       <!-- 5. MERKEZİ KAZAN, KOLEKTÖR & RAY ISITMA -->
-      <div class="card">
+      <div id="heatCard" class="card">
         <div class="card-hdr">
-          <div class="card-title">🔥 KAZAN, KOLEKTÖR & RAY ISITMA</div>
+          <div id="heatCardTitle" class="card-title">🔥 KAZAN, KOLEKTÖR & RAY ISITMA</div>
           <span id="heatStateBadge" class="badge badge-muted">BEKLEMEDE</span>
         </div>
         <div id="heatingContainer" style="margin-bottom:10px;"></div>
@@ -1773,10 +1795,10 @@ body.pc-scada-mode .equip-card {
 
     <!-- 6. 8 PERİYOTLU GÜNLÜK İKLİM TAKVİMİ (P1..P8) -->
     <div id="pc10PeriodsTableBox" class="pc-only-block" style="margin-bottom:10px;"></div>
-    <div class="card mobile-only-block">
+    <div id="periodsCard" class="card mobile-only-block">
       <div class="card-hdr">
         <div class="card-title">🕒 24 SAATLİK İKLİM PERİYOT TAKVİMİ (PERİYOT 1 .. PERİYOT 8)</div>
-        <span id="activePeriodBadge" class="badge badge-green">AKTİF: P7 (18:00)</span>
+        <span id="activePeriodBadge" class="badge badge-green">AKTİF: P1</span>
       </div>
       <div id="periodsGrid" class="grid-4" style="margin-bottom:0;">
         <!-- JS ile P1..P8 doldurulur -->
@@ -1794,7 +1816,7 @@ body.pc-scada-mode .equip-card {
     </div>
     <div class="card">
       <div class="card-hdr">
-        <div class="card-title">🧩 PC KURULUM EKRANINDA BU SERAYA EKLENMİŞ TÜM AKTİF BİRİMLER (27 BİRİM)</div>
+        <div id="installedUnitsTitle" class="card-title">🧩 PC KURULUM EKRANINDA BU SERAYA EKLENMİŞ TÜM AKTİF BİRİMLER (0 BİRİM)</div>
         <span class="badge badge-green">1:1 PC Kurulum Senkronu</span>
       </div>
       <div id="installedUnitsGrid" class="equip-grid"></div>
@@ -1832,17 +1854,16 @@ body.pc-scada-mode .equip-card {
     <div style="background:#0d1527;border:1px solid #1e293b;border-radius:6px;padding:7px 12px;margin-bottom:8px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;">
       <div style="display:flex;align-items:center;gap:10px;">
         <span style="font-size:14px;font-weight:900;color:#38bdf8;">🎛️ İKLİM VE HAVALANDIRMA KOKPİTİ</span>
-        <span style="font-size:11px;color:#64748b;font-weight:800;">TOPLAM 1 SEKTÖR İZLENİYOR</span>
       </div>
-      <div style="font-size:11px;font-weight:800;color:#fbbf24;" id="pc11SeraBreadcrumb">🏠 DNM1 / SKTR1</div>
+      <div style="font-size:11px;font-weight:800;color:#fbbf24;" id="pc11SeraBreadcrumb">🏠 KURULUM BEKLENİYOR</div>
     </div>
 
     <div class="pc-iklim-cockpit">
-      <!-- SOL KART: SKTR1 KONTROL (BATI & DOĞU KANAT YAY GÖSTERGESİ + ORANSAL HESAPLAMA) -->
+      <!-- SOL KART: SEKTÖR KONTROL (BATI & DOĞU KANAT YAY GÖSTERGESİ + ORANSAL HESAPLAMA) -->
       <div class="pc-panel-box">
         <div style="display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #1e293b;padding-bottom:6px;margin-bottom:10px;">
-          <span style="font-size:12px;font-weight:900;color:#f8fafc;">🏠 SKTR1 KONTROL</span>
-          <span style="font-size:10px;color:#94a3b8;">PERİYOT: <b id="pc11PeriyotKod" style="color:#f97316;font-size:12px;">P5</b></span>
+          <span style="font-size:12px;font-weight:900;color:#f8fafc;" id="pc11SectorTitle">🏠 SEKTÖR KONTROL</span>
+          <span style="font-size:10px;color:#94a3b8;">PERİYOT: <b id="pc11PeriyotKod" style="color:#f97316;font-size:12px;">---</b></span>
         </div>
 
         <!-- BATI / ORTAM / DOĞU YAY (ARC) GÖSTERGESİ (PC Ekran Görüntüsü 1:1) -->
@@ -2293,26 +2314,82 @@ function setSimit(circleId, pct) {
   el.style.strokeDashoffset = String(circum - (circum * clamped / 100));
 }
 
+/**
+ * Kurulumda (Setup) gerçekten eklenmiş birimleri denetler.
+ * Kurulumda olmayan hiçbir birim (Pencere, Perde, Sisleme, Fan, Isıtma, Pompa, Vana, Tank vb.)
+ * iOS, Android .APK veya TV/PC Web ekranlarında ASLA sahte olarak gösterilmez!
+ */
+function getInstalledFlags(sera, sek, sul) {
+  const units = (sek && Array.isArray(sek.kuruluBirimler)) ? sek.kuruluBirimler : [];
+  const types = units.map(u => String(u.tip || '').toUpperCase());
+  const hasType = (...keys) => types.some(t => keys.some(k => t.includes(k)));
+
+  const hasPencere = types.some(t => t === 'PENCERE' || t === 'KELEBEK') || !!(sek && Array.isArray(sek.pencereler) && sek.pencereler.length > 0);
+  const hasPerde   = types.some(t => t === 'PERDE' || t.startsWith('PERDE_')) || !!(sek && Array.isArray(sek.perdeler) && sek.perdeler.length > 0);
+  const hasSisleme = types.some(t => t === 'SISLEME') || !!(sek && sek.sisleme && sek.sisleme.varMi === true);
+  const hasSirkFan = types.some(t => t === 'SIRK_FAN' || t === 'SIRKULASYON') || !!(sek && sek.sirkFan && sek.sirkFan.varMi === true);
+  const hasPadFan  = hasType('COOLING', 'PAD', 'EMIS_FAN') || !!(sek && sek.padFan && sek.padFan.varMi === true);
+  const hasCo2     = hasType('CO2') || !!(sek && sek.co2 && sek.co2.varMi === true);
+  const hasKazan   = types.some(t => t === 'KAZAN' || t === 'KOLEKTOR');
+  const hasIsitma  = hasKazan || hasType('ISITMA', 'RAY') || !!(sek && sek.isitma && sek.isitma.varMi === true);
+  const hasGubreMakinesi = hasType('GUBRE') || !!(sul && Array.isArray(sul.kanallar) && sul.kanallar.length > 0);
+  const hasPompa   = types.some(t => t === 'SULAMA_POMPA') || !!(sul && Array.isArray(sul.pompalar) && sul.pompalar.length > 0);
+  const hasVana    = types.some(t => t === 'SULAMA' || t.startsWith('SULAMA_VANA')) || !!(sul && Array.isArray(sul.vanalar) && sul.vanalar.length > 0);
+  const hasTank    = types.some(t => t === 'SOLUSYON_TANKI') || !!(sul && Array.isArray(sul.tanklar) && sul.tanklar.length > 0);
+  const hasSulama  = !!(sul && (hasGubreMakinesi || hasPompa || hasVana || hasTank));
+  const hasIklimAny = hasPencere || hasPerde || hasSisleme || hasSirkFan || hasPadFan || hasCo2 || hasIsitma;
+  const hasOrkestra = (Number(hasPencere) + Number(hasPerde) + Number(hasSisleme) + Number(hasSirkFan) + Number(hasIsitma) + Number(hasSulama)) >= 2;
+
+  return {
+    hasSera: !!sera && !!sek,
+    units,
+    hasPencere,
+    hasPerde,
+    hasSisleme,
+    hasSirkFan,
+    hasPadFan,
+    hasCo2,
+    hasKazan,
+    hasIsitma,
+    hasGubre: hasGubreMakinesi,
+    hasGubreMakinesi,
+    hasPompa,
+    hasVana,
+    hasTank,
+    hasSulama,
+    hasIklimAny,
+    hasAnyIklim: hasIklimAny,
+    hasOrkestra
+  };
+}
+
+function setElemVisible(id, visible, displayStyle = '') {
+  const el = document.getElementById(id);
+  if (!el) return;
+  el.style.display = visible ? displayStyle : 'none';
+}
+
 function renderScada(data) {
   g_LastData = data;
   const ag = data.agrinexus;
   const sera = (ag && ag.seralar && ag.seralar[0]) ? ag.seralar[0] : null;
   const sek = (sera && sera.sektorler && sera.sektorler[0]) ? sera.sektorler[0] : null;
   const sul = sera ? sera.sulamaGubreleme : null;
-  const dis = (ag && ag.disIklim) ? ag.disIklim : { disIsi: 20, disNem: 50, ruzgarHiz: 2.5, ruzgarYon: 180, radyasyon: 450, co2: 440 };
+  const dis = (ag && ag.disIklim) ? ag.disIklim : { disIsi: 0, disNem: 0, ruzgarHiz: 0, ruzgarYon: 0, radyasyon: 0, co2: 0 };
+  const flags = getInstalledFlags(sera, sek, sul);
 
-  // Donanım Hapları & İstasyon Sayısı (PC HMI ile birebir senkron)
-  const istOn = (ag && ag.hw && ag.hw.istasyonOnline != null) ? ag.hw.istasyonOnline : 3;
-  const istTop = (ag && ag.hw && ag.hw.istasyonToplam != null && ag.hw.istasyonToplam > 0) ? ag.hw.istasyonToplam : 3;
-  const agriOk = !!sera && (!ag.guvenliMod);
-  const armOk = data.stm32_online !== false && (!ag || !ag.hw || ag.hw.stm32Online !== false);
-  const psocOk = data.psoc_online !== false && (!ag || !ag.hw || ag.hw.psocOnline !== false);
-  const sensorOk = (ag && ag.hw && ag.hw.sensorOnline != null) ? !!ag.hw.sensorOnline : (armOk && psocOk);
-  const espOk = (data.esp_online === true) || (ag && ag.hw && ag.hw.espOnline === true) || armOk || (Number(data.esp_rx_ok) > 0);
+  // Donanım Hapları & İstasyon Sayısı (PC HMI ile birebir senkron — sahte "3/3" gösterilmez!)
+  const istOn = (ag && ag.hw && ag.hw.istasyonOnline != null) ? Number(ag.hw.istasyonOnline) : 0;
+  const istTop = (ag && ag.hw && ag.hw.istasyonToplam != null) ? Number(ag.hw.istasyonToplam) : 0;
+  const agriOk = flags.hasSera && (!ag || !ag.guvenliMod);
+  const armOk = (istTop > 0) && data.stm32_online === true && (!ag || !ag.hw || ag.hw.stm32Online !== false);
+  const psocOk = (istTop > 0) && data.psoc_online === true && (!ag || !ag.hw || ag.hw.psocOnline !== false);
+  const sensorOk = flags.hasSera && ((ag && ag.hw && ag.hw.sensorOnline != null) ? !!ag.hw.sensorOnline : (armOk && psocOk));
+  const espOk = (istTop > 0) && ((data.esp_online === true) || (ag && ag.hw && ag.hw.espOnline === true) || armOk || (Number(data.esp_rx_ok) > 0));
 
   document.getElementById('pillAgri').className = 'hw-pill' + (agriOk ? '' : ' off');
   const pillAgriTxt = document.getElementById('pillAgriTxt');
-  if (pillAgriTxt) pillAgriTxt.textContent = `İstasyon ${istOn}/${istTop} ONLINE`;
+  if (pillAgriTxt) pillAgriTxt.textContent = `İstasyon ${istOn}/${istTop} ${istTop > 0 && istOn > 0 ? 'ONLINE' : 'YOK'}`;
   document.getElementById('pillArm').className = 'hw-pill' + (armOk ? '' : ' off');
   document.getElementById('pillPsoc').className = 'hw-pill' + (psocOk ? '' : ' off');
   document.getElementById('pillEsp').className = 'hw-pill' + (espOk ? '' : ' off');
@@ -2320,40 +2397,96 @@ function renderScada(data) {
   if (hdrSer) hdrSer.textContent = (data.device_serial || g_DeviceSerial).replace('OK-ARM-', '');
 
   if (ag && ag.rtc) document.getElementById('hdrRtc').textContent = ag.rtc;
-  if (sera && sek) {
+  if (flags.hasSera) {
     document.getElementById('hdrSeraAd').textContent = `${sera.ad} / ${sek.ad}`;
-    document.getElementById('hdrPeriyot').textContent = `Aktif İklim: ${sek.aktifPeriyotAdi} (${sek.aktifPeriyot?.baslangic || '18:00'})`;
+    document.getElementById('hdrPeriyot').textContent = `Aktif İklim: ${sek.aktifPeriyotAdi || 'P1'} (${sek.aktifPeriyot?.baslangic || '00:00'})`;
+  } else {
+    document.getElementById('hdrSeraAd').textContent = 'KURULUM YOK';
+    document.getElementById('hdrPeriyot').textContent = 'Kayıtlı Sera / Sektör Yok';
   }
 
-  // Üst Şerit (Haberleşme veya Sensör Hattı Kopuksa "---" / "**" Göster!)
-  const icIsi = sek ? sek.icIsi : (data.temp_c || 0);
-  const icNem = sek ? sek.icNem : (data.rh_pct || 0);
-  const ecR = sul ? sul.ecReal : (data.ec_ms || 0);
-  const ecS = sul ? sul.ecSet : (data.set_ec || 2.40);
-  const phR = sul ? sul.phReal : (data.ph_val || 0);
-  const phS = sul ? sul.phSet : (data.set_ph || 5.80);
+  // Kurulum Boş Uyarı Kartı & Sekmelerin Dinamik Görünürlüğü (iOS / Mobil / .APK)
+  const emptySetup = !flags.hasSera || flags.units.length === 0;
+  setElemVisible('mobileEmptySetupBanner', emptySetup, 'block');
+  setElemVisible('dtab-sulama', flags.hasSulama, '');
+  setElemVisible('bnav-sulama', flags.hasSulama, '');
+  setElemVisible('dtab-recete', flags.hasSulama, '');
+  setElemVisible('bnav-recete', flags.hasSulama, '');
+  setElemVisible('dtab-iklim', flags.hasIklimAny, '');
+  setElemVisible('bnav-iklim', flags.hasIklimAny, '');
+  setElemVisible('dtab-kokpit', flags.hasSera, '');
+  setElemVisible('bnav-kokpit', flags.hasSera, '');
 
-  document.getElementById('ribTemp').textContent = sensorOk ? (icIsi.toFixed(1) + '°C') : '--- °C';
-  document.getElementById('ribRh').textContent = sensorOk ? ('%' + icNem.toFixed(0)) : '**';
-  document.getElementById('ribEc').textContent = sensorOk ? `${ecR.toFixed(2)} / ${ecS.toFixed(2)}` : `--- / ${ecS.toFixed(2)}`;
-  document.getElementById('ribPh').textContent = sensorOk ? `${phR.toFixed(2)} / ${phS.toFixed(2)}` : `--- / ${phS.toFixed(2)}`;
+  // Eğer aktif sekme kurulumda olmayan bir modüle aitse otomatik olarak mevcut ilk sekmeye geç
+  const tabAllowed = {
+    sulama: flags.hasSulama,
+    recete: flags.hasSulama,
+    iklim: flags.hasIklimAny,
+    kokpit: flags.hasSera,
+    donanim: true
+  };
+  const activePaneEl = document.querySelector('.tab-pane.active');
+  const activeTabKey = activePaneEl ? activePaneEl.id.replace('pane-', '') : 'sulama';
+  if (tabAllowed[activeTabKey] === false) {
+    const fallbackTab = flags.hasSulama ? 'sulama' : (flags.hasIklimAny ? 'iklim' : (flags.hasSera ? 'kokpit' : 'donanim'));
+    switchTab(fallbackTab);
+  }
 
-  if (sek && sek.pencereler && sek.pencereler.length > 0) {
+  // Üst Şerit Metrikleri (Yalnızca Kurulumda Olan Birimler Gösterilir)
+  setElemVisible('ribEcBox', flags.hasSulama, '');
+  setElemVisible('ribPhBox', flags.hasSulama, '');
+  setElemVisible('ribWinBox', flags.hasPencere, '');
+  setElemVisible('ribCurBox', flags.hasPerde, '');
+
+  const icIsi = sek ? Number(sek.icIsi || 0) : 0;
+  const icNem = sek ? Number(sek.icNem || 0) : 0;
+  const ecR = sul ? Number(sul.ecReal || 0) : 0;
+  const ecS = sul ? Number(sul.ecSet || 0) : 0;
+  const phR = sul ? Number(sul.phReal || 0) : 0;
+  const phS = sul ? Number(sul.phSet || 0) : 0;
+
+  document.getElementById('ribTemp').textContent = (flags.hasSera && sensorOk) ? (icIsi.toFixed(1) + '°C') : '--- °C';
+  document.getElementById('ribRh').textContent = (flags.hasSera && sensorOk) ? ('%' + icNem.toFixed(0)) : '**';
+  document.getElementById('ribEc').textContent = (flags.hasSulama && sensorOk) ? `${ecR.toFixed(2)} / ${ecS.toFixed(2)}` : '--- / ---';
+  document.getElementById('ribPh').textContent = (flags.hasSulama && sensorOk) ? `${phR.toFixed(2)} / ${phS.toFixed(2)}` : '--- / ---';
+
+  if (flags.hasPencere && sek && sek.pencereler && sek.pencereler.length > 0) {
     const avgW = sek.pencereler.reduce((a, b) => a + b.gercekPct, 0) / sek.pencereler.length;
     document.getElementById('ribWin').textContent = '%' + avgW.toFixed(0);
+  } else {
+    document.getElementById('ribWin').textContent = '---';
   }
-  if (sek && sek.perdeler && sek.perdeler.length > 0) {
+  if (flags.hasPerde && sek && sek.perdeler && sek.perdeler.length > 0) {
     document.getElementById('ribCur').textContent = '%' + sek.perdeler[0].gercekPct.toFixed(0);
+  } else {
+    document.getElementById('ribCur').textContent = '---';
+  }
+
+  // Üst Durum Şeridi Başlığı
+  const ribbon = document.getElementById('liveRibbon');
+  const beacon = document.getElementById('ribbonBeacon');
+  const ribTxt = document.getElementById('ribbonStatusTxt');
+  if (!flags.hasSera) {
+    ribbon.className = 'live-ribbon';
+    beacon.className = 'pulse-beacon idle';
+    ribTxt.textContent = '🛠️ KURULUM BEKLENİYOR — PC Kurulum Ekranında Tanımlı Sera / Birim Yok';
+  } else if (!flags.hasSulama) {
+    ribbon.className = 'live-ribbon';
+    beacon.className = 'pulse-beacon idle';
+    ribTxt.textContent = `🏛️ ${sera.ad} / ${sek.ad} — Kurulu Birim: ${flags.units.length} Adet (Sulama Ünitesi Kurulu Değil)`;
   }
 
   // ═══════════════════════════════════════════════════════════════
-  // 1. SULAMA & GÜBRELEME RENDER
+  // 1. SULAMA & GÜBRELEME RENDER (Yalnızca Kurulumda Varsa!)
   // ═══════════════════════════════════════════════════════════════
-  if (sul) {
-    const ribbon = document.getElementById('liveRibbon');
-    const beacon = document.getElementById('ribbonBeacon');
-    const ribTxt = document.getElementById('ribbonStatusTxt');
+  setElemVisible('fertMasterCard', flags.hasSulama, '');
+  setElemVisible('dosingChannelsCard', flags.hasGubreMakinesi, '');
+  setElemVisible('pumpsCard', flags.hasPompa, '');
+  setElemVisible('valvesCard', flags.hasVana, '');
+  setElemVisible('pumpsAndValvesGrid', flags.hasPompa || flags.hasVana, '');
+  setElemVisible('tanksCard', flags.hasTank, '');
 
+  if (flags.hasSulama && sul) {
     if (sul.calisiyor) {
       ribbon.className = 'live-ribbon active-irrig';
       beacon.className = 'pulse-beacon';
@@ -2451,6 +2584,8 @@ function renderScada(data) {
     // Pompalar
     const pumps = sul.pompalar || [];
     const activePumps = pumps.filter(p => p.calisiyor).length;
+    const pTitleEl = document.getElementById('pumpsCardTitle');
+    if (pTitleEl) pTitleEl.textContent = `⚙️ KURULU POMPALAR (${pumps.length} ADET)`;
     document.getElementById('pumpActiveCountBadge').textContent = `${activePumps} / ${pumps.length} ÇALIŞIYOR`;
     document.getElementById('pumpsContainer').innerHTML = pumps.map(p => `
       <div class="equip-card ${p.calisiyor ? 'running' : ''}">
@@ -2469,9 +2604,11 @@ function renderScada(data) {
       </div>
     `).join('');
 
-    // Sulama Vanaları 1..12
+    // Sulama Vanaları
     const valves = sul.vanalar || [];
     const openValves = valves.filter(v => v.acik).length;
+    const vTitleEl = document.getElementById('valvesCardTitle');
+    if (vTitleEl) vTitleEl.textContent = `🚰 KURULU SULAMA VANALARI (${valves.length} ADET)`;
     document.getElementById('valveActiveCountBadge').textContent = `${openValves} / ${valves.length} AÇIK`;
     document.getElementById('valvesContainer').innerHTML = valves.map(v => `
       <div class="equip-card ${v.acik ? 'running' : ''}">
@@ -2487,9 +2624,11 @@ function renderScada(data) {
       </div>
     `).join('');
 
-    // Solüsyon Tankları (1..3) — PC HMI Birebir Senkron (AKTİF/PASİF, Dolum, Mikser, Boşaltım Animasyonlu)
+    // Solüsyon Tankları — PC HMI Birebir Senkron
     const tanks = sul.tanklar || [];
     const activeTankCnt = tanks.filter(x => x.aktif !== false).length;
+    const tTitleEl = document.getElementById('tanksCardTitle');
+    if (tTitleEl) tTitleEl.textContent = `🛢️ KURULU SOLÜSYON TANKLARI (${tanks.length} ADET)`;
     document.getElementById('tankQueueBadge').textContent = `${activeTankCnt}/${tanks.length} AKTİF • KUYRUK: ${sul.tankKuyrukSayisi || 0}`;
     const tanksBox = document.getElementById('tanksContainer');
     if (!document.activeElement || !tanksBox.contains(document.activeElement) || document.activeElement.tagName !== 'SELECT') {
@@ -2502,7 +2641,6 @@ function renderScada(data) {
         const swBos  = !!t.bosSwitch;
         const swDolu = !!t.doluSwitch;
         const pct    = Math.max(0, Math.min(100, Number(t.seviyePct) || 0));
-        // Analog sensör varsa gerçek % yüksekliği; dijital Boş/Dolu şamandıra varsa sabit ayrık şamandıra konumu (sahte % doluluk animasyonu yapılmaz!)
         const liqH   = hasAnalog ? Math.round((pct / 100) * 94) : (swDolu ? 88 : (swBos ? 12 : 48));
         const liqY   = 122 - liqH;
         const liqColTop = !isAktif ? '#475569' : (swBos ? '#ef4444' : (isDis ? '#34d399' : (isFill ? '#38bdf8' : '#0ea5e9')));
@@ -2566,7 +2704,6 @@ function renderScada(data) {
 
         return `
           <div class="tank-card ${cardCls}">
-            <!-- ÜST BAŞLIK & PC HMI BİREBİR AKTİF / PASİF BUTONU -->
             <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;">
               <div>
                 <div style="font-size:13px;font-weight:900;color:#f8fafc;">🛢️ ${t.ad} <span style="font-size:10px;color:#38bdf8;">(TANK-${t.tankNo})</span></div>
@@ -2577,13 +2714,11 @@ function renderScada(data) {
               </button>
             </div>
 
-            <!-- CANLI DURUM ŞERİDİ (DOLUYOR / BOŞALIYOR / MİKSER / ŞAMANDIRA) -->
             <div class="tank-status-strip" style="background:${statusBg};border:1px solid ${statusBorder};color:${statusCol};">
               <span>${statusBanner}</span>
               <span style="font-size:10px;opacity:0.95;">${rightBadgeTxt}</span>
             </div>
 
-            <!-- ORTA BÖLÜM: ANİMASYONLU SVG TANK KESİTİ + SENSÖR & REÇETE DETAYLARI -->
             <div class="tank-body-row">
               <div class="tank-svg-wrap">
                 <svg viewBox="0 0 112 156" width="112" height="156">
@@ -2597,28 +2732,22 @@ function renderScada(data) {
                     </linearGradient>
                   </defs>
 
-                  <!-- Üst Dolum Borusu ve Valfi (Dolumda Akan Su Animasyonu) -->
                   <path d="M 8 10 L 42 10 L 42 26" fill="none" stroke="${isFill ? '#38bdf8' : '#475569'}" stroke-width="5" stroke-linecap="round"/>
                   ${isFill ? `
                     <path d="M 8 10 L 42 10 L 42 26" fill="none" stroke="#e0f2fe" stroke-width="2.5" class="outflow-anim"/>
                   ` : ''}
                   <circle cx="26" cy="10" r="6" fill="${isFill ? '#10b981' : '#334155'}" stroke="#0f172a" stroke-width="1.5"/>
 
-                  <!-- Tank Gövdesi Arka Plan -->
                   <rect x="18" y="26" width="68" height="96" rx="10" fill="#070d19" stroke="${isFill ? '#38bdf8' : (isDis ? '#10b981' : '#475569')}" stroke-width="2.5"/>
 
-                  <!-- Sıvı & Su Akışı (ClipPath İçinde) -->
                   <g clip-path="url(#tankClip_${t.tankNo})">
-                    <!-- Ana Sıvı Kütlesi -->
                     <rect x="16" y="${liqY}" width="72" height="${liqH + 6}" fill="url(#tankGrad_${t.tankNo})"/>
-                    <!-- Üstten Dökülen Animasyonlu Su Sütunu (DOLUM AÇIK İSE) -->
                     ${isFill ? `
                       <line x1="42" y1="26" x2="42" y2="${Math.max(32, liqY + 4)}" stroke="#67e8f9" stroke-width="4.5" class="pour-anim"/>
                       <circle cx="37" cy="${Math.max(34, liqY)}" r="2.2" fill="#e0f2fe" class="bub-1"/>
                       <circle cx="47" cy="${Math.max(34, liqY)}" r="2.2" fill="#e0f2fe" class="bub-2"/>
                     ` : ''}
 
-                    <!-- Mikser Çalışırken Yükselen Hava Kabarcıkları -->
                     ${(isMix || isFill) ? `
                       <circle cx="34" cy="110" r="2.5" fill="#e0f2fe" class="bub-1"/>
                       <circle cx="52" cy="114" r="3.0" fill="#bae6fd" class="bub-2"/>
@@ -2626,13 +2755,11 @@ function renderScada(data) {
                     ` : ''}
                   </g>
 
-                  <!-- Sağ Yan Dijital Üst Dolu & Alt Boş Şamandıra Sviç Göstergeleri -->
                   <rect x="88" y="32" width="18" height="10" rx="3" fill="${swDolu ? '#10b981' : '#1e293b'}" stroke="${swDolu ? '#34d399' : '#475569'}" stroke-width="1"/>
                   <text x="97" y="39" text-anchor="middle" fill="#fff" font-size="6.5" font-weight="900">ÜST</text>
                   <rect x="88" y="106" width="18" height="10" rx="3" fill="${swBos ? '#ef4444' : '#1e293b'}" stroke="${swBos ? '#f87171' : '#475569'}" stroke-width="1"/>
                   <text x="97" y="113" text-anchor="middle" fill="#fff" font-size="6.5" font-weight="900">ALT</text>
 
-                  <!-- Mikser Şaftı ve Dönen 3 Kanatlı Pervane (YALNIZCA Kurulumda karistiriciVar === true ise çizilir!) -->
                   ${t.karistiriciVar ? `
                   <line x1="62" y1="26" x2="62" y2="104" stroke="#94a3b8" stroke-width="2"/>
                   <g transform="translate(62, 104)">
@@ -2644,11 +2771,9 @@ function renderScada(data) {
                   </g>
                   ` : ''}
 
-                  <!-- Tank Üzeri Durum Gösterimi (Analog sensör yoksa sahte %/L göstermez!) -->
                   <text x="50" y="68" text-anchor="middle" fill="#ffffff" font-size="${hasAnalog ? '15' : '11.5'}" font-weight="900" style="text-shadow:0 2px 5px #000;">${centerLine1}</text>
                   <text x="50" y="82" text-anchor="middle" fill="#e2e8f0" font-size="8.5" font-weight="800" style="text-shadow:0 1px 4px #000;">${centerLine2}</text>
 
-                  <!-- Alt Boşaltım (Seraya Transfer) Borusu ve Valfi -->
                   <path d="M 52 122 L 52 142 L 104 142" fill="none" stroke="${isDis ? '#10b981' : '#334155'}" stroke-width="6" stroke-linecap="round"/>
                   ${isDis ? `
                     <path d="M 52 122 L 52 142 L 104 142" fill="none" stroke="#6ee7b7" stroke-width="3.5" class="outflow-anim"/>
@@ -2657,7 +2782,6 @@ function renderScada(data) {
                 </svg>
               </div>
 
-              <!-- SAĞ METRİK & KONTROL PANELİ -->
               <div style="flex:1;min-width:0;display:flex;flex-direction:column;justify-content:space-between;">
                 <div>
                   <div class="simit-row" style="padding:3px 0;">
@@ -2684,7 +2808,6 @@ function renderScada(data) {
                   </div>
                 </div>
 
-                <!-- Tank Reçete Seçimi (G0..G6) -->
                 <div style="margin-top:4px;">
                   <select class="set-input" style="width:100%;font-size:11px;padding:4px 6px;" onchange="sendScadaCmd({action:'tank_control',tankNo:${t.tankNo},gubreProgramNo:Number(this.value)})">
                     ${gpOpts}
@@ -2693,7 +2816,6 @@ function renderScada(data) {
               </div>
             </div>
 
-            <!-- ALT HIZLI MÜDAHALE BUTONLARI (PC HMI İLE BİREBİR) -->
             <div class="tank-ctrl-grid">
               <button class="btn btn-sm ${isFill ? 'btn-blue' : ''}" onclick="sendScadaCmd({action:'tank_control',tankNo:${t.tankNo},dolumTetikle:true})">
                 💧 ${isFill ? 'Doluyor...' : 'Hemen Doldur'}
@@ -2768,7 +2890,7 @@ function renderScada(data) {
                       <span style="font-size:11px;color:#38bdf8;font-weight:800;">(G${a.gubreProgramNo}: ${a.ecHedef} EC / ${a.phHedef} pH)</span>
                     </div>
                     <div style="font-size:11px;color:#cbd5e1;margin-top:4px;">
-                      🚰 Vanalar: <b style="color:#34d399;">${vNames || 'Tümü'}</b> • ⚙️ Pompalar: <b style="color:#38bdf8;">${pNames || 'Pompa 1'}</b>
+                      🚰 Vanalar: <b style="color:#34d399;">${vNames || 'YOK'}</b> • ⚙️ Pompalar: <b style="color:#38bdf8;">${pNames || 'YOK'}</b>
                     </div>
                   </div>
                   <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;">
@@ -2797,12 +2919,33 @@ function renderScada(data) {
         </div>
       `).join('');
     }
+  } else {
+    document.getElementById('dosingChannelsContainer').innerHTML = '';
+    document.getElementById('pumpsContainer').innerHTML = '';
+    document.getElementById('valvesContainer').innerHTML = '';
+    document.getElementById('tanksContainer').innerHTML = '';
+    document.getElementById('gubreProgContainer').innerHTML = '';
+    document.getElementById('recipesContainer').innerHTML = '';
   }
 
   // ═══════════════════════════════════════════════════════════════
   // 3. İKLİMLENDİRME BİRİMLERİ & CANLI SERA KESİTİ RENDER
+  //    (Yalnızca Kurulumda Eklenen İklim Birimleri Gösterilir!)
   // ═══════════════════════════════════════════════════════════════
-  if (sek) {
+  setElemVisible('seraCrossSectionStage', flags.hasSera, '');
+  setElemVisible('svgWinGroup', flags.hasPencere, '');
+  setElemVisible('svgCurtainGroup', flags.hasPerde, '');
+  setElemVisible('svgFanGroup', flags.hasSirkFan, '');
+  setElemVisible('svgFogGroup', flags.hasSisleme, '');
+  setElemVisible('svgHeatGroup', flags.hasIsitma, '');
+  setElemVisible('winCard', flags.hasPencere, '');
+  setElemVisible('curtainCard', flags.hasPerde, '');
+  setElemVisible('fogCard', flags.hasSisleme, '');
+  setElemVisible('fanCard', flags.hasSirkFan, '');
+  setElemVisible('heatCard', flags.hasIsitma, '');
+  setElemVisible('periodsCard', flags.hasIklimAny, '');
+
+  if (flags.hasSera && sek) {
     document.getElementById('svgSeraTitle').textContent = `${sera.ad} / ${sek.ad} (${sensorOk ? sek.stresMesaj : 'HABERLEŞME / SENSÖR KOPUK'})`;
     document.getElementById('svgRadTxt').textContent = sensorOk ? `${dis.radyasyon} W/m²` : '--- W/m²';
     document.getElementById('svgWindTxt').textContent = sensorOk ? `${dis.ruzgarHiz} km/h (${dis.ruzgarYon}°)` : '--- km/h (**)';
@@ -2814,153 +2957,177 @@ function renderScada(data) {
       ? `SERA İÇİ: ${sek.icIsi}°C | %${sek.icNem} Nem | Çiğ Noktası: ${sek.cigNoktasi}°C | PAR: ${sek.par} µmol | CO₂: ${sek.co2} ppm`
       : 'SERA İÇİ: --- °C | ** Nem | Çiğ Noktası: --- °C | SENSÖR BAĞLANTISI KOPUK';
 
-    // Pencereler (Doğu & Batı Kanat)
-    const wins = sek.pencereler || [];
-    const doguW = wins.find(w => w.yon === 'DOĞU') || { gercekPct: 0, hedefPct: 0, durum: 'Bosta', setSicaklik: 24, blokSebebi: 'YOK', ruzgarKurali: 'D1' };
-    const batiW = wins.find(w => w.yon === 'BATI') || { gercekPct: 0, hedefPct: 0, durum: 'Bosta', setSicaklik: 24, blokSebebi: 'YOK', ruzgarKurali: 'D1' };
+    // Pencereler (Yalnızca Kurulumda Varsa)
+    if (flags.hasPencere) {
+      const wins = sek.pencereler || [];
+      const doguW = wins.find(w => w.yon === 'DOĞU') || wins[0] || { yon: 'DOĞU', gercekPct: 0, hedefPct: 0, durum: 'Bosta', setSicaklik: 24, blokSebebi: 'YOK', ruzgarKurali: 'D1' };
+      const batiW = wins.find(w => w.yon === 'BATI') || wins[1] || { yon: 'BATI', gercekPct: 0, hedefPct: 0, durum: 'Bosta', setSicaklik: 24, blokSebebi: 'YOK', ruzgarKurali: 'D1' };
+      const wTitleEl = document.getElementById('winCardTitle');
+      if (wTitleEl) wTitleEl.textContent = `🦋 ÇATI KELEBEK PENCERELERİ (${wins.length} KANAT)`;
 
-    document.getElementById('svgWestWing').style.transform = `rotate(${(batiW.gercekPct * 0.28).toFixed(1)}deg)`;
-    document.getElementById('svgEastWing').style.transform = `rotate(-${(doguW.gercekPct * 0.28).toFixed(1)}deg)`;
-    document.getElementById('svgWestText').textContent = `BATI KANAT: %${batiW.gercekPct.toFixed(0)} (Hedef %${batiW.hedefPct.toFixed(0)})`;
-    document.getElementById('svgEastText').textContent = `DOĞU KANAT: %${doguW.gercekPct.toFixed(0)} (Hedef %${doguW.hedefPct.toFixed(0)})`;
-    document.getElementById('winRuleBadge').textContent = `Rüzgar Kuralı: ${doguW.ruzgarKurali} • Blok: ${doguW.blokSebebi}`;
+      document.getElementById('svgWestWing').style.transform = `rotate(${(batiW.gercekPct * 0.28).toFixed(1)}deg)`;
+      document.getElementById('svgEastWing').style.transform = `rotate(-${(doguW.gercekPct * 0.28).toFixed(1)}deg)`;
+      document.getElementById('svgWestText').textContent = `BATI KANAT: %${batiW.gercekPct.toFixed(0)} (Hedef %${batiW.hedefPct.toFixed(0)})`;
+      document.getElementById('svgEastText').textContent = `DOĞU KANAT: %${doguW.gercekPct.toFixed(0)} (Hedef %${doguW.hedefPct.toFixed(0)})`;
+      document.getElementById('winRuleBadge').textContent = `Rüzgar Kuralı: ${doguW.ruzgarKurali} • Blok: ${doguW.blokSebebi}`;
 
-    document.getElementById('windowsContainer').innerHTML = [batiW, doguW].map(w => {
-      const c = w.yon === 'DOĞU' ? '#10b981' : '#38bdf8';
-      const off = 251.2 - (251.2 * Math.min(100, w.gercekPct) / 100);
-      return `
-        <div class="card" style="background:rgba(11,17,30,0.85);padding:10px;">
-          <div style="font-size:11px;font-weight:800;color:${c};margin-bottom:6px;">🦋 ${w.yon} KANAT PENCERE</div>
-          <div class="simit-wrap">
-            <div class="simit-svg-box sm">
-              <svg class="simit-svg" viewBox="0 0 100 100">
-                <circle class="simit-bg" cx="50" cy="50" r="40"></circle>
-                <circle class="simit-fg" cx="50" cy="50" r="40" stroke="${c}" stroke-dasharray="251.2" stroke-dashoffset="${off}"></circle>
-              </svg>
-              <div class="simit-center">
-                <div class="simit-val" style="color:${c};">%${w.gercekPct.toFixed(0)}</div>
-                <div class="simit-unit">GERÇEK</div>
+      document.getElementById('windowsContainer').innerHTML = wins.map(w => {
+        const c = w.yon === 'DOĞU' ? '#10b981' : '#38bdf8';
+        const off = 251.2 - (251.2 * Math.min(100, w.gercekPct) / 100);
+        return `
+          <div class="card" style="background:rgba(11,17,30,0.85);padding:10px;">
+            <div style="font-size:11px;font-weight:800;color:${c};margin-bottom:6px;">🦋 ${w.yon} KANAT (${shortUnitName(w.kimlik)})</div>
+            <div class="simit-wrap">
+              <div class="simit-svg-box sm">
+                <svg class="simit-svg" viewBox="0 0 100 100">
+                  <circle class="simit-bg" cx="50" cy="50" r="40"></circle>
+                  <circle class="simit-fg" cx="50" cy="50" r="40" stroke="${c}" stroke-dasharray="251.2" stroke-dashoffset="${off}"></circle>
+                </svg>
+                <div class="simit-center">
+                  <div class="simit-val" style="color:${c};">%${w.gercekPct.toFixed(0)}</div>
+                  <div class="simit-unit">GERÇEK</div>
+                </div>
+              </div>
+              <div class="simit-info">
+                <div class="simit-row"><span>🎯 Hedef</span><b>%${w.hedefPct.toFixed(0)}</b></div>
+                <div class="simit-row"><span>🌡️ Efektif Set</span><b>${w.setSicaklik}°C</b></div>
+                <div class="simit-row"><span>⚙️ Motor</span><b>${w.durum}</b></div>
               </div>
             </div>
-            <div class="simit-info">
-              <div class="simit-row"><span>🎯 Hedef</span><b>%${w.hedefPct.toFixed(0)}</b></div>
-              <div class="simit-row"><span>🌡️ Efektif Set</span><b>${w.setSicaklik}°C</b></div>
-              <div class="simit-row"><span>⚙️ Motor</span><b>${w.durum}</b></div>
+          </div>
+        `;
+      }).join('');
+    } else {
+      document.getElementById('windowsContainer').innerHTML = '';
+    }
+
+    // Perdeler (Yalnızca Kurulumda Varsa)
+    if (flags.hasPerde && sek.perdeler && sek.perdeler[0]) {
+      const cur = sek.perdeler[0];
+      const cTitleEl = document.getElementById('curtainCardTitle');
+      if (cTitleEl) cTitleEl.textContent = `🛡️ TERMAL & GÖLGELEME PERDESİ (${shortUnitName(cur.kimlik)})`;
+      const halfW = Math.round((Math.min(100, cur.gercekPct) / 100) * 250);
+      document.getElementById('svgCurtainLeft').setAttribute('width', String(halfW));
+      document.getElementById('svgCurtainRight').setAttribute('x', String(650 - halfW));
+      document.getElementById('svgCurtainRight').setAttribute('width', String(halfW));
+      document.getElementById('svgCurtainText').textContent = `${shortUnitName(cur.kimlik)} (${cur.calismaModu}): %${cur.gercekPct.toFixed(1)} SERİLİ`;
+      document.getElementById('curtainModeBadge').textContent = cur.calismaModu;
+
+      const curOff = 251.2 - (251.2 * Math.min(100, cur.gercekPct) / 100);
+      document.getElementById('curtainsContainer').innerHTML = `
+        <div class="simit-wrap">
+          <div class="simit-svg-box">
+            <svg class="simit-svg" viewBox="0 0 100 100">
+              <circle class="simit-bg" cx="50" cy="50" r="40"></circle>
+              <circle class="simit-fg" cx="50" cy="50" r="40" stroke="#f59e0b" stroke-dasharray="251.2" stroke-dashoffset="${curOff}"></circle>
+            </svg>
+            <div class="simit-center">
+              <div class="simit-val" style="color:#fbbf24;">%${cur.gercekPct.toFixed(1)}</div>
+              <div class="simit-unit">SERİLİ</div>
             </div>
+          </div>
+          <div class="simit-info">
+            <div class="simit-row"><span>🎯 Hedef Kapanma</span><b style="color:#fbbf24;">%${cur.hedefPct.toFixed(1)}</b></div>
+            <div class="simit-row"><span>⚡ Enerji Tasarrufu</span><b style="color:#34d399;">%${cur.enerjiTasarrufuPct.toFixed(1)}</b></div>
+            <div class="simit-row"><span>📋 Karar</span><b style="font-size:10px;">${cur.durum}</b></div>
           </div>
         </div>
       `;
-    }).join('');
+    } else {
+      document.getElementById('curtainsContainer').innerHTML = '';
+    }
 
-    // Perdeler
-    const cur = (sek.perdeler && sek.perdeler[0]) ? sek.perdeler[0] : { kimlik: 'PERDE_1', gercekPct: 0, hedefPct: 0, calismaModu: 'Kombine', durum: 'OTOMATİK', enerjiTasarrufuPct: 0 };
-    const halfW = Math.round((Math.min(100, cur.gercekPct) / 100) * 250);
-    document.getElementById('svgCurtainLeft').setAttribute('width', String(halfW));
-    document.getElementById('svgCurtainRight').setAttribute('x', String(650 - halfW));
-    document.getElementById('svgCurtainRight').setAttribute('width', String(halfW));
-    document.getElementById('svgCurtainText').textContent = `${shortUnitName(cur.kimlik)} (${cur.calismaModu}): %${cur.gercekPct.toFixed(1)} SERİLİ`;
-    document.getElementById('curtainModeBadge').textContent = cur.calismaModu;
-
-    const curOff = 251.2 - (251.2 * Math.min(100, cur.gercekPct) / 100);
-    document.getElementById('curtainsContainer').innerHTML = `
-      <div class="simit-wrap">
-        <div class="simit-svg-box">
-          <svg class="simit-svg" viewBox="0 0 100 100">
-            <circle class="simit-bg" cx="50" cy="50" r="40"></circle>
-            <circle class="simit-fg" cx="50" cy="50" r="40" stroke="#f59e0b" stroke-dasharray="251.2" stroke-dashoffset="${curOff}"></circle>
-          </svg>
-          <div class="simit-center">
-            <div class="simit-val" style="color:#fbbf24;">%${cur.gercekPct.toFixed(1)}</div>
-            <div class="simit-unit">SERİLİ</div>
+    // Sisleme (Yalnızca Kurulumda Varsa)
+    if (flags.hasSisleme && sek.sisleme) {
+      const sis = sek.sisleme;
+      document.getElementById('svgFogMist').setAttribute('opacity', sis.aktif ? '0.9' : '0.18');
+      document.getElementById('svgFogText').textContent = `SİSLEME: ${sis.aktif ? '🟢 AKTİF PÜSKÜRTMEDE' : 'BEKLEMEDE'} (VPD ${sek.vpd} kPa)`;
+      document.getElementById('fogStateBadge').className = 'badge ' + (sis.aktif ? 'badge-green' : 'badge-muted');
+      document.getElementById('fogStateBadge').textContent = sis.aktif ? '🟢 AKTİF' : 'BEKLEMEDE';
+      const vpdOff = 251.2 - (251.2 * Math.min(100, (sek.vpd / 2.5) * 100) / 100);
+      document.getElementById('fogContainer').innerHTML = `
+        <div class="simit-wrap">
+          <div class="simit-svg-box sm">
+            <svg class="simit-svg" viewBox="0 0 100 100">
+              <circle class="simit-bg" cx="50" cy="50" r="40"></circle>
+              <circle class="simit-fg" cx="50" cy="50" r="40" stroke="#06b6d4" stroke-dasharray="251.2" stroke-dashoffset="${vpdOff}"></circle>
+            </svg>
+            <div class="simit-center">
+              <div class="simit-val" style="color:#22d3ee;">${sek.vpd}</div>
+              <div class="simit-unit">kPa VPD</div>
+            </div>
+          </div>
+          <div class="simit-info">
+            <div class="simit-row"><span>⏱️ Pulse ON / OFF</span><b>${sis.onSn}sn / ${sis.offSn}sn</b></div>
+            <div class="simit-row"><span>🎯 VPD Tetik / Max RH</span><b>${sis.vpdTetik} kPa / %${sis.maxRhLimit}</b></div>
+            <div class="simit-row"><span>📋 Durum</span><b style="font-size:10px;">${sis.durum}</b></div>
           </div>
         </div>
-        <div class="simit-info">
-          <div class="simit-row"><span>🎯 Hedef Kapanma</span><b style="color:#fbbf24;">%${cur.hedefPct.toFixed(1)}</b></div>
-          <div class="simit-row"><span>⚡ Enerji Tasarrufu</span><b style="color:#34d399;">%${cur.enerjiTasarrufuPct.toFixed(1)}</b></div>
-          <div class="simit-row"><span>📋 Karar</span><b style="font-size:10px;">${cur.durum}</b></div>
-        </div>
-      </div>
-    `;
+      `;
+    } else {
+      document.getElementById('fogContainer').innerHTML = '';
+    }
 
-    // Sisleme
-    const sis = sek.sisleme || { aktif: false, pulseAcik: false, onSn: 30, offSn: 50, kalanSn: 0, vpdTetik: 1.2, maxRhLimit: 85, durum: 'BEKLEMEDE' };
-    document.getElementById('svgFogMist').setAttribute('opacity', sis.aktif ? '0.9' : '0.18');
-    document.getElementById('svgFogText').textContent = `SİSLEME: ${sis.aktif ? '🟢 AKTİF PÜSKÜRTMEDE' : 'BEKLEMEDE'} (VPD ${sek.vpd} kPa)`;
-    document.getElementById('fogStateBadge').className = 'badge ' + (sis.aktif ? 'badge-green' : 'badge-muted');
-    document.getElementById('fogStateBadge').textContent = sis.aktif ? '🟢 AKTİF' : 'BEKLEMEDE';
-    const vpdOff = 251.2 - (251.2 * Math.min(100, (sek.vpd / 2.5) * 100) / 100);
-    document.getElementById('fogContainer').innerHTML = `
-      <div class="simit-wrap">
-        <div class="simit-svg-box sm">
-          <svg class="simit-svg" viewBox="0 0 100 100">
-            <circle class="simit-bg" cx="50" cy="50" r="40"></circle>
-            <circle class="simit-fg" cx="50" cy="50" r="40" stroke="#06b6d4" stroke-dasharray="251.2" stroke-dashoffset="${vpdOff}"></circle>
-          </svg>
-          <div class="simit-center">
-            <div class="simit-val" style="color:#22d3ee;">${sek.vpd}</div>
-            <div class="simit-unit">kPa VPD</div>
+    // Sirkülasyon Fanı (Yalnızca Kurulumda Varsa)
+    if (flags.hasSirkFan && sek.sirkFan) {
+      const fan = sek.sirkFan;
+      document.getElementById('svgFanRotor').setAttribute('class', fan.aktif ? 'spin-active' : '');
+      document.getElementById('svgFanText').textContent = `SİRK. FAN: %${fan.hizPct}`;
+      document.getElementById('fanStateBadge').className = 'badge ' + (fan.aktif ? 'badge-green' : 'badge-muted');
+      document.getElementById('fanStateBadge').textContent = fan.aktif ? `🟢 %${fan.hizPct} ÇALIŞIYOR` : 'DURUYOR';
+      const fanOff = 251.2 - (251.2 * Math.min(100, fan.hizPct) / 100);
+      document.getElementById('fanContainer').innerHTML = `
+        <div class="simit-wrap">
+          <div class="simit-svg-box sm">
+            <svg class="simit-svg" viewBox="0 0 100 100">
+              <circle class="simit-bg" cx="50" cy="50" r="40"></circle>
+              <circle class="simit-fg" cx="50" cy="50" r="40" stroke="#38bdf8" stroke-dasharray="251.2" stroke-dashoffset="${fanOff}"></circle>
+            </svg>
+            <div class="simit-center">
+              <div class="simit-val" style="color:#38bdf8;">%${fan.hizPct}</div>
+              <div class="simit-unit">FAN HIZI</div>
+            </div>
+          </div>
+          <div class="simit-info">
+            <div class="simit-row"><span>⚡ Analog Sürücü</span><b>${fan.volt0_10} V (0-10V)</b></div>
+            <div class="simit-row"><span>📋 Karar</span><b style="font-size:10px;">${fan.durum}</b></div>
           </div>
         </div>
-        <div class="simit-info">
-          <div class="simit-row"><span>⏱️ Pulse ON / OFF</span><b>${sis.onSn}sn / ${sis.offSn}sn</b></div>
-          <div class="simit-row"><span>🎯 VPD Tetik / Max RH</span><b>${sis.vpdTetik} kPa / %${sis.maxRhLimit}</b></div>
-          <div class="simit-row"><span>📋 Durum</span><b style="font-size:10px;">${sis.durum}</b></div>
-        </div>
-      </div>
-    `;
+      `;
+    } else {
+      document.getElementById('fanContainer').innerHTML = '';
+    }
 
-    // Sirkülasyon Fanı
-    const fan = sek.sirkFan || { aktif: false, hizPct: 0, volt0_10: 0, durum: 'DURUYOR' };
-    document.getElementById('svgFanRotor').setAttribute('class', fan.aktif ? 'spin-active' : '');
-    document.getElementById('svgFanText').textContent = `SİRK. FAN: %${fan.hizPct}`;
-    document.getElementById('fanStateBadge').className = 'badge ' + (fan.aktif ? 'badge-green' : 'badge-muted');
-    document.getElementById('fanStateBadge').textContent = fan.aktif ? `🟢 %${fan.hizPct} ÇALIŞIYOR` : 'DURUYOR';
-    const fanOff = 251.2 - (251.2 * Math.min(100, fan.hizPct) / 100);
-    document.getElementById('fanContainer').innerHTML = `
-      <div class="simit-wrap">
-        <div class="simit-svg-box sm">
-          <svg class="simit-svg" viewBox="0 0 100 100">
-            <circle class="simit-bg" cx="50" cy="50" r="40"></circle>
-            <circle class="simit-fg" cx="50" cy="50" r="40" stroke="#38bdf8" stroke-dasharray="251.2" stroke-dashoffset="${fanOff}"></circle>
-          </svg>
-          <div class="simit-center">
-            <div class="simit-val" style="color:#38bdf8;">%${fan.hizPct}</div>
-            <div class="simit-unit">FAN HIZI</div>
+    // Isıtma (Yalnızca Kurulumda Varsa)
+    if (flags.hasIsitma && sek.isitma) {
+      const isit = sek.isitma;
+      const ray = (isit.hatlar && isit.hatlar[0]) ? isit.hatlar[0] : { valfGercekPct: 0, valfHedefPct: 0, pompaAktif: false };
+      document.getElementById('svgHeatText').textContent = `RAY ISITMA: Vana %${ray.valfGercekPct} (${isit.gidisSicaklik}°C)`;
+      document.getElementById('heatStateBadge').className = 'badge ' + (isit.kazanAktif ? 'badge-red' : 'badge-muted');
+      document.getElementById('heatStateBadge').textContent = isit.kazanAktif ? '🔥 KAZAN AKTİF' : 'BEKLEMEDE';
+      const heatOff = 251.2 - (251.2 * Math.min(100, ray.valfGercekPct) / 100);
+      document.getElementById('heatingContainer').innerHTML = `
+        <div class="simit-wrap">
+          <div class="simit-svg-box sm">
+            <svg class="simit-svg" viewBox="0 0 100 100">
+              <circle class="simit-bg" cx="50" cy="50" r="40"></circle>
+              <circle class="simit-fg" cx="50" cy="50" r="40" stroke="#ef4444" stroke-dasharray="251.2" stroke-dashoffset="${heatOff}"></circle>
+            </svg>
+            <div class="simit-center">
+              <div class="simit-val" style="color:#f87171;">%${ray.valfGercekPct}</div>
+              <div class="simit-unit">3-YOLLU VANA</div>
+            </div>
+          </div>
+          <div class="simit-info">
+            <div class="simit-row"><span>🔥 Kazan Gidiş/Dönüş</span><b>${isit.gidisSicaklik}°C / ${isit.donusSicaklik}°C</b></div>
+            <div class="simit-row"><span>🎯 Vana Hedef / Set</span><b>%${ray.valfHedefPct} / ${isit.ortamIsitmaSet}°C</b></div>
+            <div class="simit-row"><span>📋 Durum</span><b style="font-size:10px;">${isit.durumMesaji}</b></div>
           </div>
         </div>
-        <div class="simit-info">
-          <div class="simit-row"><span>⚡ Analog Sürücü</span><b>${fan.volt0_10} V (0-10V)</b></div>
-          <div class="simit-row"><span>📋 Karar</span><b style="font-size:10px;">${fan.durum}</b></div>
-        </div>
-      </div>
-    `;
-
-    // Isıtma (Kazan, Kolektör, Ray Isıtma)
-    const isit = sek.isitma || { kazanAktif: false, gidisSicaklik: 48, donusSicaklik: 38, ortamIsitmaSet: 18, durumMesaji: 'BEKLEMEDE', hatlar: [] };
-    const ray = (isit.hatlar && isit.hatlar[0]) ? isit.hatlar[0] : { valfGercekPct: 0, valfHedefPct: 0, pompaAktif: false };
-    document.getElementById('svgHeatText').textContent = `RAY ISITMA: Vana %${ray.valfGercekPct} (${isit.gidisSicaklik}°C)`;
-    document.getElementById('heatStateBadge').className = 'badge ' + (isit.kazanAktif ? 'badge-red' : 'badge-muted');
-    document.getElementById('heatStateBadge').textContent = isit.kazanAktif ? '🔥 KAZAN AKTİF' : 'BEKLEMEDE';
-    const heatOff = 251.2 - (251.2 * Math.min(100, ray.valfGercekPct) / 100);
-    document.getElementById('heatingContainer').innerHTML = `
-      <div class="simit-wrap">
-        <div class="simit-svg-box sm">
-          <svg class="simit-svg" viewBox="0 0 100 100">
-            <circle class="simit-bg" cx="50" cy="50" r="40"></circle>
-            <circle class="simit-fg" cx="50" cy="50" r="40" stroke="#ef4444" stroke-dasharray="251.2" stroke-dashoffset="${heatOff}"></circle>
-          </svg>
-          <div class="simit-center">
-            <div class="simit-val" style="color:#f87171;">%${ray.valfGercekPct}</div>
-            <div class="simit-unit">3-YOLLU VANA</div>
-          </div>
-        </div>
-        <div class="simit-info">
-          <div class="simit-row"><span>🔥 Kazan Gidiş/Dönüş</span><b>${isit.gidisSicaklik}°C / ${isit.donusSicaklik}°C</b></div>
-          <div class="simit-row"><span>🎯 Vana Hedef / Set</span><b>%${ray.valfHedefPct} / ${isit.ortamIsitmaSet}°C</b></div>
-          <div class="simit-row"><span>📋 Durum</span><b style="font-size:10px;">${isit.durumMesaji}</b></div>
-        </div>
-      </div>
-    `;
+      `;
+    } else {
+      document.getElementById('heatingContainer').innerHTML = '';
+    }
 
     // Aktif Periyot Inputlarını Senkronize Et (odakta değilse)
     const ap = sek.aktifPeriyot;
@@ -2980,8 +3147,8 @@ function renderScada(data) {
       syncInp('inpRayMaxBoru', ap.rayMaxBoru);
     }
 
-    // 8 Periyot Takvimi
-    document.getElementById('activePeriodBadge').textContent = `AKTİF: ${sek.aktifPeriyotAdi} (${ap?.baslangic || '18:00'})`;
+    // 8 Periyot Takvimi (Yalnızca Kurulumda Olan Birimlerin Satırlarını Gösterir)
+    document.getElementById('activePeriodBadge').textContent = `AKTİF: ${sek.aktifPeriyotAdi || 'P1'} (${ap?.baslangic || '00:00'})`;
     document.getElementById('periodsGrid').innerHTML = (sek.periyotlar || []).map(p => `
       <div class="card" style="background:rgba(11,17,30,0.85);padding:10px;border-color:${p.aktifMi ? '#10b981' : 'var(--border)'};">
         <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
@@ -2989,15 +3156,16 @@ function renderScada(data) {
           <span class="badge ${p.aktifMi ? 'badge-green' : 'badge-muted'}">${p.aktifMi ? 'AKTİF' : 'TAKİPTE'}</span>
         </div>
         <div style="font-size:10px;color:#cbd5e1;line-height:1.55;">
-          <div>🦋 Pencere Açma: <b>${p.penAcmaSet}°C</b> (Max %${p.penMax})</div>
-          <div>🔥 Isıtma Set: <b>${p.isitmaSet}°C</b> (Boru ${p.rayMaxBoru}°C)</div>
-          <div>🛡️ Perde Rad: <b>${p.perdeRadTetik} W/m²</b> (${p.perdeDisIsiKapat}°C)</div>
-          <div>💨 Sisleme VPD: <b>${p.sisVpdTetik} kPa</b> (RH %${p.sisMaxRh})</div>
+          ${flags.hasPencere ? `<div>🦋 Pencere Açma: <b>${p.penAcmaSet}°C</b> (Max %${p.penMax})</div>` : ''}
+          ${flags.hasIsitma ? `<div>🔥 Isıtma Set: <b>${p.isitmaSet}°C</b> (Boru ${p.rayMaxBoru}°C)</div>` : ''}
+          ${flags.hasPerde ? `<div>🛡️ Perde Rad: <b>${p.perdeRadTetik} W/m²</b> (${p.perdeDisIsiKapat}°C)</div>` : ''}
+          ${flags.hasSisleme ? `<div>💨 Sisleme VPD: <b>${p.sisVpdTetik} kPa</b> (RH %${p.sisMaxRh})</div>` : ''}
+          ${flags.hasSirkFan ? `<div>🌀 Sirk. Fan Max: <b>%${p.sirkMaxHiz}</b></div>` : ''}
         </div>
       </div>
     `).join('');
 
-    // 4. SEKME: GENEL KOKPİT & TÜM KURULU BİRİMLER (27 BİRİM)
+    // 4. SEKME: GENEL KOKPİT & KURULU BİRİMLER
     document.getElementById('cockpitKpiGrid').innerHTML = [
       { ico: '🌡️', lbl: 'SERA İÇ SICAKLIK', val: sensorOk ? `${sek.icIsi}°C` : '--- °C', sub: `Pencere Set: ${ap?.penAcmaSet || 24}°C | Isıtma: ${ap?.isitmaSet || 18}°C`, col: sensorOk ? '#38bdf8' : '#ef4444' },
       { ico: '💧', lbl: 'SERA İÇ NEM & VPD', val: sensorOk ? `%${sek.icNem}` : '** RH', sub: sensorOk ? `VPD: ${sek.vpd} kPa | Çiğ Noktası: ${sek.cigNoktasi}°C` : 'VPD: --- kPa | Çiğ Noktası: --- °C', col: sensorOk ? '#10b981' : '#ef4444' },
@@ -3011,83 +3179,80 @@ function renderScada(data) {
       </div>
     `).join('');
 
-    const units = sek.kuruluBirimler || [];
+    const units = flags.units;
+    const uTitleEl = document.getElementById('installedUnitsTitle');
+    if (uTitleEl) uTitleEl.textContent = `🧩 PC KURULUM EKRANINDA BU SERAYA EKLENMİŞ TÜM AKTİF BİRİMLER (${units.length} BİRİM)`;
     const iconByType = {
       PENCERE: '🦋', PERDE: '🛡️', SISLEME: '💨', SIRK_FAN: '🌀',
       KAZAN: '🔥', KOLEKTOR: '🔀', RAY_ISITMA: '♨️', GUBRELEME: '🧪',
       SULAMA: '🚰', SULAMA_POMPA: '⚙️', SOLUSYON_TANKI: '🛢️'
     };
-    document.getElementById('installedUnitsGrid').innerHTML = units.map(u => `
-      <div class="equip-card running">
-        <div class="equip-icon" style="font-size:17px;">${iconByType[u.tip] || '🔧'}</div>
-        <div style="min-width:0;">
-          <div style="font-size:11px;font-weight:800;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${shortUnitName(u.kimlik)}</div>
-          <div style="font-size:9px;color:#38bdf8;font-weight:700;">${u.tip}</div>
-        </div>
-      </div>
-    `).join('');
+    document.getElementById('installedUnitsGrid').innerHTML = units.length > 0
+      ? units.map(u => `
+          <div class="equip-card running">
+            <div class="equip-icon" style="font-size:17px;">${iconByType[u.tip] || '🔧'}</div>
+            <div style="min-width:0;">
+              <div style="font-size:11px;font-weight:800;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${shortUnitName(u.kimlik)}</div>
+              <div style="font-size:9px;color:#38bdf8;font-weight:700;">${u.tip}</div>
+            </div>
+          </div>
+        `).join('')
+      : `<div style="grid-column:1/-1;padding:12px;color:#94a3b8;font-size:12px;">Kurulumda bu sektöre eklenmiş aktif birim bulunmamaktadır.</div>`;
+  } else {
+    document.getElementById('cockpitKpiGrid').innerHTML = '';
+    const uTitleEl = document.getElementById('installedUnitsTitle');
+    if (uTitleEl) uTitleEl.textContent = '🧩 PC KURULUM EKRANINDA BU SERAYA EKLENMİŞ TÜM AKTİF BİRİMLER (0 BİRİM)';
+    document.getElementById('installedUnitsGrid').innerHTML =
+      `<div style="grid-column:1/-1;padding:12px;color:#94a3b8;font-size:12px;">PC Sistem Kurulumu ekranında henüz kayıtlı sera veya birim bulunmamaktadır.</div>`;
   }
 
   // ═══════════════════════════════════════════════════════════════
-  // 5. SEKME: FİZİKSEL RÖLE & DİJİTAL GİRİŞ TELEMETRİSİ (PC scada_veriler.json İLE 1:1 AYNI PİN HARİTASI)
+  // 5. SEKME: FİZİKSEL RÖLE & DİJİTAL GİRİŞ TELEMETRİSİ
+  //    (Yalnızca Kurulumda Kayıtlı Kart/Pin Varsa Gösterilir — Sahte İsim Üretilmez!)
   // ═══════════════════════════════════════════════════════════════
   const doMask = Number(data.do_mask) || 0;
   const diMask = Number(data.di_mask) || 0;
   document.getElementById('doMaskBadge').textContent = 'DO: 0x' + doMask.toString(16).toUpperCase().padStart(4, '0');
   document.getElementById('diMaskBadge').textContent = 'DI: 0x' + diMask.toString(16).toUpperCase().padStart(4, '0');
 
-  const defaultDoNames = [
-    'Asit Dozaj Valfi', 'Gübre A Dozaj Valfi', 'Gübre B Dozaj Valfi', 'Dozaj Pompası Start',
-    'Sulama Vana 1', 'Sulama Vana 2', 'Sulama Vana 3', 'Sulama Pompa 1',
-    'Sulama Pompa 2', 'Sulama Pompa 3', 'Sulama Pompa 4', 'Tank 1 Dolum Valfi',
-    'Tank 1 Mikser', 'Tank 1 Boşaltım Valfi', 'Tank 2 Dolum Valfi', 'Tank 2 Mikser'
-  ];
-  const doPins = (ag && ag.hw && Array.isArray(ag.hw.doPinler) && ag.hw.doPinler.length > 0)
-    ? ag.hw.doPinler
-    : defaultDoNames.map((n, idx) => ({ no: idx, kod: 'DO' + idx, tag: n, aktif: ((doMask & (1 << idx)) !== 0) }));
+  const doPins = (ag && ag.hw && Array.isArray(ag.hw.doPinler) && ag.hw.doPinler.length > 0) ? ag.hw.doPinler : [];
+  document.getElementById('hwRelaysGrid').innerHTML = doPins.length > 0
+    ? doPins.map((pin, i) => {
+        const isOn = pin.aktif != null ? !!pin.aktif : ((doMask & (1 << i)) !== 0);
+        const label = shortUnitName(pin.tag || ('Çıkış ' + i));
+        return `
+          <div class="card" style="padding:8px;text-align:center;background:${isOn ? 'rgba(16,185,129,0.18)' : 'rgba(11,17,30,0.85)'};border-color:${isOn ? '#10b981' : 'var(--border)'};">
+            <div style="font-size:11px;font-weight:900;color:${isOn ? '#34d399' : '#94a3b8'};">DO${i}: ${isOn ? '🟢 AKTİF (1)' : '⚪ KAPALI (0)'}</div>
+            <div style="font-size:9.5px;color:#e2e8f0;margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${label}</div>
+          </div>
+        `;
+      }).join('')
+    : `<div style="grid-column:1/-1;padding:12px;color:#94a3b8;font-size:12px;background:rgba(11,17,30,0.65);border-radius:8px;border:1px dashed #334155;">Kurulumda kayıtlı CPU / Röle (DO) kartı veya atanmış çıkış pini bulunmamaktadır.</div>`;
 
-  document.getElementById('hwRelaysGrid').innerHTML = doPins.map((pin, i) => {
-    const isOn = pin.aktif != null ? !!pin.aktif : ((doMask & (1 << i)) !== 0);
-    const label = shortUnitName(pin.tag || defaultDoNames[i] || ('Çıkış ' + i));
-    return `
-      <div class="card" style="padding:8px;text-align:center;background:${isOn ? 'rgba(16,185,129,0.18)' : 'rgba(11,17,30,0.85)'};border-color:${isOn ? '#10b981' : 'var(--border)'};">
-        <div style="font-size:11px;font-weight:900;color:${isOn ? '#34d399' : '#94a3b8'};">DO${i}: ${isOn ? '🟢 AKTİF (1)' : '⚪ KAPALI (0)'}</div>
-        <div style="font-size:9.5px;color:#e2e8f0;margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${label}</div>
-      </div>
-    `;
-  }).join('');
-
-  const defaultDiNames = [
-    'Pencere Doğu Açık Limit', 'Pencere Doğu Kapalı Limit', 'Pencere Batı Açık Limit', 'Pencere Batı Kapalı Limit',
-    'Perde Açık Limit', 'Perde Kapalı Limit', 'Sirk. Fan Termik', 'Kazan Brülör Arıza',
-    'Ana Pompa Termik', 'EC/pH Akış Şalteri', 'Tank 1 ALT BOŞ Şamandıra', 'Tank 1 ÜST DOLU Şamandıra',
-    'Tank 2 ALT BOŞ Şamandıra', 'Tank 2 ÜST DOLU Şamandıra', 'Tank 3 ALT BOŞ Şamandıra', 'Tank 3 ÜST DOLU Şamandıra'
-  ];
-  const diPins = (ag && ag.hw && Array.isArray(ag.hw.diPinler) && ag.hw.diPinler.length > 0)
-    ? ag.hw.diPinler
-    : defaultDiNames.map((n, idx) => ({ no: idx, kod: 'DI' + idx, tag: n, aktif: ((diMask & (1 << idx)) !== 0) }));
-
-  document.getElementById('hwInputsGrid').innerHTML = diPins.map((pin, i) => {
-    const isHi = pin.aktif != null ? !!pin.aktif : ((diMask & (1 << i)) !== 0);
-    const label = shortUnitName(pin.tag || defaultDiNames[i] || ('Giriş ' + i));
-    return `
-      <div class="card" style="padding:8px;text-align:center;background:rgba(11,17,30,0.85);border-color:${isHi ? '#38bdf8' : 'var(--border)'};">
-        <div style="font-size:11px;font-weight:800;color:${isHi ? '#34d399' : '#94a3b8'};">DI${i}: ${isHi ? 'AKTİF (1)' : 'PASİF (0)'}</div>
-        <div style="font-size:9px;color:var(--muted);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${label}</div>
-      </div>
-    `;
-  }).join('');
+  const diPins = (ag && ag.hw && Array.isArray(ag.hw.diPinler) && ag.hw.diPinler.length > 0) ? ag.hw.diPinler : [];
+  document.getElementById('hwInputsGrid').innerHTML = diPins.length > 0
+    ? diPins.map((pin, i) => {
+        const isHi = pin.aktif != null ? !!pin.aktif : ((diMask & (1 << i)) !== 0);
+        const label = shortUnitName(pin.tag || ('Giriş ' + i));
+        return `
+          <div class="card" style="padding:8px;text-align:center;background:rgba(11,17,30,0.85);border-color:${isHi ? '#38bdf8' : 'var(--border)'};">
+            <div style="font-size:11px;font-weight:800;color:${isHi ? '#34d399' : '#94a3b8'};">DI${i}: ${isHi ? 'AKTİF (1)' : 'PASİF (0)'}</div>
+            <div style="font-size:9px;color:var(--muted);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${label}</div>
+          </div>
+        `;
+      }).join('')
+    : `<div style="grid-column:1/-1;padding:12px;color:#94a3b8;font-size:12px;background:rgba(11,17,30,0.65);border-radius:8px;border:1px dashed #334155;">Kurulumda kayıtlı Dijital Giriş (DI) kartı veya atanmış sensör/şamandıra pini bulunmamaktadır.</div>`;
 
   document.getElementById('hwDiagnosticsBox').innerHTML =
-    `ESP32-S3 Wi-Fi IP: <b>${data.sta_ip || '192.168.1.109'}</b> (AP: <b>${data.ap_ip || '192.168.4.1'}</b>) • ` +
-    `UART Pinleri: <b>RX=GPIO${data.rx_pin || 18}, TX=GPIO${data.tx_pin || 17}</b> • ` +
-    `PSoC Paket Sayacı: <b>${data.psoc_pkt_cnt || 0}</b> • ESP32 Başarılı/Hata: <b>${data.esp_rx_ok || 0} / ${data.esp_err || 0}</b>`;
+    `Kayıtlı İstasyon: <b>${istOn} / ${istTop} ONLINE</b> • ` +
+    `ESP32-S3 Wi-Fi IP: <b>${data.sta_ip || '---'}</b> • ` +
+    `PSoC Paket Sayacı: <b>${data.psoc_pkt_cnt || 0}</b>`;
 
   // ═══════════════════════════════════════════════════════════════
   // 6. PC / TV BÜYÜK MONİTÖR MODU & BÖLÜNMÜŞ EKRAN CANLI RENDER
   //    (Aynı Veri ve Aynı Adres Haritası Üzerinden Çalışır)
   // ═══════════════════════════════════════════════════════════════
-  renderPcScadaViews(data, ag, sera, sek, sul, dis, sensorOk, istOn, istTop);
+  renderPcScadaViews(data, ag, sera, sek, sul, dis, sensorOk, istOn, istTop, flags);
 }
 
 // ═══════════════════════════════════════════════════════════════════════════
@@ -3328,6 +3493,18 @@ function setUiDeviceMode(mode, savePref = true) {
 
 function initDeviceModeAuto() {
   populatePcSlotSelects();
+  // İlk açılışta (veya internet/sunucu henüz yanıt vermeden önce) kurulu olmayan hiçbir şeyin gözükmemesi için temiz başlangıç durumu uygula:
+  if (!g_LastData) {
+    renderScada({
+      stm32_online: false,
+      psoc_online: false,
+      esp_online: false,
+      agrinexus: {
+        seralar: [],
+        hw: { istasyonOnline: 0, istasyonToplam: 0, doPinler: [], diPinler: [] }
+      }
+    });
+  }
   const params = new URLSearchParams(window.location.search);
   const urlMode = (params.get('mode') || '').toLowerCase();
   const urlPage = params.get('page');
@@ -3344,11 +3521,11 @@ function initDeviceModeAuto() {
   const isIphoneOrIpod = /iPhone|iPod/i.test(ua);
   const isPortraitPhone = (window.innerWidth > 0 && window.innerWidth < 560 && window.innerHeight > window.innerWidth);
 
-  if (urlMode === 'mobile' || urlMode === 'ios' || pathName.endsWith('/ios')) {
+  if (urlMode === 'mobile' || urlMode === 'ios' || pathName.endsWith('/ios') || pathName.endsWith('/ios.html')) {
     setUiDeviceMode('mobile', false);
     return;
   }
-  if (urlMode !== 'pc' && urlMode !== 'tv' && !pathName.endsWith('/tv') && (isApkWebView || isIphoneOrIpod || isPortraitPhone)) {
+  if (urlMode !== 'pc' && urlMode !== 'tv' && !pathName.endsWith('/tv') && !pathName.endsWith('/tv.html') && (isApkWebView || isIphoneOrIpod || isPortraitPhone)) {
     setUiDeviceMode('mobile', false);
     return;
   }
@@ -3463,7 +3640,26 @@ function applyRemoteTvLayout(tv, showMsg) {
   }
 }
 
-function renderPcScadaViews(data, ag, sera, sek, sul, dis, sensorOk, istOn, istTop) {
+function isPcPageCodeAllowed(code, flags) {
+  if (code === '00' || code === '70') return true;
+  if (!flags || !flags.hasSera) return false;
+  if (code === '01') return flags.hasSera;
+  if (code === '10' || code === '11' || code === '12') return flags.hasPencere;
+  if (code === '20' || code === '21') return flags.hasIsitma;
+  if (code === '30') return flags.hasAnyIklim;
+  if (code === '31') return flags.hasPerde;
+  if (code === '32') return flags.hasPadFan;
+  if (code === '33') return flags.hasSisleme;
+  if (code === '34') return flags.hasSirkFan;
+  if (code === '40') return flags.hasSulama && flags.hasTank;
+  if (code === '41' || code === '42' || code === '43') return flags.hasSulama;
+  if (code === '50' || code === '60') return flags.hasAnyIklim || flags.hasSulama;
+  return true;
+}
+
+function renderPcScadaViews(data, ag, sera, sek, sul, dis, sensorOk, istOn, istTop, flags) {
+  flags = flags || getInstalledFlags(sera, sek, sul);
+
   // 0) PC UYGULAMASINDAN ("📺 ANDROID TV'YE YANSIT") GELEN UZAKTAN EKRAN KOMUTUNU YAKALA
   if (ag && ag.tvMonitor && Number(ag.tvMonitor.cmdId) > 0) {
     const incomingId = Number(ag.tvMonitor.cmdId);
@@ -3484,10 +3680,47 @@ function renderPcScadaViews(data, ag, sera, sek, sul, dis, sensorOk, istOn, istT
   // 1) Üst & Alt PC SCADA Barları ve Sol Meteoroloji Pusulası
   const rtcEl = document.getElementById('pcRtcClock');
   if (rtcEl && ag && ag.rtc) rtcEl.textContent = `🕒 ARM RTC: ${ag.rtc}`;
+  const seraCnt = (ag && Array.isArray(ag.seralar)) ? ag.seralar.length : 0;
+  const sekCnt = (sera && Array.isArray(sera.sektorler)) ? sera.sektorler.length : 0;
   const sumEl = document.getElementById('pcSetupSummary');
-  if (sumEl) sumEl.textContent = `TESİS: 1 SERA / 1 SEKTÖR | İSTASYON: ${istOn}/${istTop} ONLINE`;
+  if (sumEl) sumEl.textContent = `TESİS: ${seraCnt} SERA / ${sekCnt} SEKTÖR | İSTASYON: ${istOn}/${istTop} ${istTop > 0 && istOn > 0 ? 'ONLINE' : 'YOK'}`;
   const serEl = document.getElementById('pcHdrSerial');
   if (serEl) serEl.textContent = (data.device_serial || g_DeviceSerial).replace('OK-ARM-', '');
+
+  // Sol Navigasyon Menüsünü Kurulumdaki Birimlere Göre Dinamik Göster/Gizle
+  setElemVisible('pcnav-01', flags.hasSera);
+  setElemVisible('pcGrp10', flags.hasPencere);
+  setElemVisible('pcnav-10', flags.hasPencere);
+  setElemVisible('pcnav-11', flags.hasPencere);
+  setElemVisible('pcnav-12', flags.hasPencere);
+  setElemVisible('pcGrp20', flags.hasIsitma);
+  setElemVisible('pcnav-20', flags.hasIsitma);
+  setElemVisible('pcnav-21', flags.hasIsitma);
+  setElemVisible('pcGrp30', flags.hasAnyIklim);
+  setElemVisible('pcnav-30', flags.hasAnyIklim);
+  setElemVisible('pcnav-31', flags.hasPerde);
+  setElemVisible('pcnav-32', flags.hasPadFan);
+  setElemVisible('pcnav-33', flags.hasSisleme);
+  setElemVisible('pcnav-34', flags.hasSirkFan);
+  setElemVisible('pcGrp40', flags.hasSulama);
+  setElemVisible('pcnav-40', flags.hasSulama && flags.hasTank);
+  setElemVisible('pcnav-41', flags.hasSulama);
+  setElemVisible('pcnav-42', flags.hasSulama);
+  setElemVisible('pcnav-43', flags.hasSulama);
+  setElemVisible('pcGrp50', flags.hasSera && (flags.hasAnyIklim || flags.hasSulama));
+  setElemVisible('pcnav-50', flags.hasSera && (flags.hasAnyIklim || flags.hasSulama));
+  setElemVisible('pcnav-60', flags.hasSera && (flags.hasAnyIklim || flags.hasSulama));
+
+  // Çoklu monitör slot dropdown seçeneklerini de kuruluma göre filtrele
+  for (let s = 0; s < 4; s++) {
+    const sel = document.getElementById('pcSlotSel-' + s);
+    if (!sel) continue;
+    Array.from(sel.options).forEach(opt => {
+      const allowed = isPcPageCodeAllowed(opt.value, flags);
+      opt.hidden = !allowed;
+      opt.disabled = !allowed;
+    });
+  }
 
   const needle = document.getElementById('pcCompassNeedle');
   if (needle) needle.style.transform = `rotate(${Number(dis.ruzgarYon) || 0}deg)`;
@@ -3505,14 +3738,18 @@ function renderPcScadaViews(data, ag, sera, sek, sul, dis, sensorOk, istOn, istT
 
   const commTxt = document.getElementById('pcCommStatusTxt');
   if (commTxt) {
-    commTxt.textContent = sensorOk ? 'MODBUS ONLINE' : 'KISMİ / KOPUK';
-    commTxt.style.color = sensorOk ? '#38bdf8' : '#ef4444';
+    commTxt.textContent = sensorOk ? 'MODBUS ONLINE' : (istTop === 0 ? 'KURULUM YOK' : 'KISMİ / KOPUK');
+    commTxt.style.color = sensorOk ? '#38bdf8' : (istTop === 0 ? '#94a3b8' : '#ef4444');
   }
   const alarmStrip = document.getElementById('pcAlarmStrip');
   const alarmTxt = document.getElementById('pcAlarmText');
   const alarmCnt = document.getElementById('pcAlarmCountBadge');
   if (alarmStrip && alarmTxt && alarmCnt) {
-    if (!sensorOk || (ag && ag.guvenliMod)) {
+    if (!flags.hasSera) {
+      alarmStrip.style.background = '#0f172a';
+      alarmTxt.textContent = '⚪ KURULUM BEKLENİYOR — PC KURULUM EKRANINDAN SERA, SEKTÖR VE BİRİM EKLEYİNİZ';
+      alarmCnt.textContent = '0';
+    } else if (!sensorOk || (ag && ag.guvenliMod)) {
       alarmStrip.style.background = '#7f1d1d';
       alarmTxt.textContent = `GÜVENLİK: 🛑 GÜVENLİ MOD / HABERLEŞME UYARISI — İstasyon: ${istOn}/${istTop} ONLINE`;
       alarmCnt.textContent = '1';
@@ -3528,7 +3765,7 @@ function renderPcScadaViews(data, ag, sera, sek, sul, dis, sensorOk, istOn, istT
   }
 
   // Trend geçmişini her döngüde güncelle
-  if (sul && sensorOk) {
+  if (sul && sensorOk && flags.hasSulama) {
     const now = new Date();
     const tStr = now.toTimeString().slice(0, 8);
     if (g_TrendHistory.length === 0 || (Date.now() - g_TrendHistory[g_TrendHistory.length - 1].ts) >= 1200) {
@@ -3555,14 +3792,32 @@ function renderPcScadaViews(data, ag, sera, sek, sul, dis, sensorOk, istOn, istT
   for (let i = 0; i < slotCnt; i++) {
     const bodyEl = document.getElementById('pcSlotBody-' + i);
     if (!bodyEl) continue;
-    const code = g_PcSlotCodes[i] || '11';
+    let code = g_PcSlotCodes[i] || '00';
+    if (!isPcPageCodeAllowed(code, flags)) {
+      code = '00';
+      g_PcSlotCodes[i] = '00';
+      const sel = document.getElementById('pcSlotSel-' + i);
+      if (sel) sel.value = '00';
+      const badge = document.getElementById('pcSlotBadge-' + i);
+      const pg0 = PC_PAGES.find(p => p.code === '00');
+      if (badge) badge.textContent = pg0 ? pg0.title : '[00] GENEL SAHA';
+      if (i === 0) {
+        const titleEl = document.getElementById('pcActiveTitle');
+        if (titleEl && pg0) titleEl.textContent = pg0.title;
+        document.querySelectorAll('.pc-menu-btn').forEach(b => b.classList.remove('active'));
+        const nav0 = document.getElementById('pcnav-00');
+        if (nav0) nav0.classList.add('active');
+      }
+      bodyEl.dataset.forceRender = '1';
+    }
+    const sig = `${code}|${seraCnt}|${sekCnt}|${flags.units.length}`;
     // Klavye/Mouse ile bir input/select düzenleniyorsa ve sayfa değişmediyse odak kaybolmaması için DOM'u ezme!
-    if (bodyEl.dataset.forceRender !== '1' && bodyEl.dataset.renderedCode === code && bodyEl.contains(document.activeElement)) {
+    if (bodyEl.dataset.forceRender !== '1' && bodyEl.dataset.renderedCode === sig && bodyEl.contains(document.activeElement)) {
       continue;
     }
-    bodyEl.dataset.renderedCode = code;
+    bodyEl.dataset.renderedCode = sig;
     bodyEl.dataset.forceRender = '0';
-    bodyEl.innerHTML = buildPcDesktopPageHtml(i, code, data, ag, sera, sek, sul, dis, sensorOk, istOn, istTop);
+    bodyEl.innerHTML = buildPcDesktopPageHtml(i, code, data, ag, sera, sek, sul, dis, sensorOk, istOn, istTop, flags);
   }
 }
 
@@ -3653,19 +3908,41 @@ function buildPcUnitTreeHtml(seraAd, sekAd, unitIcon, unitId, subLabel) {
   `;
 }
 
-function buildPcDesktopPageHtml(slotIdx, code, data, ag, sera, sek, sul, dis, sensorOk, istOn, istTop) {
-  const sAd = sera ? sera.ad : 'DNM1';
-  const kAd = sek ? sek.ad : 'SKTR1';
+function buildPcDesktopPageHtml(slotIdx, code, data, ag, sera, sek, sul, dis, sensorOk, istOn, istTop, flags) {
+  flags = flags || getInstalledFlags(sera, sek, sul);
+
+  // Eğer kurulumda hiçbir sera/sektör eklenmemişse (ve sayfa [70] Donanım değilse) sahte DNM1/SKTR1 üretme!
+  if (!flags.hasSera && code !== '70') {
+    return `
+      <div class="pc-panel-box" style="padding:36px 24px;text-align:center;margin:14px auto;max-width:760px;border:1px dashed #334155;background:#09101f;">
+        <div style="font-size:32px;margin-bottom:10px;">⚙️</div>
+        <div style="font-size:15px;font-weight:900;color:#fbbf24;margin-bottom:8px;">KURULUM BEKLENİYOR — TANIMLI SERA VEYA EKİPMAN BULUNMAMAKTADIR</div>
+        <div style="font-size:12px;color:#94a3b8;line-height:1.65;margin-bottom:14px;">
+          AgriNexus SCADA altın kuralı gereği kurulumda eklenmeyen hiçbir sera, sektör, pompa, vana, solüsyon tankı veya iklim birimi ekranda varsayılan olarak gösterilmez.<br>
+          Lütfen <b>PC Uygulaması → Kurulum</b> ekranından sera, sektör, donanım kartı ve saha birimlerinizi ekleyiniz.
+        </div>
+        <div style="display:inline-flex;gap:10px;flex-wrap:wrap;justify-content:center;">
+          <span class="badge badge-muted">Kayıtlı Sera: 0</span>
+          <span class="badge badge-muted">Kayıtlı Sektör: 0</span>
+          <span class="badge badge-muted">Kayıtlı Birim: 0</span>
+          <span class="badge badge-muted">Kayıtlı İstasyon: ${istTop}</span>
+        </div>
+      </div>
+    `;
+  }
+
+  const sAd = sera ? sera.ad : '---';
+  const kAd = sek ? sek.ad : '---';
   const perList = (sek && Array.isArray(sek.periyotlar)) ? sek.periyotlar : [];
   const ap = (sek && sek.aktifPeriyot) ? sek.aktifPeriyot : (perList[0] || { no: 1, baslangic: '06:00', penAcmaSet: 22, penKapamaSet: 20, penMin: 0, penMax: 100, pBand: 4, adimPct: 10, beklemeSn: 60, rampaDk: 15, nemYuk1: 80, nemYuk1Etki: -1, nemDus1: 45, nemDus1Etki: 0.5, isitmaSet: 18, rayMinBoru: 35, rayMaxBoru: 60, perdeMod: 'Kombine', perdeRadTetik: 500, perdeDisIsiKapat: 12, sisVpdTetik: 1.2, sisMaxRh: 85, sirkMaxHiz: 100 });
   const wins = (sek && Array.isArray(sek.pencereler)) ? sek.pencereler : [];
   const doguW = wins.find(w => w.yon === 'DOĞU') || { gercekPct: 0, hedefPct: 0, durum: 'BOŞTA', setSicaklik: 22.8, blokSebebi: 'YOK', ruzgarKurali: 'D1' };
   const batiW = wins.find(w => w.yon === 'BATI') || { gercekPct: 0, hedefPct: 0, durum: 'BOŞTA', setSicaklik: 22.8, blokSebebi: 'YOK', ruzgarKurali: 'D1' };
-  const cur = (sek && sek.perdeler && sek.perdeler[0]) ? sek.perdeler[0] : { kimlik: 'DNM1_SKTR1_PERDE_1', gercekPct: 36, hedefPct: 36, calismaModu: 'Kombine', durum: 'OTOMATİK', enerjiTasarrufuPct: 25 };
-  const isit = (sek && sek.isitma) ? sek.isitma : { kazanAktif: false, gidisSicaklik: 48.0, donusSicaklik: 38.0, ortamIsitmaSet: 18.0, durumMesaji: 'BEKLEMEDE', hatlar: [] };
+  const cur = (sek && sek.perdeler && sek.perdeler[0]) ? sek.perdeler[0] : { kimlik: '', gercekPct: 0, hedefPct: 0, calismaModu: 'Kombine', durum: 'YOK', enerjiTasarrufuPct: 0 };
+  const isit = (sek && sek.isitma) ? sek.isitma : { kazanAktif: false, gidisSicaklik: 0.0, donusSicaklik: 0.0, ortamIsitmaSet: 18.0, durumMesaji: 'YOK', hatlar: [] };
   const ray = (isit.hatlar && isit.hatlar[0]) ? isit.hatlar[0] : { valfGercekPct: 0, valfHedefPct: 0, pompaAktif: false };
-  const fan = (sek && sek.sirkFan) ? sek.sirkFan : { aktif: false, hizPct: 0, volt0_10: 0, durum: 'DURUYOR' };
-  const sis = (sek && sek.sisleme) ? sek.sisleme : { aktif: false, pulseAcik: false, onSn: 30, offSn: 50, vpdTetik: 1.2, maxRhLimit: 85, durum: 'BEKLEMEDE' };
+  const fan = (sek && sek.sirkFan) ? sek.sirkFan : { aktif: false, hizPct: 0, volt0_10: 0, durum: 'YOK' };
+  const sis = (sek && sek.sisleme) ? sek.sisleme : { aktif: false, pulseAcik: false, onSn: 30, offSn: 50, vpdTetik: 1.2, maxRhLimit: 85, durum: 'YOK' };
 
   // ═══════════════════════════════════════════════════════════════════════════
   // [11] PENCERE CANLI İKLİM VE ORANSAL HESAPLAMA KOKPİTİ (PC Ekran Görüntüsü 1:1 — Mobil Setpoint Kutusu YOK!)
@@ -3752,11 +4029,12 @@ function buildPcDesktopPageHtml(slotIdx, code, data, ag, sera, sek, sul, dis, se
           </div>
         </div>
 
-        <!-- SAĞ KART: TERMAL & İKLİM EKİPMANLARI CANLI KOKPİTİ (PC 1:1) -->
+        <!-- SAĞ KART: TERMAL & İKLİM EKİPMANLARI CANLI KOKPİTİ (SADECE KURULU BİRİMLER) -->
         <div class="pc-panel-box" style="display:flex;flex-direction:column;gap:10px;">
           <div style="font-size:12px;font-weight:900;color:#f8fafc;border-bottom:1px solid #1e293b;padding-bottom:6px;">
             🔥 TERMAL &amp; İKLİM EKİPMANLARI CANLI KOKPİTİ
           </div>
+          ${flags.hasIsitma ? `
           <div style="display:flex;gap:10px;flex-wrap:wrap;">
             <div class="pc-panel-box" style="background:#09101f;width:270px;">
               <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
@@ -3791,6 +4069,7 @@ function buildPcDesktopPageHtml(slotIdx, code, data, ag, sera, sek, sul, dis, se
               </div>
             </div>
           </div>
+          ` : ''}
 
           <div style="background:#09101f;border:1px solid #1e293b;border-radius:5px;padding:6px 10px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;">
             <span style="font-size:11px;font-weight:900;color:#38bdf8;">🔧 İKLİM EKİPMANLARI CANLI ANİMASYON, ÇALIŞMA &amp; DURMA NEDENLERİ KOKPİTİ</span>
@@ -3803,6 +4082,7 @@ function buildPcDesktopPageHtml(slotIdx, code, data, ag, sera, sek, sul, dis, se
           </div>
 
           <div class="grid-3" style="margin-bottom:0;">
+            ${flags.hasPerde ? `
             <div class="pc-panel-box" style="background:#09101f;">
               <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
                 <span style="font-size:11px;font-weight:900;color:#4ade80;">🟢 PERDE SİSTEMİ</span>
@@ -3824,7 +4104,9 @@ function buildPcDesktopPageHtml(slotIdx, code, data, ag, sera, sek, sul, dis, se
                 <div>[MOD: ${cur.calismaModu.toUpperCase()}] SERİLİ (%${cPct}) — Sebep: Radyasyon Gölgelendirme (Rad: ${dis.radyasyon} W/m² • Hedef: %${Math.round(cur.hedefPct)})</div>
               </div>
             </div>
+            ` : ''}
 
+            ${flags.hasSirkFan ? `
             <div class="pc-panel-box" style="background:#09101f;">
               <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
                 <span style="font-size:11px;font-weight:900;color:#38bdf8;">🌀 SİRKÜLASYON FANI</span>
@@ -3844,7 +4126,9 @@ function buildPcDesktopPageHtml(slotIdx, code, data, ag, sera, sek, sul, dis, se
                 <div>${fan.durum} | İç Isı ${sek.icIsi}°C &lt; 30,0°C, Nem %${Math.round(sek.icNem)} &lt; %80</div>
               </div>
             </div>
+            ` : ''}
 
+            ${flags.hasSisleme ? `
             <div class="pc-panel-box" style="background:#09101f;">
               <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
                 <span style="font-size:11px;font-weight:900;color:#38bdf8;">💨 YÜKSEK BASINÇ SİSLEME</span>
@@ -3865,6 +4149,7 @@ function buildPcDesktopPageHtml(slotIdx, code, data, ag, sera, sek, sul, dis, se
                 <div>${sis.durum} | İç Isı ${sek.icIsi}°C &lt; Başlama 28,0°C (VPD Tetik: ${sis.vpdTetik} kPa)</div>
               </div>
             </div>
+            ` : ''}
           </div>
         </div>
       </div>
@@ -4343,7 +4628,7 @@ function buildPcDesktopPageHtml(slotIdx, code, data, ag, sera, sek, sul, dis, se
         <div style="display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #1e293b;padding-bottom:8px;margin-bottom:10px;flex-wrap:wrap;gap:8px;">
           <div>
             <span style="font-size:13px;font-weight:900;color:#38bdf8;">🏭 [40] ISA-101 PROSES P&amp;ID, SOLÜSYON TANKI FIFO VE DİNAMİK POMPA/VANA SCADA KOKPİTİ</span>
-            <div style="font-size:10px;color:#94a3b8;margin-top:2px;">Kurulum Topolojisi: <b>1 Temiz Su Pompası + 3 Tank Boşaltma Pompası (Toplam 4 Pompa)</b> • <b>3 Solüsyon Tankı (1000L)</b> • <b>12 Sulama Vanası</b></div>
+            <div style="font-size:10px;color:#94a3b8;margin-top:2px;">Kurulum Topolojisi: <b>${pumps.length} Pompa</b> • <b>${tanks.length} Solüsyon Tankı</b> • <b>${valves.length} Sulama Vanası</b></div>
           </div>
           <div style="display:flex;gap:6px;">
             <button class="pc-dg-btn pc-dg-btn-green" onclick="sendScadaCmd({action:'fert_start'})">▶ SULAMA BAŞLAT</button>
@@ -4353,9 +4638,9 @@ function buildPcDesktopPageHtml(slotIdx, code, data, ag, sera, sek, sul, dis, se
         </div>
         <div style="width:100%;overflow-x:auto;background:#070c17;border:1px solid #1e293b;border-radius:6px;padding:8px;">
           <svg viewBox="0 0 990 340" style="width:100%;height:auto;display:block;">
-            <text x="18" y="18" fill="#38bdf8" font-size="9.5" font-weight="900">1. HAM SU &amp; TEMİZ SU POMPASI (1 ADET)</text>
+            <text x="18" y="18" fill="#38bdf8" font-size="9.5" font-weight="900">1. HAM SU &amp; TEMİZ SU POMPASI</text>
             <text x="235" y="18" fill="#f59e0b" font-size="9.5" font-weight="900">2. BYPASS GÜBRE/ASİT DOZAJ ÜNİTESİ</text>
-            <text x="505" y="18" fill="#34d399" font-size="9.5" font-weight="900">3. 3 SOLÜSYON TANKI + 3 BOŞALTMA POMPASI + 12 VANA</text>
+            <text x="505" y="18" fill="#34d399" font-size="9.5" font-weight="900">3. ${tanks.length} TANK + ${pumps.length} POMPA + ${valves.length} VANA</text>
             <rect x="16" y="88" width="92" height="145" rx="8" fill="#0b1324" stroke="#0284c7" stroke-width="2.2"/>
             <rect x="20" y="128" width="84" height="101" rx="5" fill="rgba(2,132,199,0.32)"/>
             <text x="62" y="112" text-anchor="middle" fill="#38bdf8" font-size="10" font-weight="900">🌊 HAM SU</text>
@@ -4463,7 +4748,7 @@ function buildPcDesktopPageHtml(slotIdx, code, data, ag, sera, sek, sul, dis, se
       <div class="pc-panel-box" style="margin-bottom:8px;">
         <div style="display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #1e293b;padding-bottom:8px;margin-bottom:8px;flex-wrap:wrap;gap:8px;">
           <div>
-            <span style="font-size:13px;font-weight:900;color:#38bdf8;">🚀 [41] CANLI SULAMA &amp; GÜBRE/ASİT PID DOZAJ KOKPİTİ (${sul?.kimlik || sul?.makineKimlik || 'DNM1_SKTR1_GUBRELEME_1'})</span>
+            <span style="font-size:13px;font-weight:900;color:#38bdf8;">🚀 [41] CANLI SULAMA &amp; GÜBRE/ASİT PID DOZAJ KOKPİTİ (${sul?.kimlik || sul?.makineKimlik || 'GÜBRELEME ÜNİTESİ'})</span>
             <span style="margin-left:10px;font-size:11px;font-weight:900;color:${sul?.calisiyor ? '#34d399' : '#94a3b8'};">${sul ? sul.fazTurkce : 'BEKLEMEDE'} — ${sul?.aktifReceteAdi || 'Periyot 1'}</span>
           </div>
           <div style="display:flex;align-items:center;gap:6px;">
@@ -4489,9 +4774,10 @@ function buildPcDesktopPageHtml(slotIdx, code, data, ag, sera, sek, sul, dis, se
       </div>
 
       <div class="grid-2" style="margin-bottom:8px;">
-        <!-- SOL: DOZAJ ENJEKTÖR KANALLARI TABLOSU -->
+        <!-- SOL: DOZAJ ENJEKTÖR KANALLARI TABLOSU (SADECE GÜBRELEME KURULU İSE) -->
+        ${chans.length > 0 ? `
         <div class="pc-panel-box">
-          <div style="font-size:11.5px;font-weight:900;color:#38bdf8;margin-bottom:6px;">🧪 DOZAJ ENJEKTÖR KANALLARI (ASİT + GÜBRE A + GÜBRE B)</div>
+          <div style="font-size:11.5px;font-weight:900;color:#38bdf8;margin-bottom:6px;">🧪 DOZAJ ENJEKTÖR KANALLARI (${chans.length} KANAL)</div>
           <table class="pc-ind-table">
             <thead>
               <tr><th>KANAL</th><th>TIP</th><th>REÇETE BAZ (L/h)</th><th>PID ÇARPAN</th><th>ANLIK DEBİ (L/h)</th><th>PWM DUTY (%)</th><th>VALF</th></tr>
@@ -4517,10 +4803,12 @@ function buildPcDesktopPageHtml(slotIdx, code, data, ag, sera, sek, sul, dis, se
             </tbody>
           </table>
         </div>
+        ` : ''}
 
-        <!-- SAĞ: KURULUMDA EKLENEN 4 POMPA DURUM TABLOSU -->
+        <!-- SAĞ: KURULUMDA EKLENEN POMPA DURUM TABLOSU -->
+        ${pumps.length > 0 ? `
         <div class="pc-panel-box">
-          <div style="font-size:11.5px;font-weight:900;color:#34d399;margin-bottom:6px;">⚙️ KURULUMDA EKLENEN SULAMA POMPALARI (1 TEMİZ SU + 3 TANK BOŞALTMA)</div>
+          <div style="font-size:11.5px;font-weight:900;color:#34d399;margin-bottom:6px;">⚙️ KURULUMDA EKLENEN SULAMA POMPALARI (${pumps.length} POMPA)</div>
           <table class="pc-ind-table">
             <thead>
               <tr><th>POMPA NO</th><th>KİMLİK</th><th>GÖREV ROLÜ</th><th>DURUM</th></tr>
@@ -4537,11 +4825,13 @@ function buildPcDesktopPageHtml(slotIdx, code, data, ag, sera, sek, sul, dis, se
             </tbody>
           </table>
         </div>
+        ` : ''}
       </div>
 
-      <!-- ALT: 12 SULAMA VANASI DURUM MATRİSİ -->
+      <!-- ALT: SULAMA VANASI DURUM MATRİSİ -->
+      ${valves.length > 0 ? `
       <div class="pc-panel-box">
-        <div style="font-size:11.5px;font-weight:900;color:#38bdf8;margin-bottom:6px;">🚰 12 SULAMA BÖLGE VANASI CANLI DURUM MATRİSİ (SULAMA_1 .. SULAMA_12)</div>
+        <div style="font-size:11.5px;font-weight:900;color:#38bdf8;margin-bottom:6px;">🚰 KURULUMDA EKLENEN SULAMA BÖLGE VANALARI (${valves.length} VANA)</div>
         <div style="display:grid;grid-template-columns:repeat(6,1fr);gap:6px;">
           ${valves.map(v => `
             <div style="background:${v.acik ? 'rgba(16,185,129,0.2)' : '#09101f'};border:1px solid ${v.acik ? '#10b981' : '#1e293b'};border-radius:4px;padding:6px 8px;display:flex;justify-content:space-between;align-items:center;">
@@ -4551,6 +4841,7 @@ function buildPcDesktopPageHtml(slotIdx, code, data, ag, sera, sek, sul, dis, se
           `).join('')}
         </div>
       </div>
+      ` : ''}
     `;
   }
 
@@ -4770,13 +5061,13 @@ function buildPcDesktopPageHtml(slotIdx, code, data, ag, sera, sek, sul, dis, se
           <table class="pc-ind-table">
             <thead><tr><th>PİN</th><th>TANIM / EKİPMAN</th><th>DURUM</th></tr></thead>
             <tbody>
-              ${doPins.map((p, i) => `
+              ${doPins.length > 0 ? doPins.map((p, i) => `
                 <tr>
                   <td style="font-weight:900;color:#38bdf8;">DO${i}</td>
                   <td>${p.tag}</td>
                   <td><span class="badge ${p.aktif ? 'badge-green' : 'badge-muted'}">${p.aktif ? '🟢 AKTİF (1)' : '⚪ KAPALI (0)'}</span></td>
                 </tr>
-              `).join('')}
+              `).join('') : `<tr><td colspan="3" style="text-align:center;color:#94a3b8;padding:14px;">Kurulumda kayıtlı DO çıkış kartı / röle bulunmamaktadır.</td></tr>`}
             </tbody>
           </table>
         </div>
@@ -4785,13 +5076,13 @@ function buildPcDesktopPageHtml(slotIdx, code, data, ag, sera, sek, sul, dis, se
           <table class="pc-ind-table">
             <thead><tr><th>PİN</th><th>SENSÖR / SVİÇ TANIMI</th><th>DURUM</th></tr></thead>
             <tbody>
-              ${diPins.map((p, i) => `
+              ${diPins.length > 0 ? diPins.map((p, i) => `
                 <tr>
                   <td style="font-weight:900;color:#fbbf24;">DI${i}</td>
                   <td>${p.tag}</td>
                   <td><span class="badge ${p.aktif ? 'badge-blue' : 'badge-muted'}">${p.aktif ? '🟢 AKTİF (1)' : '⚪ PASİF (0)'}</span></td>
                 </tr>
-              `).join('')}
+              `).join('') : `<tr><td colspan="3" style="text-align:center;color:#94a3b8;padding:14px;">Kurulumda kayıtlı DI dijital giriş kartı bulunmamaktadır.</td></tr>`}
             </tbody>
           </table>
         </div>
